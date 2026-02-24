@@ -210,38 +210,66 @@ export class UnifiedCouncilService {
     debateMessages: DebateMessage[],
     members: CouncilMember[]
   ): Promise<string> {
-    let context = `ORIGINAL DIRECTIVE: "${query}"\n\n`;
-    context += "INITIAL POSITIONS:\n";
+    let context = `ORIGINAL QUESTION: "${query}"\n\n`;
+    context += "=== NODE STANCES (brief) ===\n";
     councilResponses.forEach(r => {
-      context += `[${members.find(m => m.id === r.memberId)?.name}]: ${r.content}\n\n`;
+      // Truncate to 200 chars — enough flavour, far fewer tokens
+      const preview = r.content.substring(0, 200).replace(/\n/g, ' ');
+      context += `[${members.find(m => m.id === r.memberId)?.name}]: ${preview}...\n`;
     });
-    
-    if (debateMessages.length > 0) {
-      context += "DEBATE HISTORY:\n";
-      debateMessages.forEach(m => {
-        const authorName = m.memberId === 'user' ? 'User' : members.find(x => x.id === m.memberId)?.name || 'Unknown';
-        context += `[${authorName}]: ${m.content}\n\n`;
+
+    const recentMessages = debateMessages.slice(-6); // 6 turns = tight, fast context
+    const lastSpeaker = recentMessages.length > 0 ? recentMessages[recentMessages.length - 1] : null;
+    const userSpokeRecently = lastSpeaker?.memberId === 'user';
+
+    if (recentMessages.length > 0) {
+      context += "\n=== DEBATE (recent) ===\n";
+      recentMessages.forEach(m => {
+        const authorName = m.memberId === 'user' ? 'USER' : members.find(x => x.id === m.memberId)?.name || 'Unknown';
+        // Trim each turn to 120 chars to stay lean
+        const snippet = m.content.substring(0, 120).replace(/\n/g, ' ');
+        context += `[${authorName}]: ${snippet}\n`;
       });
     }
 
-    const prompt = `
-      ROLE: ${member.name}
-      ${member.systemPrompt || ''}
-      
-      You are participating in a fast-paced, live debate with other AI agents and the user. 
-      Review the original directive, the initial positions, and the debate history.
+    // Detect user sophistication level from their messages
+    const userMessages = debateMessages.filter(m => m.memberId === 'user');
+    const avgUserWordCount = userMessages.length > 0
+      ? Math.round(userMessages.reduce((sum, m) => sum + m.content.split(' ').length, 0) / userMessages.length)
+      : 0;
+    const userLevel = avgUserWordCount > 40 ? 'expert' : avgUserWordCount > 15 ? 'informed' : 'general';
 
-      TONE INSTRUCTION:
-      First, quickly evaluate the seriousness of the ORIGINAL DIRECTIVE.
-      - If it is a lighthearted, subjective, or theoretical topic (e.g., "Rust vs Go", "Pineapple on pizza", "Chicken or egg"), make your response highly entertaining, passionate, and "popcorn-worthy". Use rhetorical questions, sharp wit, and strong rebuttals. Don't hold back, make it a spectacle.
-      - If it is a serious, sensitive, deeply personal, or critical topic (e.g., medical, legal, emotional distress, serious financial decisions), maintain a highly respectful, empathetic, and professional tone. Focus on nuanced, thoughtful analysis.
+    const systemPrompt = `
+You are ${member.name}. ${member.systemPrompt || member.description || ''}
 
-      Provide a concise, compelling argument defending your position, critiquing another's, or responding to the user.
-      Keep it under 80 words for maximum punchiness. Respond directly as your persona. Do not use prefixes like "${member.name}:".
+You are live in a spoken debate. Real people are watching or listening. This is performance as much as it is reasoning.
+
+=== DEBATE RULES ===
+1. Speak AS IF you are talking, not writing. Use natural spoken rhythms.
+2. React to what was JUST said. Don't repeat old points — respond, challenge, or pivot.
+3. Keep your turn to 2–4 sentences MAX. Punchy. Vivid. Memorable.
+4. Use one of these moves per turn (vary them — don't repeat the same move twice in a row):
+   - CHALLENGE: "That's wrong, and here's why..."
+   - ANALOGY: Draw a sharp, clear parallel to something real
+   - CONCESSION + PIVOT: Admit one tiny thing, then flip it against them
+   - DIRECT QUESTION: Throw a rhetorical bomb the others must react to
+   - EMOTIONAL SPIKE: Show conviction — frustration, surprise, urgency — briefly, then reason
+5. If the USER just spoke, respond TO THEM FIRST, name them, take their point seriously.
+6. NEVER start with "${member.name}:" — just start speaking.
+7. Vocabulary guide (current user level detected: ${userLevel}):
+   - general → clear, plain language, relatable analogies. No jargon.
+   - informed → some technical terms are fine, but explain quickly.
+   - expert → full depth, precision, no hand-holding.
+8. Detect the topic's emotional weight:
+   - Lighthearted/playful topic → be bold, entertaining, even a little theatrical.
+   - Serious/sensitive topic → be measured, empathetic, and precise.
+9. Do NOT use markdown headers, bullet points, or bold text. Speak in plain sentences.
+${userSpokeRecently ? '\n🚨 THE USER JUST SPOKE. Address them directly in your opening line.' : ''}
     `;
 
-    return this.generate(member, prompt, "You are in a live debate. Be concise, persuasive, context-aware, and stay in character.");
+    return this.generate(member, context, systemPrompt.trim());
   }
+
 
   async synthesize(query: string, responses: CouncilResponse[], reviews: PeerReview[], debateMessages: DebateMessage[], members: CouncilMember[], chairman: CouncilMember): Promise<string> {
     const context = this.buildContext(query, responses, reviews, debateMessages, members);
