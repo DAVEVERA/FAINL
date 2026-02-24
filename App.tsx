@@ -1,4 +1,4 @@
-
+﻿
 import { useState, useRef, useEffect, FC } from 'react';
 import { 
   Send, 
@@ -1032,6 +1032,3 @@ const App: FC = () => {
   );
 };
 export default App;
-/ /   D e p l o y m e n t   H e a r t b e a t :   0 2 / 2 4 / 2 0 2 6   2 0 : 0 6 : 0 4  
- / /   F o r c e d   D e p l o y m e n t :   0 2 / 2 4 / 2 0 2 6   2 0 : 2 7 : 5 8  
- 
