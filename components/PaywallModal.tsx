@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { FC } from 'react';
 import { 
   Zap, 
   Shield, 
@@ -20,7 +20,7 @@ interface PaywallModalProps {
   onClose: () => void;
 }
 
-export const PaywallModal: React.FC<PaywallModalProps> = ({ 
+export const PaywallModal: FC<PaywallModalProps> = ({ 
   isOpen, 
   hasOwnKeys,
   onPurchaseTurns, 
@@ -47,7 +47,7 @@ export const PaywallModal: React.FC<PaywallModalProps> = ({
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full transition-all">
+          <button onClick={onClose} title="Close Paywall" aria-label="Close Paywall" className="p-2 hover:bg-black/5 rounded-full transition-all">
             <X className="w-8 h-8" />
           </button>
         </div>

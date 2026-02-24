@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import { 
   HelpCircle, 
   ChevronDown, 
@@ -32,7 +32,7 @@ const FAQS = [
   }
 ];
 
-export const FAQPage: React.FC = () => {
+export const FAQPage: FC = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (

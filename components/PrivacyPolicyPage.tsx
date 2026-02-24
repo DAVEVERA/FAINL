@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import { Shield, Lock, Eye, Server, Cpu, Globe } from 'lucide-react';
 
-export const PrivacyPolicyPage: React.FC = () => {
+export const PrivacyPolicyPage: FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-24 animate-fade-in">
       <div className="bg-white border-4 border-black p-8 md:p-16 shadow-[24px_24px_0px_0px_rgba(0,0,0,1)]">

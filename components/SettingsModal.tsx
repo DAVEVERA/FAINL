@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import { 
   X, Save, Key, Plus, Trash2, Zap, Settings, Shield, Loader2, 
   CheckCircle, AlertCircle, RefreshCw, Database, Download, Upload, Lock
@@ -14,15 +14,17 @@ interface SettingsModalProps {
   onSave: (config: AppConfig) => void;
   history?: SessionState[];
   onImportHistory?: (history: SessionState[]) => void;
+  onVerifyKey?: (provider: ModelProvider, key: string) => Promise<boolean>;
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ 
+export const SettingsModal: FC<SettingsModalProps> = ({ 
   isOpen, 
   onClose, 
   config, 
   onSave,
   history = [],
-  onImportHistory
+  onImportHistory,
+  onVerifyKey
 }) => {
   const [activeTab, setActiveTab] = useState<'keys' | 'members' | 'overview' | 'storage'>('overview');
   const [tempConfig, setTempConfig] = useState<AppConfig>(JSON.parse(JSON.stringify(config)));
@@ -97,15 +99,29 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     e.target.value = '';
   };
 
+  const [verifyingKey, setVerifyingKey] = useState<string | null>(null);
+  const [verificationResults, setVerificationResults] = useState<Record<string, 'success' | 'error' | null>>({});
+
+  const testKey = async (provider: ModelProvider, configKey: string) => {
+    if (!onVerifyKey) return;
+    const value = (tempConfig as any)[configKey];
+    if (!value) return;
+
+    setVerifyingKey(configKey);
+    const result = await onVerifyKey(provider, value);
+    setVerificationResults(prev => ({ ...prev, [configKey]: result ? 'success' : 'error' }));
+    setVerifyingKey(null);
+  };
+
   const validateApiKey = (key: string, providerKey: string) => {
-    if (!key) return null; // No key entered
+    if (!key) return null; 
     
-    // Simple regex patterns for common providers
     const patterns: Record<string, RegExp> = {
+      googleKey: /^AIza[a-zA-Z0-9_-]{35}$/,
       openaiKey: /^sk-[a-zA-Z0-9]{32,}$/,
       anthropicKey: /^sk-ant-[a-zA-Z0-9_-]+$/,
       groqKey: /^gsk_[a-zA-Z0-9]{32,}$/,
-      deepseekKey: /^sk-[a-zA-Z0-9]{32,}$/,
+      deepseekKey: /^sk-[0-9a-f]{32}$/,
       openRouterKey: /^sk-or-v1-[a-zA-Z0-9]{64}$/
     };
 
@@ -113,8 +129,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       return patterns[providerKey].test(key);
     }
     
-    // For unknown providers, just check if it's reasonably long
-    return key.length > 10;
+    return key.length > 20;
   };
 
   return (
@@ -132,7 +147,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                <p className="text-[8px] md:text-[10px] font-black text-black/40 uppercase mt-1 md:mt-2 tracking-widest">Autonomous Intelligence Configuration</p>
              </div>
           </div>
-          <button onClick={onClose} className="p-2 md:p-3 hover:bg-black/5 rounded-full transition-all">
+          <button onClick={onClose} title="Close settings" aria-label="Close settings" className="p-2 md:p-3 hover:bg-black/5 rounded-full transition-all">
             <X className="w-6 h-6 md:w-10 md:h-10" />
           </button>
         </div>
@@ -227,35 +242,53 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
                 <div className="space-y-6 md:space-y-10">
                   {[
-                    { label: "Secondary Neural Link (Groq)", key: 'groqKey' },
-                    { label: "Anthropic Credentials", key: 'anthropicKey' },
-                    { label: "DeepSeek Reasoning Link", key: 'deepseekKey' },
-                    { label: "OpenAI Protocol Key", key: 'openaiKey' },
-                    { label: "OpenRouter Multi-Model Key", key: 'openRouterKey' }
+                    { label: "Primary Neural Link (Google Gemini)", key: 'googleKey', provider: ModelProvider.GOOGLE, url: "https://aistudio.google.com/app/apikey", desc: "Powers the main consensus engine. Required for baseline operation." },
+                    { label: "High-Speed Logic (Groq)", key: 'groqKey', provider: ModelProvider.GROQ, url: "https://console.groq.com/keys", desc: "Instant response times. Excellent for fast-paced debate turns." },
+                    { label: "Reasoning Deep-Link (DeepSeek)", key: 'deepseekKey', provider: ModelProvider.DEEPSEEK, url: "https://platform.deepseek.com/api_keys", desc: "Superior for complex mathematical and logical synthesis." },
+                    { label: "Advanced Semantic Link (Anthropic)", key: 'anthropicKey', provider: ModelProvider.ANTHROPIC, url: "https://console.anthropic.com/settings/keys", desc: "Highest conceptual integrity for ethical and nuanced prompts." },
+                    { label: "Standard General Link (OpenAI)", key: 'openaiKey', provider: ModelProvider.OPENAI, url: "https://platform.openai.com/api-keys", desc: "High reliability and broad logic coverage." },
+                    { label: "Universal Routing (OpenRouter)", key: 'openRouterKey', provider: ModelProvider.OPENROUTER, url: "https://openrouter.ai/keys", desc: "Access to 100+ specialized models via a single protocol." }
                   ].map((field) => {
                     const value = (tempConfig as any)[field.key] || '';
                     const isValid = validateApiKey(value, field.key);
+                    const isVerifying = verifyingKey === field.key;
+                    const verifyStatus = verificationResults[field.key];
                     
                     return (
-                      <div key={field.key}>
-                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-black/40 mb-3">{field.label}</label>
-                        <div className="relative">
-                          <input
-                            type="password"
-                            value={value}
-                            onChange={(e) => handleKeyChange(field.key as keyof AppConfig, e.target.value)}
-                            placeholder="••••••••••••••••••••••••"
-                            className={`w-full bg-zinc-100 border-2 rounded-xl px-6 py-5 font-mono text-sm font-black focus:bg-white focus:ring-8 focus:ring-black/5 outline-none transition-all shadow-inner ${isValid === false ? 'border-red-500' : isValid === true ? 'border-green-500' : 'border-black'}`}
-                          />
-                          <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                            {isValid === true && <CheckCircle className="w-4 h-4 text-green-500" />}
-                            {isValid === false && <AlertCircle className="w-4 h-4 text-red-500" />}
-                            {isValid === null && <Lock className="w-4 h-4 text-black/10" />}
-                          </div>
+                      <div key={field.key} className="p-6 bg-zinc-50 rounded-2xl border-2 border-black/5">
+                        <div className="flex justify-between items-start mb-4">
+                           <div>
+                              <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-black/60 mb-1">{field.label}</label>
+                              <p className="text-[9px] font-bold text-black/30 uppercase tracking-widest">{field.desc}</p>
+                           </div>
+                           <a href={field.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-black hover:underline underline-offset-4">
+                             Get Key <Download className="w-3 h-3 rotate-[270deg]" />
+                           </a>
                         </div>
-                        {isValid === false && (
-                          <p className="text-red-500 text-[10px] font-bold mt-2 uppercase tracking-widest">Invalid Key Format</p>
-                        )}
+                        <div className="flex gap-3">
+                          <div className="relative flex-1">
+                            <input
+                              type="password"
+                              value={value}
+                              onChange={(e) => handleKeyChange(field.key as keyof AppConfig, e.target.value)}
+                              placeholder="••••••••••••••••••••••••"
+                              className={`w-full bg-white border-2 rounded-xl px-6 py-4 font-mono text-sm font-black focus:ring-8 focus:ring-black/5 outline-none transition-all ${verifyStatus === 'success' || isValid === true ? 'border-green-500' : verifyStatus === 'error' || isValid === false ? 'border-red-500' : 'border-black'}`}
+                            />
+                            <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                              {verifyStatus === 'success' && <CheckCircle className="w-4 h-4 text-green-500" />}
+                              {verifyStatus === 'error' && <AlertCircle className="w-4 h-4 text-red-500" />}
+                              {(!verifyStatus && isValid === true) && <CheckCircle className="w-4 h-4 text-green-500/30" />}
+                              {(!verifyStatus && isValid === false) && <AlertCircle className="w-4 h-4 text-red-500/30" />}
+                            </div>
+                          </div>
+                          <button 
+                            onClick={() => testKey(field.provider, field.key)}
+                            disabled={!value || isVerifying}
+                            className={`px-6 rounded-xl border-2 border-black font-black uppercase text-[10px] tracking-widest transition-all ${isVerifying ? 'bg-zinc-100 text-black/20' : 'bg-black text-white hover:bg-zinc-800 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-0.5 active:shadow-none active:translate-y-0'}`}
+                          >
+                            {isVerifying ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify'}
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -274,7 +307,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </button>
               </div>
               <div className="grid grid-cols-1 gap-6 md:gap-10">
-                {tempConfig.activeCouncil.map((member, idx) => (
+                {tempConfig.activeCouncil.map((member: CouncilMember, idx: number) => (
                   <div key={idx} className="bg-white p-6 md:p-10 rounded-3xl border-4 border-black flex flex-col gap-6 md:gap-8 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
                     <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
                       <div className="flex flex-row md:flex-col items-center gap-4 w-full md:w-auto">
@@ -288,18 +321,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       </div>
                       <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 w-full">
                         <div>
-                          <label className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Neural Identity</label>
-                          <input value={member.name} onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner" />
+                          <label htmlFor={`member-name-${idx}`} className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Neural Identity</label>
+                          <input id={`member-name-${idx}`} placeholder="Member Name" value={member.name} onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner" />
                         </div>
                         <div>
-                          <label className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Logic Provider</label>
-                          <select value={member.provider} onChange={(e) => handleMemberChange(idx, 'provider', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner cursor-pointer">
+                          <label htmlFor={`member-provider-${idx}`} className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Logic Provider</label>
+                          <select id={`member-provider-${idx}`} title="Select Provider" value={member.provider} onChange={(e) => handleMemberChange(idx, 'provider', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner cursor-pointer">
                             {Object.values(ModelProvider).map(p => <option key={p} value={p}>{p}</option>)}
                           </select>
                         </div>
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Custom Endpoint (Base URL) <span className="text-black/20 lowercase normal-case tracking-normal font-medium">- Optional</span></label>
+                          <label htmlFor={`member-url-${idx}`} className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">Custom Endpoint (Base URL) <span className="text-black/20 lowercase normal-case tracking-normal font-medium">- Optional</span></label>
                           <input 
+                            id={`member-url-${idx}`}
                             value={member.baseUrl || ''} 
                             onChange={(e) => handleMemberChange(idx, 'baseUrl', e.target.value)} 
                             placeholder="e.g., http://localhost:11434/v1"
@@ -307,11 +341,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                           />
                         </div>
                         <div className="col-span-1 sm:col-span-2">
-                          <label className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">System Directive Instruction</label>
-                          <textarea value={member.systemPrompt || ''} onChange={(e) => handleMemberChange(idx, 'systemPrompt', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-4 text-xs font-medium min-h-[100px] shadow-inner font-serif" />
+                          <label htmlFor={`member-prompt-${idx}`} className="text-[9px] font-black text-black/30 uppercase tracking-[0.2em] mb-2 block">System Directive Instruction</label>
+                          <textarea id={`member-prompt-${idx}`} placeholder="System prompt..." value={member.systemPrompt || ''} onChange={(e) => handleMemberChange(idx, 'systemPrompt', e.target.value)} className="w-full bg-zinc-50 border-2 border-black rounded-xl px-5 py-4 text-xs font-medium min-h-[100px] shadow-inner font-serif" />
                         </div>
                       </div>
-                      <button onClick={() => removeMember(idx)} className="p-4 text-black/10 hover:text-black transition-all"><Trash2 className="w-8 h-8" /></button>
+                      <button onClick={() => removeMember(idx)} title="Remove Council Member" aria-label="Remove Council Member" className="p-4 text-black/10 hover:text-black transition-all"><Trash2 className="w-8 h-8" /></button>
                     </div>
                   </div>
                 ))}

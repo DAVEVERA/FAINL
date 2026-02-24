@@ -1,7 +1,7 @@
-import React from 'react';
+import { FC } from 'react';
 import { Gavel, Scale, FileText, Zap, Users, AlertTriangle } from 'lucide-react';
 
-export const TermsOfServicePage: React.FC = () => {
+export const TermsOfServicePage: FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-24 animate-fade-in">
       <div className="bg-white border-4 border-black p-8 md:p-16 shadow-[24px_24px_0px_0px_rgba(0,0,0,1)]">

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { CouncilMember, CouncilResponse } from '../types';
 import { Bot, Loader2 } from 'lucide-react';
@@ -11,7 +11,7 @@ interface CouncilCardProps {
   onToggle: () => void;
 }
 
-export const CouncilCard: React.FC<CouncilCardProps> = ({ 
+export const CouncilCard: FC<CouncilCardProps> = ({ 
   member, 
   response, 
   isLoading, 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { FC } from 'react';
 import { 
   Zap, 
   Shield, 
@@ -18,7 +18,7 @@ interface PricingPageProps {
   onPurchaseCredits: (count: number) => void;
 }
 
-export const PricingPage: React.FC<PricingPageProps> = ({ 
+export const PricingPage: FC<PricingPageProps> = ({ 
   hasOwnKeys,
   onPurchaseTurns, 
   onPurchaseCredits

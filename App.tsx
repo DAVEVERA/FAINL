@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, FC } from 'react';
 import { 
   Send, 
   Settings as SettingsIcon, 
@@ -44,7 +44,7 @@ import { LoginPage } from './components/LoginPage';
 import { Session } from '@supabase/supabase-js';
 import { LogOut } from 'lucide-react';
 
-const ScrambleText: React.FC<{ text: string }> = ({ text }) => {
+const ScrambleText: FC<{ text: string }> = ({ text }: { text: string }) => {
   const [displayText, setDisplayText] = useState(text);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
   const isAnimating = useRef(false);
@@ -59,7 +59,7 @@ const ScrambleText: React.FC<{ text: string }> = ({ text }) => {
       clearInterval(interval);
       interval = setInterval(() => {
         setDisplayText(
-          text.split('').map((char, index) => {
+          text.split('').map((char: string, index: number) => {
             if (index < iteration) return text[index];
             return chars[Math.floor(Math.random() * chars.length)];
           }).join('')
@@ -88,7 +88,7 @@ const ScrambleText: React.FC<{ text: string }> = ({ text }) => {
       clearInterval(interval);
       interval = setInterval(() => {
         setDisplayText(
-          text.split('').map((char, index) => {
+          text.split('').map((char: string, index: number) => {
             if (indicesToGlitch.has(index)) {
               return chars[Math.floor(Math.random() * chars.length)];
             }
@@ -131,7 +131,7 @@ const ScrambleText: React.FC<{ text: string }> = ({ text }) => {
   return <>{displayText}</>;
 };
 
-const FadingPlaceholder: React.FC<{ isFocused: boolean }> = ({ isFocused }) => {
+const FadingPlaceholder: FC<{ isFocused: boolean }> = ({ isFocused }: { isFocused: boolean }) => {
   const examples = [
     "Should I learn Rust or Go?",
     "Buy vs. Rent in 2026?",
@@ -165,7 +165,7 @@ const FadingPlaceholder: React.FC<{ isFocused: boolean }> = ({ isFocused }) => {
   );
 };
 
-const AnimatedSendIcon: React.FC = () => {
+const AnimatedSendIcon: FC = () => {
   const [glitch, setGlitch] = useState(false);
 
   useEffect(() => {
@@ -189,7 +189,7 @@ const AnimatedSendIcon: React.FC = () => {
   );
 };
 
-const App: React.FC = () => {
+const App: FC = () => {
   // Initialization with Persistent Config
   const [config, setConfig] = useState<AppConfig>(() => {
     const saved = localStorage.getItem('fainl_config_v2');
@@ -300,7 +300,7 @@ const App: React.FC = () => {
     
     // Ensure we meet the minimum requirement for consensus logic
     if (readyMembers.length < 2) {
-      setSession(prev => ({
+      setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
         error: "Insufficient active nodes for consensus protocol. Minimum 2 nodes required."
@@ -321,7 +321,7 @@ const App: React.FC = () => {
       // 1. Council Analysis Phase
       const responses = await councilService.current.getCouncilResponses(input, readyMembers);
       
-      setSession(prev => ({
+      setSession((prev: SessionState) => ({
         ...prev,
         councilResponses: responses,
         stage: WorkflowStage.DEBATE,
@@ -335,7 +335,7 @@ const App: React.FC = () => {
 
     } catch (err: any) {
       console.error(err);
-      setSession(prev => ({
+      setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
         error: err.message || "Autonomous consensus protocol interrupted."
@@ -346,7 +346,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (session.stage === WorkflowStage.DEBATE && isDebateActive && !isDebatePaused && debateTimeLeft > 0) {
       debateIntervalRef.current = setInterval(() => {
-        setDebateTimeLeft(prev => {
+        setDebateTimeLeft((prev: number) => {
           if (prev <= 1) {
             clearInterval(debateIntervalRef.current!);
             handleEndDebate();
@@ -390,7 +390,7 @@ const App: React.FC = () => {
         );
 
         if (mounted && session.stage === WorkflowStage.DEBATE && !isDebatePaused) {
-          setSession(prev => ({
+          setSession((prev: SessionState) => ({
             ...prev,
             debateMessages: [
               ...prev.debateMessages,
@@ -430,7 +430,7 @@ const App: React.FC = () => {
     setIsDebateActive(false);
     setIsDebatePaused(true);
     
-    setSession(prev => ({
+    setSession((prev: SessionState) => ({
       ...prev,
       stage: WorkflowStage.SYNTHESIZING,
       synthesis: ''
@@ -447,19 +447,19 @@ const App: React.FC = () => {
         readyMembers,
         DEFAULT_CHAIRMAN,
         (chunk) => {
-          setSession(prev => ({
+          setSession((prev: SessionState) => ({
             ...prev,
             synthesis: (prev.synthesis || '') + chunk
           }));
         }
       );
 
-      setSession(prev => {
+      setSession((prev: SessionState) => {
         const completedSession = { ...prev, synthesis, stage: WorkflowStage.COMPLETED };
-        setHistory(h => [completedSession, ...h]);
+        setHistory((h: SessionState[]) => [completedSession, ...h]);
         
         // Update Usage Tracking
-        setConfig(current => {
+        setConfig((current: AppConfig) => {
           const hasOwnKeys = current.googleKey || current.openaiKey || current.anthropicKey || current.groqKey || current.deepseekKey;
           if (hasOwnKeys && current.creditsRemaining > 0) {
             return {
@@ -477,7 +477,7 @@ const App: React.FC = () => {
         return completedSession;
       });
     } catch (err: any) {
-      setSession(prev => ({
+      setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
         error: err.message || "Synthesis failed."
@@ -488,7 +488,7 @@ const App: React.FC = () => {
   const handleUserDebateMessage = () => {
     if (!userDebateInput.trim()) return;
     
-    setSession(prev => ({
+    setSession((prev: SessionState) => ({
       ...prev,
       debateMessages: [
         ...prev.debateMessages,
@@ -506,7 +506,7 @@ const App: React.FC = () => {
   const handleQuoteMessage = (memberId: string, content: string) => {
     const memberName = memberId === 'user' ? 'User' : config.activeCouncil.find(m => m.id === memberId)?.name || 'Unknown';
     const quote = `> [${memberName}]: "${content}"\n\n`;
-    setUserDebateInput(prev => prev + quote);
+    setUserDebateInput((prev: string) => prev + quote);
     setIsDebatePaused(true);
   };
 
@@ -662,45 +662,102 @@ const App: React.FC = () => {
                 <p className="text-[10px] md:text-xs text-black/30 font-black uppercase tracking-[0.4em] md:tracking-[0.6em] max-w-md mx-auto leading-loose">Fully Autonomous Intelligence Network & Logic</p>
                 <div className="flex flex-wrap justify-center gap-3 md:gap-4">
                    <div className="flex items-center gap-2 md:gap-2.5 px-4 py-1.5 md:px-5 md:py-2 bg-white/60 border border-black/10 rounded-full shadow-sm">
-                     <CircleCheck className="w-3 h-3 md:w-4 md:h-4 text-green-600" />
-                     <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest">3 Nodes Standby</span>
+                     <CircleCheck className={`w-3 h-3 md:w-4 md:h-4 ${config.googleKey ? 'text-green-600' : 'text-zinc-300'}`} />
+                     <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest">{config.googleKey ? 'Primary Node Active' : 'Primary Node Offline'}</span>
                    </div>
-                   {/* Global Link removed */}
                 </div>
               </div>
             </div>
             
-            <div className="w-full relative">
-              <div className="relative bg-white border-2 md:border-4 border-black rounded-xl p-6 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] focus-within:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:focus-within:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all">
-                <div className="relative w-full min-h-[200px] md:min-h-[350px]">
-                  {!input && !isInputFocused && (
-                    <div className="absolute top-0 left-0 pointer-events-none text-xl sm:text-2xl md:text-4xl font-black text-black/20 font-serif italic">
-                      <FadingPlaceholder isFocused={isInputFocused} />
+            {!config.googleKey ? (
+              <div className="w-full max-w-2xl bg-white border-4 border-black p-8 md:p-16 rounded-3xl shadow-[32px_32px_0px_0px_rgba(0,0,0,1)] text-left animate-in zoom-in-95 duration-500">
+                <div className="flex items-center gap-6 mb-10 pb-6 border-b-4 border-black">
+                  <div className="p-4 bg-black rounded-2xl">
+                    <ZapIcon className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter">Quick Start</h3>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-black/40">Neural Link Authorization Required</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-8">
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <label className="text-xs font-black uppercase tracking-[0.2em]">Paste Google Gemini API Key</label>
+                      <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline">Get Free Key</a>
                     </div>
-                  )}
-                  <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => setIsInputFocused(false)}
-                    className="w-full h-full bg-transparent border-none p-0 text-xl sm:text-2xl md:text-4xl font-black text-black placeholder-transparent focus:ring-0 transition-all resize-none font-serif italic absolute top-0 left-0"
-                  />
+                    <div className="flex gap-4">
+                      <input 
+                        type="password"
+                        placeholder="AIza..."
+                        className="flex-1 bg-zinc-100 border-4 border-black p-5 rounded-2xl font-mono text-sm focus:bg-white transition-all shadow-inner"
+                        onChange={(e) => {
+                          const val = e.target.value.trim();
+                          if (val.startsWith('AIza')) {
+                            setConfig(prev => ({ ...prev, googleKey: val }));
+                          }
+                        }}
+                      />
+                    </div>
+                    <p className="mt-4 text-[9px] font-bold text-black/30 uppercase tracking-widest leading-relaxed">
+                      FAINL is a "bring your own key" protocol. Your keys are stored locally in your browser and are never sent to our servers.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-5 border-2 border-black/5 rounded-2xl bg-zinc-50">
+                      <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
+                        <Shield className="w-4 h-4" /> Zero-Data
+                      </div>
+                      <p className="text-[9px] text-black/40 font-bold uppercase leading-tight">Missions are encrypted and stored only on your device.</p>
+                    </div>
+                    <div className="p-5 border-2 border-black/5 rounded-2xl bg-zinc-50">
+                      <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
+                        <Globe className="w-4 h-4" /> Pure Logic
+                      </div>
+                      <p className="text-[9px] text-black/40 font-bold uppercase leading-tight">No central filters. Direct access to raw neural reasoning.</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="absolute bottom-4 left-4 md:bottom-12 md:left-12 pointer-events-none">
-                  <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${input.length >= MAX_CHARS ? 'text-red-500' : 'text-black/20'}`}>
-                    {input.length} / {MAX_CHARS}
-                  </span>
-                </div>
-                <button
-                  onClick={handleStart}
-                  disabled={!input.trim()}
-                  className="absolute bottom-4 right-4 md:bottom-12 md:right-12 p-4 md:p-8 bg-black hover:bg-zinc-800 disabled:opacity-20 disabled:grayscale disabled:cursor-not-allowed text-white rounded-xl md:rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] overflow-hidden"
-                >
-                  <AnimatedSendIcon />
-                </button>
               </div>
-              <p className="mt-4 md:mt-8 text-[8px] md:text-[10px] font-black text-black/20 uppercase tracking-[0.2em] md:tracking-[0.3em]">Encrypted Session. Data persistent locally only.</p>
-            </div>
+            ) : (
+              <div className="w-full relative">
+                <div className="relative bg-white border-2 md:border-4 border-black rounded-xl p-6 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] focus-within:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:focus-within:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] transition-all">
+                  <div className="relative w-full min-h-[200px] md:min-h-[350px]">
+                    {!input && !isInputFocused && (
+                      <div className="absolute top-0 left-0 pointer-events-none text-xl sm:text-2xl md:text-4xl font-black text-black/20 font-serif italic">
+                        <FadingPlaceholder isFocused={isInputFocused} />
+                      </div>
+                    )}
+                    <textarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => setIsInputFocused(false)}
+                      aria-label="Enter your mission or directive"
+                      placeholder="Enter your mission..."
+                      className="w-full h-full bg-transparent border-none p-0 text-xl sm:text-2xl md:text-4xl font-black text-black placeholder-transparent focus:ring-0 transition-all resize-none font-serif italic absolute top-0 left-0"
+                    />
+                  </div>
+                  <div className="absolute bottom-4 left-4 md:bottom-12 md:left-12 pointer-events-none">
+                    <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${input.length >= MAX_CHARS ? 'text-red-500' : 'text-black/20'}`}>
+                      {input.length} / {MAX_CHARS}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleStart}
+                    disabled={!input.trim()}
+                    title="Send mission"
+                    aria-label="Send mission"
+                    className="absolute bottom-4 right-4 md:bottom-12 md:right-12 p-4 md:p-8 bg-black hover:bg-zinc-800 disabled:opacity-20 disabled:grayscale disabled:cursor-not-allowed text-white rounded-xl md:rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] overflow-hidden"
+                  >
+                    <AnimatedSendIcon />
+                  </button>
+                </div>
+                <p className="mt-4 md:mt-8 text-[8px] md:text-[10px] font-black text-black/20 uppercase tracking-[0.2em] md:tracking-[0.3em]">Encrypted Session. Data persistent locally only.</p>
+              </div>
+            )}
           </div>
         ) : session.stage !== WorkflowStage.ERROR && (
           <div className="animate-fade-in-up space-y-8 md:space-y-16 w-full pb-12 md:pb-20">
@@ -869,14 +926,14 @@ const App: React.FC = () => {
         {currentView === AppView.PRICING && (
             <PricingPage 
                 hasOwnKeys={!!(config.googleKey || config.openaiKey || config.anthropicKey || config.groqKey || config.deepseekKey)}
-                onPurchaseTurns={(count) => {
+                onPurchaseTurns={(count: number | typeof Infinity) => {
                     setConfig(prev => ({
                         ...prev,
                         isLifetime: count === Infinity ? true : prev.isLifetime,
                         totalTurnsAllowed: count === Infinity ? prev.totalTurnsAllowed : prev.totalTurnsAllowed + count
                     }));
                 }}
-                onPurchaseCredits={(count) => {
+                onPurchaseCredits={(count: number) => {
                     setConfig(prev => ({
                         ...prev,
                         creditsRemaining: prev.creditsRemaining + count
@@ -891,7 +948,7 @@ const App: React.FC = () => {
                 <AccountPage 
                     config={config}
                     history={history}
-                    onLoadSession={(sess) => {
+                    onLoadSession={(sess: SessionState) => {
                         setSession(sess);
                         setCurrentView(AppView.HOME);
                     }}
@@ -900,7 +957,7 @@ const App: React.FC = () => {
         )}
         {currentView === AppView.COOKBOOK && (
             <CookbookPage 
-                onSelectMission={(q) => {
+                onSelectMission={(q: string) => {
                     setInput(q);
                     setCurrentView(AppView.HOME);
                 }}
@@ -943,7 +1000,7 @@ const App: React.FC = () => {
       <PaywallModal 
         isOpen={isPaywallOpen}
         hasOwnKeys={!!(config.googleKey || config.openaiKey || config.anthropicKey || config.groqKey || config.deepseekKey)}
-        onPurchaseTurns={(count) => {
+        onPurchaseTurns={(count: number | typeof Infinity) => {
           setConfig(prev => ({
             ...prev,
             isLifetime: count === Infinity ? true : prev.isLifetime,
@@ -952,7 +1009,7 @@ const App: React.FC = () => {
           setIsPaywallOpen(false);
           handleStart(); // Auto-start after "purchase"
         }}
-        onPurchaseCredits={(count) => {
+        onPurchaseCredits={(count: number) => {
           setConfig(prev => ({
             ...prev,
             creditsRemaining: prev.creditsRemaining + count
@@ -961,6 +1018,15 @@ const App: React.FC = () => {
           handleStart(); // Auto-start after "purchase"
         }}
         onClose={() => setIsPaywallOpen(false)}
+      />
+      <SettingsModal 
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        config={config}
+        onSave={setConfig}
+        history={history}
+        onImportHistory={setHistory}
+        onVerifyKey={(provider: ModelProvider, key: string) => councilService.current.verifyProviderKey(provider, key)}
       />
     </div>
   );

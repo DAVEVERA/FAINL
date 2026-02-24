@@ -35,8 +35,49 @@ export class UnifiedCouncilService {
       case ModelProvider.OLMO: return !!c.olmoKey;
       case ModelProvider.GEMMA: return !!c.gemmaKey;
       case ModelProvider.OLLAMA:
-      case ModelProvider.CUSTOM: return true; // Usually local or custom baseUrl handles it
+      case ModelProvider.CUSTOM: return true; 
       default: return false;
+    }
+  }
+
+  public async verifyProviderKey(provider: ModelProvider, key: string): Promise<boolean> {
+    if (!key) return false;
+    try {
+      switch (provider) {
+        case ModelProvider.GOOGLE: {
+          const tempGenAI = new GoogleGenAI({ apiKey: key });
+          // List models as a lightweight check
+          await tempGenAI.models.get({ model: "gemini-1.5-flash" });
+          return true;
+        }
+        case ModelProvider.ANTHROPIC: {
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json", "dangerously-allow-browser": "true" },
+            body: JSON.stringify({ model: "claude-3-haiku-20240307", max_tokens: 1, messages: [{ role: "user", content: "hi" }] })
+          });
+          return res.status !== 401;
+        }
+        default: {
+          // Generic OpenAI-compatible check (e.g. models list)
+          let baseUrl = "";
+          switch (provider) {
+            case ModelProvider.OPENAI: baseUrl = "https://api.openai.com/v1"; break;
+            case ModelProvider.GROQ: baseUrl = "https://api.groq.com/openai/v1"; break;
+            case ModelProvider.DEEPSEEK: baseUrl = "https://api.deepseek.com"; break;
+            case ModelProvider.MISTRAL: baseUrl = "https://api.mistral.ai/v1"; break;
+            case ModelProvider.OPENROUTER: baseUrl = "https://openrouter.ai/api/v1"; break;
+            default: return true; // Can't easily verify local/custom without knowing URL
+          }
+          const res = await fetch(`${baseUrl}/models`, {
+            headers: { "Authorization": `Bearer ${key}` }
+          });
+          return res.status === 200;
+        }
+      }
+    } catch (e) {
+      console.warn("Key verification failed", e);
+      return false;
     }
   }
 

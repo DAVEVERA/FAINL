@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { FC } from 'react';
 import { 
   Book, 
   Sparkles, 
@@ -48,7 +48,7 @@ const MISSIONS: Mission[] = [
   }
 ];
 
-export const CookbookPage: React.FC<{ onSelectMission: (query: string) => void }> = ({ onSelectMission }) => {
+export const CookbookPage: FC<{ onSelectMission: (query: string) => void }> = ({ onSelectMission }) => {
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center mb-16 md:mb-24">

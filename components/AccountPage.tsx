@@ -1,5 +1,5 @@
 
-import React from 'react';
+import { FC } from 'react';
 import { 
   Users, 
   MessageSquare, 
@@ -19,7 +19,7 @@ interface AccountPageProps {
   onLoadSession: (session: SessionState) => void;
 }
 
-export const AccountPage: React.FC<AccountPageProps> = ({ 
+export const AccountPage: FC<AccountPageProps> = ({ 
   config, 
   history,
   onLoadSession

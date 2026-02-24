@@ -43,6 +43,13 @@ export interface CouncilResponse {
   timestamp: number;
 }
 
+export interface DebateMessage {
+  id: string;
+  memberId: string;
+  content: string;
+  timestamp: number;
+}
+
 export enum WorkflowStage {
   IDLE = "IDLE",
   PROCESSING_COUNCIL = "PROCESSING_COUNCIL",
@@ -68,6 +75,7 @@ export interface SessionState {
   stage: WorkflowStage;
   query: string;
   councilResponses: CouncilResponse[];
+  debateMessages: DebateMessage[];
   reviews: PeerReview[];
   synthesis: string;
   error?: string;
