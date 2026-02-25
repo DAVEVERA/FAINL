@@ -432,17 +432,17 @@ const App: FC = () => {
     if (session.stage === WorkflowStage.IDLE || session.stage === WorkflowStage.ERROR) return null;
     return (
       <div className="flex justify-center mb-8 md:mb-16 w-full">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 bg-white/20 p-2.5 rounded-3xl sm:rounded-full border border-black/10 backdrop-blur-sm w-full sm:w-auto overflow-x-auto">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 bg-white/20 dark:bg-white/5 p-2.5 rounded-3xl sm:rounded-full border border-black/10 dark:border-white/10 backdrop-blur-sm w-full sm:w-auto overflow-x-auto">
           {stages.map((s, idx) => {
             const isActive = session.stage === s.id;
             const isCompleted = [WorkflowStage.COMPLETED, ...stages.slice(idx + 1).map(st => st.id)].includes(session.stage);
             return (
               <div key={s.id} className="flex items-center gap-3 w-full sm:w-auto">
-                <div className={`flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.2em] uppercase transition-all border-2 w-full sm:w-auto justify-center sm:justify-start ${isActive ? 'bg-black text-white border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)]' : isCompleted ? 'bg-white text-black border-black' : 'text-black/20 border-transparent'}`}>
+                <div className={`flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.2em] uppercase transition-all border-2 w-full sm:w-auto justify-center sm:justify-start ${isActive ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] dark:sm:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)]' : isCompleted ? 'bg-white dark:bg-zinc-800 text-black dark:text-white border-black dark:border-white/20' : 'text-black/20 dark:text-white/20 border-transparent'}`}>
                   <s.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
                   <span className="whitespace-nowrap">{s.label}</span>
                 </div>
-                {idx < stages.length - 1 && <ArrowRight className="hidden sm:block w-4 h-4 text-black/10" />}
+                {idx < stages.length - 1 && <ArrowRight className="hidden sm:block w-4 h-4 text-black/10 dark:text-white/10" />}
               </div>
             );
           })}
@@ -642,7 +642,7 @@ const App: FC = () => {
                     />
                   </div>
                   <div className="absolute bottom-4 left-4 md:bottom-12 md:left-12 pointer-events-none">
-                    <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${input.length >= MAX_CHARS ? 'text-red-500' : 'text-black/20 dark:text-white/20'}`}>
+                    <span className={`text-[10px] md:text-xs font-black uppercase tracking-widest ${input.length >= MAX_CHARS ? 'text-red-500' : 'text-black/40 dark:text-white/40'}`}>
                       {input.length} / {MAX_CHARS}
                     </span>
                   </div>
@@ -651,7 +651,7 @@ const App: FC = () => {
                     disabled={!input.trim()}
                     title="Send mission"
                     aria-label="Send mission"
-                    className="absolute bottom-4 right-4 md:bottom-12 md:right-12 p-4 md:p-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-20 disabled:grayscale disabled:cursor-not-allowed text-white dark:text-black rounded-xl md:rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] overflow-hidden"
+                    className="absolute bottom-4 right-4 md:bottom-12 md:right-12 p-4 md:p-8 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 disabled:opacity-20 disabled:grayscale disabled:cursor-not-allowed text-white dark:text-black rounded-xl md:rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] dark:shadow-[4px_4px_0px_1px_rgba(0,0,0,0.1)] md:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] dark:md:shadow-[8px_8px_0px_1px_rgba(0,0,0,0.1)] overflow-hidden"
                   >
                     <AnimatedSendIcon />
                   </button>
@@ -719,7 +719,7 @@ const App: FC = () => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 py-4">
                 <button
                   onClick={() => setIsDebateOpen(true)}
-                  className="group flex items-center gap-4 px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:scale-105 active:scale-95 transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.12)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.2)]"
+                  className="group flex items-center gap-4 px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase tracking-[0.2em] text-sm hover:scale-105 active:scale-95 transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.12)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.2)] dark:hover:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.1)]"
                 >
                   <MessageSquare className="w-5 h-5 group-hover:animate-pulse" />
                   Open Debate Room
@@ -739,7 +739,7 @@ const App: FC = () => {
               <div className="flex justify-center pt-12 md:pt-24 pb-20 md:pb-40">
                 <button 
                   onClick={() => setSession({ ...session, stage: WorkflowStage.IDLE, query: '', synthesis: '', councilResponses: [], reviews: [], debateMessages: [] })} 
-                  className="px-10 py-6 md:px-20 md:py-10 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-xl md:rounded-2xl text-white dark:text-black transition-all hover:scale-105 flex items-center gap-4 md:gap-8 font-black text-xl md:text-3xl shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)] active:translate-y-2 active:shadow-none uppercase tracking-tighter"
+                  className="px-10 py-6 md:px-20 md:py-10 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-xl md:rounded-2xl text-white dark:text-black transition-all hover:scale-105 flex items-center gap-4 md:gap-8 font-black text-xl md:text-3xl shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] dark:shadow-[8px_8px_0px_1px_rgba(0,0,0,0.1)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)] dark:md:shadow-[16px_16px_0px_1px_rgba(0,0,0,0.1)] active:translate-y-2 active:shadow-none uppercase tracking-tighter"
                 >
                   <Send className="w-8 h-8 md:w-12 md:h-12" />
                   Initialize New Mission

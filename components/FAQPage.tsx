@@ -38,31 +38,31 @@ export const FAQPage: FC = () => {
     return (
         <div className="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-16 md:mb-24">
-                <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6">Internal Docs</h1>
-                <p className="text-black/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">Recursive intelligence questioning protocol.</p>
+                <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-6 text-black dark:text-white">Internal Docs</h1>
+                <p className="text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">Recursive intelligence questioning protocol.</p>
             </div>
 
             <div className="space-y-6">
                 {FAQS.map((faq, idx) => (
                     <div 
                         key={idx}
-                        className="bg-white border-4 border-black rounded-[2rem] overflow-hidden transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]"
+                        className="bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-[2rem] overflow-hidden transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)]"
                     >
                         <button 
                             onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
                             className="w-full text-left p-8 md:p-10 flex items-center justify-between group"
                         >
                             <div className="flex items-center gap-6">
-                                <div className={`p-3 rounded-xl transition-colors ${openIndex === idx ? 'bg-black text-white' : 'bg-black/5 text-black'}`}>
+                                <div className={`p-3 rounded-xl transition-colors ${openIndex === idx ? 'bg-black dark:bg-white text-white dark:text-black' : 'bg-black/5 dark:bg-white/5 text-black dark:text-white'}`}>
                                     <faq.icon className="w-6 h-6" />
                                 </div>
-                                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-none group-hover:underline">{faq.q}</h3>
+                                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-none group-hover:underline text-black dark:text-white">{faq.q}</h3>
                             </div>
-                            {openIndex === idx ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+                            {openIndex === idx ? <ChevronUp className="w-8 h-8 text-black dark:text-white" /> : <ChevronDown className="w-8 h-8 text-black dark:text-white" />}
                         </button>
                         {openIndex === idx && (
                             <div className="px-8 md:px-10 pb-8 md:pb-10 animate-in slide-in-from-top-2 duration-300">
-                                <div className="pt-6 border-t-2 border-black/5 text-sm md:text-lg font-bold text-black/60 leading-relaxed uppercase tracking-wider">
+                                <div className="pt-6 border-t-2 border-black/5 dark:border-white/5 text-sm md:text-lg font-bold text-black/60 dark:text-white/60 leading-relaxed uppercase tracking-wider">
                                     {faq.a}
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ export const FAQPage: FC = () => {
             </div>
 
             <div className="mt-20 text-center">
-                <p className="text-[10px] font-black text-black/20 uppercase tracking-[0.5em]">System Revision 4.2.0 • Consensus Priority 0</p>
+                <p className="text-[10px] font-black text-black/20 dark:text-white/20 uppercase tracking-[0.5em]">System Revision 4.2.0 • Consensus Priority 0</p>
             </div>
         </div>
     );

@@ -16,20 +16,39 @@
     background-color: var(--color-zinc-950);
     color: var(--color-zinc-100);
   }
+
+  /* Standardize link colors */
+  a {
+    transition: 0.2s;
+  }
+  .dark a {
+    color: white;
+  }
 }
 
-/* Custom Scrollbar - Dark for contrast */
+/* Custom Scrollbar - Adapted for light/dark */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #94a3b8;
+  background: var(--color-zinc-200);
+}
+.dark ::-webkit-scrollbar-track {
+  background: #18181b; /* zinc-900 */
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
+  background: var(--color-zinc-400);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #52525b; /* zinc-600 */
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #1e293b;
+  background: var(--color-zinc-500);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #71717a; /* zinc-500 */
 }

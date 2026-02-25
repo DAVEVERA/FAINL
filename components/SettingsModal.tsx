@@ -167,11 +167,11 @@ export const SettingsModal: FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 text-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
       <div className="bg-[#c3cdde] dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-3xl w-full max-w-5xl h-[90vh] flex flex-col shadow-[32px_32px_0px_0px_rgba(0,0,0,1)] dark:shadow-[32px_32px_0px_0px_rgba(255,255,255,0.1)] overflow-hidden">
         
         {/* Header */}
-        <div className="flex justify-between items-center p-4 md:p-8 border-b-4 border-black dark:border-zinc-700 bg-white dark:bg-zinc-950">
+        <div className="flex justify-between items-center p-4 md:p-8 border-b-4 border-black dark:border-white/20 bg-white dark:bg-zinc-950">
           <div className="flex items-center gap-3 md:gap-5">
              <div className="bg-black dark:bg-white p-2 md:p-3 rounded-lg">
                <Shield className="w-6 h-6 md:w-8 md:h-8 text-white dark:text-black" />
@@ -186,7 +186,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b-4 border-black dark:border-zinc-700 bg-white dark:bg-zinc-950 overflow-x-auto">
+        <div className="flex border-b-4 border-black dark:border-white/20 bg-white dark:bg-zinc-950 overflow-x-auto">
           {[
             { id: 'overview', label: 'Protocol Settings' },
             { id: 'members', label: 'Council Nodes' },
@@ -196,7 +196,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
              <button 
              key={tab.id}
              onClick={() => setActiveTab(tab.id as any)}
-             className={`px-6 py-4 md:px-10 md:py-5 font-black text-[9px] md:text-[10px] whitespace-nowrap transition-all uppercase tracking-[0.2em] ${activeTab === tab.id ? 'bg-[#c3cdde] dark:bg-zinc-900 text-black dark:text-white border-b-4 border-black dark:border-zinc-700 -mb-1' : 'text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white border-b-4 border-transparent'}`}
+             className={`px-6 py-4 md:px-10 md:py-5 font-black text-[9px] md:text-[10px] whitespace-nowrap transition-all uppercase tracking-[0.2em] ${activeTab === tab.id ? 'bg-[#c3cdde] dark:bg-zinc-900 text-black dark:text-white border-b-4 border-black dark:border-zinc-300 -mb-1' : 'text-black/30 dark:text-white/30 hover:text-black dark:hover:text-white border-b-4 border-transparent'}`}
            >
              {tab.label}
            </button>
@@ -207,7 +207,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
         <div className="flex-1 overflow-y-auto p-4 md:p-12 bg-[#c3cdde] dark:bg-zinc-900">
           {activeTab === 'overview' && (
             <div className="space-y-6 md:space-y-12">
-              <div className="bg-white dark:bg-zinc-950 border-4 border-black dark:border-zinc-700 p-6 md:p-10 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]">
+              <div className="bg-white dark:bg-zinc-950 border-4 border-black dark:border-white/20 p-6 md:p-10 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)]">
                 <h3 className="text-xl md:text-2xl font-black mb-4 md:mb-6 uppercase tracking-tighter border-b-2 border-black/5 dark:border-white/5 pb-4 text-black dark:text-white">Standard Consensus Architecture</h3>
                 <p className="text-xs md:text-sm text-black/60 dark:text-white/60 font-medium leading-relaxed mb-6 md:mb-8">
                   FAINL uses a multi-node consensus protocol to validate intelligence directives. By default, three secure neural nodes are active using the standard encrypted link.
@@ -226,7 +226,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                   <button 
                     key={idx}
                     onClick={() => loadPreset(preset)}
-                    className="text-left p-8 bg-white dark:bg-zinc-950 border-4 border-black dark:border-zinc-700 rounded-2xl hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group"
+                    className="text-left p-8 bg-white dark:bg-zinc-950 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <span className="font-black uppercase tracking-widest text-sm group-hover:underline text-black dark:text-white">{preset.name}</span>
@@ -241,17 +241,17 @@ export const SettingsModal: FC<SettingsModalProps> = ({
 
           {activeTab === 'storage' && (
             <div className="space-y-8 md:space-y-12 max-w-2xl mx-auto text-center">
-              <div className="bg-white dark:bg-zinc-950 border-4 border-black dark:border-zinc-700 p-6 md:p-12 rounded-3xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)]">
+              <div className="bg-white dark:bg-zinc-950 border-4 border-black dark:border-white/20 p-6 md:p-12 rounded-3xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.1)]">
                 <Database className="w-16 h-16 md:w-20 md:h-20 text-black dark:text-white mb-6 md:mb-8 mx-auto" />
                 <h3 className="text-2xl md:text-3xl font-black uppercase mb-4 tracking-tighter text-black dark:text-white">Session Persistence Vault</h3>
                 <p className="text-sm md:text-base text-black/60 dark:text-white/60 font-bold mb-8 md:mb-12 leading-relaxed">
                   Export or import your local mission configurations, active node setups, and credentials as an encrypted JSON vault.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                  <button onClick={handleExport} className="w-full py-6 bg-black dark:bg-white text-white dark:text-black border-4 border-black dark:border-zinc-700 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all shadow-lg">
+                  <button onClick={handleExport} className="w-full py-6 bg-black dark:bg-white text-white dark:text-black border-4 border-black dark:border-white/20 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all shadow-lg">
                     <Download className="w-6 h-6" /> Download Vault
                   </button>
-                  <label className="w-full py-6 bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all cursor-pointer shadow-lg text-black dark:text-white">
+                  <label className="w-full py-6 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-4 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all cursor-pointer shadow-lg text-black dark:text-white">
                     <Upload className="w-6 h-6" />
                     <span>Restore Vault</span>
                     <input type="file" accept=".json" onChange={handleImport} className="hidden" />
@@ -263,8 +263,8 @@ export const SettingsModal: FC<SettingsModalProps> = ({
 
           {activeTab === 'keys' && (
             <div className="space-y-6 md:space-y-8 max-w-3xl mx-auto">
-              <div className="bg-white dark:bg-zinc-950 p-6 md:p-12 rounded-3xl border-4 border-black dark:border-zinc-700 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)]">
-                <div className="flex items-center gap-4 mb-6 md:mb-10 border-b-4 border-black dark:border-zinc-700 pb-4 md:pb-6 text-black dark:text-white">
+              <div className="bg-white dark:bg-zinc-950 p-6 md:p-12 rounded-3xl border-4 border-black dark:border-white/20 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.1)]">
+                <div className="flex items-center gap-4 mb-6 md:mb-10 border-b-4 border-black dark:border-white/20 pb-4 md:pb-6 text-black dark:text-white">
                   <Key className="w-6 h-6 md:w-8 md:h-8 text-black dark:text-white" />
                   <h3 className="font-black text-xl md:text-3xl uppercase tracking-tighter text-black dark:text-white">Identity Credentials</h3>
                 </div>
@@ -317,7 +317,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                           <button 
                             onClick={() => testKey(field.provider, field.key)}
                             disabled={!value || isVerifying}
-                            className={`px-6 rounded-xl border-2 border-black dark:border-zinc-600 font-black uppercase text-[10px] tracking-widest transition-all ${isVerifying ? 'bg-zinc-100 dark:bg-zinc-800 text-black/20 dark:text-white/20' : 'bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:-translate-y-0.5 active:shadow-none active:translate-y-0'}`}
+                            className={`px-6 rounded-xl border-2 border-black dark:border-white/20 font-black uppercase text-[10px] tracking-widest transition-all ${isVerifying ? 'bg-zinc-100 dark:bg-zinc-800 text-black/20 dark:text-white/20' : 'bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-0.5 active:shadow-none active:translate-y-0'}`}
                           >
                             {isVerifying ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify'}
                           </button>
@@ -332,7 +332,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
 
           {activeTab === 'members' && (
             <div className="space-y-6 md:space-y-10">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-4 border-black dark:border-zinc-700 pb-4 md:pb-6 gap-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-4 border-black dark:border-white/20 pb-4 md:pb-6 gap-4">
                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Council Nodes</h3>
                 <button onClick={addMember} className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl font-black text-[9px] md:text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-3">
                   <Plus className="w-4 h-4" />
@@ -341,12 +341,12 @@ export const SettingsModal: FC<SettingsModalProps> = ({
               </div>
               <div className="grid grid-cols-1 gap-6 md:gap-10">
                 {tempConfig.activeCouncil.map((member: CouncilMember, idx: number) => (
-                  <div key={idx} className="bg-white dark:bg-zinc-950 p-6 md:p-8 rounded-3xl border-4 border-black dark:border-zinc-700 flex flex-col gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] relative">
+                  <div key={idx} className="bg-white dark:bg-zinc-950 p-6 md:p-8 rounded-3xl border-4 border-black dark:border-white/20 flex flex-col gap-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)] relative text-black dark:text-white">
                     <div className="flex flex-col md:flex-row items-start gap-6 md:gap-10">
                       
                       {/* Avatar Section */}
                       <div className="flex flex-row md:flex-col items-center gap-4 w-full md:w-auto">
-                        <div className={`w-24 h-24 md:w-32 md:h-32 rounded-2xl border-4 border-black dark:border-zinc-700 ${member.color} overflow-hidden bg-zinc-50 dark:bg-zinc-800 shadow-inner shrink-0 relative group/avatar`}>
+                        <div className={`w-24 h-24 md:w-32 md:h-32 rounded-2xl border-4 border-black dark:border-white/20 ${member.color} overflow-hidden bg-zinc-50 dark:bg-zinc-800 shadow-inner shrink-0 relative group/avatar`}>
                            <img src={member.avatar} alt="Avatar" className="w-full h-full object-cover" />
                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/avatar:opacity-100 transition-opacity flex items-center justify-center">
                               <label className="cursor-pointer p-2 bg-white rounded-full hover:scale-110 transition-transform" title="Upload Image">
@@ -377,7 +377,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                               placeholder="Member Name" 
                               value={member.name} 
                               onChange={(e) => handleMemberChange(idx, 'name', e.target.value)} 
-                              className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner text-black dark:text-white pr-8" 
+                              className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-white/20 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner text-black dark:text-white pr-8" 
                             />
                             <div className="absolute right-2 top-1/2 -translate-y-1/2">
                                <select 
@@ -404,7 +404,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                               </div>
                             </div>
                           </label>
-                          <select id={`member-provider-${idx}`} title="Select Provider" value={member.provider} onChange={(e) => handleMemberChange(idx, 'provider', e.target.value)} className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner cursor-pointer text-black dark:text-white">
+                          <select id={`member-provider-${idx}`} title="Select Provider" value={member.provider} onChange={(e) => handleMemberChange(idx, 'provider', e.target.value)} className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-white/20 rounded-xl px-5 py-3.5 text-xs font-black uppercase tracking-widest shadow-inner cursor-pointer text-black dark:text-white">
                             {Object.values(ModelProvider).map(p => <option key={p} value={p}>{p}</option>)}
                           </select>
                         </div>
@@ -423,7 +423,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                             value={member.baseUrl || ''} 
                             onChange={(e) => handleMemberChange(idx, 'baseUrl', e.target.value)} 
                             placeholder="e.g., http://localhost:11434/v1"
-                            className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl px-5 py-3.5 text-xs font-mono font-bold shadow-inner text-black dark:text-white" 
+                            className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-white/20 rounded-xl px-5 py-3.5 text-xs font-mono font-bold shadow-inner text-black dark:text-white" 
                           />
                         </div>
                         <div className="col-span-1 sm:col-span-2">
@@ -433,7 +433,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
                               <Wand2 className="w-3 h-3" /> Enhance with AI
                             </button>
                           </div>
-                          <textarea id={`member-prompt-${idx}`} placeholder="System prompt..." value={member.systemPrompt || ''} onChange={(e) => handleMemberChange(idx, 'systemPrompt', e.target.value)} className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-zinc-700 rounded-xl px-5 py-4 text-xs font-medium min-h-[100px] shadow-inner font-serif text-black dark:text-white" />
+                          <textarea id={`member-prompt-${idx}`} placeholder="System prompt..." value={member.systemPrompt || ''} onChange={(e) => handleMemberChange(idx, 'systemPrompt', e.target.value)} className="w-full bg-zinc-50 dark:bg-zinc-800 border-2 border-black dark:border-white/20 rounded-xl px-5 py-4 text-xs font-medium min-h-[100px] shadow-inner font-serif text-black dark:text-white" />
                         </div>
                       </div>
                       <button onClick={() => removeMember(idx)} title="Remove Council Member" aria-label="Remove Council Member" className="p-4 text-black/10 dark:text-white/10 hover:text-black dark:hover:text-white transition-all"><Trash2 className="w-8 h-8" /></button>
@@ -446,7 +446,7 @@ export const SettingsModal: FC<SettingsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-6 md:p-10 border-t-4 border-black dark:border-zinc-700 bg-white dark:bg-zinc-950 flex flex-col-reverse md:flex-row justify-end gap-4 md:gap-6 items-center">
+        <div className="p-6 md:p-10 border-t-4 border-black dark:border-white/20 bg-white dark:bg-zinc-950 flex flex-col-reverse md:flex-row justify-end gap-4 md:gap-6 items-center">
           <div className="flex gap-4 w-full md:w-auto">
             <button onClick={onClose} className="flex-1 md:flex-none px-8 py-4 md:px-14 md:py-6 font-black text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-all border-2 border-transparent hover:border-black/10 dark:hover:border-white/10 rounded-xl">Cancel</button>
             <button 
