@@ -191,7 +191,30 @@ const AnimatedSendIcon: FC = () => {
     </div>
   );
 };
-
+const CyberLogo: FC = () => {
+    return (
+      <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center group overflow-visible">
+        {/* Outer Glow Ring */}
+        <div className="absolute inset-0 bg-white/10 dark:bg-white/5 rounded-full blur-xl group-hover:bg-white/20 transition-all duration-500 animate-pulse-glow" />
+        
+        {/* Orbital Layers */}
+        <div className="absolute inset-x-0.5 inset-y-0.5 border border-white/20 rounded-full animate-orbit pointer-events-none" />
+        <div className="absolute inset-x-2 inset-y-2 border border-white/10 dark:border-white/5 rounded-full animate-reverse-orbit pointer-events-none" />
+        
+        {/* Core Geometry (Shield with Glassmorphism) */}
+        <div className="relative w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-white/5 backdrop-blur-md rounded-xl border border-white/30 dark:border-white/20 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:border-white/50 transition-all duration-500 overflow-hidden">
+          {/* Internal Light Source */}
+          <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.4)_0%,transparent_60%)] opacity-50 group-hover:opacity-80 transition-opacity" />
+          
+          <Shield className="text-white dark:text-white w-4 h-4 md:w-5 md:h-5 relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
+          
+          {/* Glass Glint */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+        </div>
+      </div>
+    );
+  };
+  
 const App: FC = () => {
   // Initialization with Persistent Config
   const [config, setConfig] = useState<AppConfig>(() => {
@@ -461,9 +484,7 @@ const App: FC = () => {
               onClick={() => setCurrentView(AppView.HOME)}
               className="flex items-center gap-3 md:gap-5 group"
             >
-              <div className="w-9 h-9 md:w-11 md:h-11 bg-black dark:bg-white rounded flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                <Shield className="text-white dark:text-black w-4 h-4 md:w-5 md:h-5" />
-              </div>
+              <CyberLogo />
               <span className="text-2xl font-black tracking-tighter hidden sm:block">FAINL</span>
             </button>
 
