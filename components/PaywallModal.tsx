@@ -15,6 +15,7 @@ import { PRICING } from '../constants';
 interface PaywallModalProps {
   isOpen: boolean;
   hasOwnKeys: boolean;
+  isLoading?: boolean;
   onPurchaseTurns: (count: number) => void;
   onPurchaseCredits: (count: number) => void;
   onClose: () => void;
@@ -23,6 +24,7 @@ interface PaywallModalProps {
 export const PaywallModal: FC<PaywallModalProps> = ({ 
   isOpen, 
   hasOwnKeys,
+  isLoading,
   onPurchaseTurns, 
   onPurchaseCredits,
   onClose 
@@ -67,7 +69,8 @@ export const PaywallModal: FC<PaywallModalProps> = ({
                   <button 
                     key={idx}
                     onClick={() => onPurchaseTurns(pkg.count)}
-                    className={`flex flex-col items-center justify-center p-6 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group relative overflow-hidden ${pkg.count === Infinity ? 'col-span-2 bg-zinc-900 dark:bg-white text-white dark:text-black border-zinc-800 dark:border-white/20' : ''}`}
+                    disabled={isLoading}
+                    className={`flex flex-col items-center justify-center p-6 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed ${pkg.count === Infinity ? 'col-span-2 bg-zinc-900 dark:bg-white text-white dark:text-black border-zinc-800 dark:border-white/20' : ''}`}
                   >
                     {pkg.count === Infinity && (
                         <div className="absolute top-0 right-0 bg-yellow-400 text-black px-4 py-1 text-[8px] font-black uppercase tracking-widest rotate-12 translate-x-3 -translate-y-1">Best Value</div>
@@ -77,6 +80,11 @@ export const PaywallModal: FC<PaywallModalProps> = ({
                     </div>
                     <div className={`text-xs font-black uppercase tracking-widest ${pkg.count === Infinity ? 'text-white/50' : 'text-black/40 dark:text-white/40'}`}>€{pkg.price}</div>
                     {pkg.count === Infinity && <div className="mt-2 text-[10px] font-black uppercase tracking-widest text-yellow-400">One-Time Lifetime Fee</div>}
+                    {isLoading && (
+                      <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
                   </button>
                 ))}
               </div>
@@ -95,8 +103,8 @@ export const PaywallModal: FC<PaywallModalProps> = ({
                   <button 
                     key={idx}
                     onClick={() => onPurchaseCredits(pkg.count)}
-                    className="w-full flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group disabled:opacity-50 disabled:cursor-not-allowed text-black dark:text-white"
-                    disabled={!hasOwnKeys}
+                    className="w-full flex items-center justify-between p-5 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group disabled:opacity-50 disabled:cursor-not-allowed text-black dark:text-white relative overflow-hidden"
+                    disabled={!hasOwnKeys || isLoading}
                   >
                     <div className="flex items-center gap-4">
                       <div className="p-2 bg-black dark:bg-white text-white dark:text-black rounded-lg">
@@ -105,6 +113,11 @@ export const PaywallModal: FC<PaywallModalProps> = ({
                       <span className="font-black uppercase tracking-widest text-sm">{pkg.label}</span>
                     </div>
                     <div className="font-black text-lg">€{pkg.price}</div>
+                    {isLoading && (
+                      <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
                   </button>
                 ))}
                 {!hasOwnKeys && (
