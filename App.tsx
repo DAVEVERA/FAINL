@@ -46,93 +46,8 @@ import { supabase } from './services/supabaseClient';
 import { LoginPage } from './components/LoginPage';
 import { Session } from '@supabase/supabase-js';
 import { LogOut } from 'lucide-react';
+import { ScrambleText } from './components/ScrambleText';
 
-const ScrambleText: FC<{ text: string }> = ({ text }: { text: string }) => {
-  const [displayText, setDisplayText] = useState(text);
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+';
-  const isAnimating = useRef(false);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    let interval: NodeJS.Timeout;
-
-    const runFullScramble = () => {
-      isAnimating.current = true;
-      let iteration = 0;
-      clearInterval(interval);
-      interval = setInterval(() => {
-        setDisplayText(
-          text.split('').map((char: string, index: number) => {
-            if (index < iteration) return text[index];
-            return chars[Math.floor(Math.random() * chars.length)];
-          }).join('')
-        );
-        if (iteration >= text.length) {
-          clearInterval(interval);
-          setDisplayText(text);
-          isAnimating.current = false;
-          scheduleNext();
-        }
-        iteration += 1 / 4;
-      }, 40);
-    };
-
-    const runPartialGlitch = () => {
-      isAnimating.current = true;
-      const numCharsToGlitch = Math.floor(Math.random() * 2) + 1; // 1 or 2 characters
-      const indicesToGlitch = new Set<number>();
-      while (indicesToGlitch.size < numCharsToGlitch) {
-        indicesToGlitch.add(Math.floor(Math.random() * text.length));
-      }
-
-      let ticks = 0;
-      const maxTicks = Math.floor(Math.random() * 5) + 4; // 4 to 8 ticks (160ms - 320ms)
-
-      clearInterval(interval);
-      interval = setInterval(() => {
-        setDisplayText(
-          text.split('').map((char: string, index: number) => {
-            if (indicesToGlitch.has(index)) {
-              return chars[Math.floor(Math.random() * chars.length)];
-            }
-            return text[index];
-          }).join('')
-        );
-        ticks++;
-        if (ticks >= maxTicks) {
-          clearInterval(interval);
-          setDisplayText(text);
-          isAnimating.current = false;
-          scheduleNext();
-        }
-      }, 40);
-    };
-
-    const scheduleNext = () => {
-      if (isAnimating.current) return;
-      // Random interval between 8 and 25 seconds
-      const nextDelay = Math.random() * 17000 + 8000;
-      timeout = setTimeout(() => {
-        // 15% chance for a full word scramble, 85% chance for a subtle partial glitch
-        if (Math.random() < 0.15) {
-          runFullScramble();
-        } else {
-          runPartialGlitch();
-        }
-      }, nextDelay);
-    };
-
-    // Initial animation on mount
-    runFullScramble();
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, [text]);
-
-  return <>{displayText}</>;
-};
 
 const FadingPlaceholder: FC<{ isFocused: boolean }> = ({ isFocused }: { isFocused: boolean }) => {
   const examples = [
@@ -191,15 +106,19 @@ const AnimatedSendIcon: FC = () => {
     </div>
   );
 };
-const CyberLogo: FC = () => {
+const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
     return (
       <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center group overflow-visible">
         {/* Outer Glow Ring */}
         <div className="absolute inset-0 bg-white/10 dark:bg-white/5 rounded-full blur-xl group-hover:bg-white/20 transition-all duration-500 animate-pulse-glow" />
         
         {/* Orbital Layers */}
-        <div className="absolute inset-x-0.5 inset-y-0.5 border border-white/20 rounded-full animate-orbit pointer-events-none" />
-        <div className="absolute inset-x-2 inset-y-2 border border-white/10 dark:border-white/5 rounded-full animate-reverse-orbit pointer-events-none" />
+        {isAnimated && (
+          <>
+            <div className="absolute inset-x-0.5 inset-y-0.5 border border-white/20 rounded-full animate-orbit pointer-events-none" />
+            <div className="absolute inset-x-2 inset-y-2 border border-white/10 dark:border-white/5 rounded-full animate-reverse-orbit pointer-events-none" />
+          </>
+        )}
         
         {/* Core Geometry (Shield with Glassmorphism) */}
         <div className="relative w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-white/5 backdrop-blur-md rounded-xl border border-white/30 dark:border-white/20 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:border-white/50 transition-all duration-500 overflow-hidden">
@@ -281,7 +200,19 @@ const App: FC = () => {
 
   const [history, setHistory] = useState<SessionState[]>(() => {
     const saved = localStorage.getItem('fainl_history');
-    return saved ? JSON.parse(saved) : [];
+    if (!saved) return [];
+    try {
+      const parsed = JSON.parse(saved);
+      // Migrate: Ensure all sessions have an ID
+      const migrated = parsed.map((s: any) => ({
+        ...s,
+        id: s.id || crypto.randomUUID(),
+        isArchived: !!s.isArchived
+      }));
+      return migrated;
+    } catch (e) {
+      return [];
+    }
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -289,6 +220,7 @@ const App: FC = () => {
   const [isDebateOpen, setIsDebateOpen] = useState(false);
   
   const [session, setSession] = useState<SessionState>({
+    id: crypto.randomUUID(),
     stage: WorkflowStage.IDLE,
     query: '',
     councilResponses: [],
@@ -340,6 +272,7 @@ const App: FC = () => {
     }
 
     setSession({
+      id: crypto.randomUUID(),
       stage: WorkflowStage.PROCESSING_COUNCIL,
       query: input,
       councilResponses: [],
@@ -562,7 +495,7 @@ const App: FC = () => {
               onClick={() => setCurrentView(AppView.HOME)}
               className="flex items-center gap-3 md:gap-5 group"
             >
-              <CyberLogo />
+              <CyberLogo isAnimated={currentView !== AppView.HOME} />
               <span className="text-2xl font-black tracking-tighter hidden sm:block">FAINL</span>
             </button>
 
@@ -837,7 +770,7 @@ const App: FC = () => {
             {session.stage === WorkflowStage.COMPLETED && session.councilResponses.length > 0 && (
               <div className="flex justify-center pt-12 md:pt-24 pb-20 md:pb-40">
                 <button 
-                  onClick={() => setSession({ ...session, stage: WorkflowStage.IDLE, query: '', synthesis: '', councilResponses: [], reviews: [], debateMessages: [] })} 
+                  onClick={() => setSession({ id: crypto.randomUUID(), stage: WorkflowStage.IDLE, query: '', synthesis: '', councilResponses: [], reviews: [], debateMessages: [] })} 
                   className="px-10 py-6 md:px-20 md:py-10 bg-black dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-xl md:rounded-2xl text-white dark:text-black transition-all hover:scale-105 flex items-center gap-4 md:gap-8 font-black text-xl md:text-3xl shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] dark:shadow-[8px_8px_0px_1px_rgba(0,0,0,0.1)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)] dark:md:shadow-[16px_16px_0px_1px_rgba(0,0,0,0.1)] active:translate-y-2 active:shadow-none uppercase tracking-tighter"
                 >
                   <Send className="w-8 h-8 md:w-12 md:h-12" />
@@ -879,6 +812,12 @@ const App: FC = () => {
                     onLoadSession={(sess: SessionState) => {
                         setSession(sess);
                         setCurrentView(AppView.HOME);
+                    }}
+                    onDeleteSessions={(ids: string[]) => {
+                        setHistory(prev => prev.filter(s => !ids.includes(s.id)));
+                    }}
+                    onArchiveSessions={(ids: string[]) => {
+                        setHistory(prev => prev.map(s => ids.includes(s.id) ? { ...s, isArchived: !s.isArchived } : s));
                     }}
                 />
             )

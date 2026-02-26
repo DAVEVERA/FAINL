@@ -137,15 +137,15 @@ export const PRESETS = [
 
 export const PRICING = {
   TURNS: [
-    { count: 10, price: 8.99, label: "10 Turns" },
-    { count: 20, price: 16.99, label: "20 Turns" },
-    { count: 50, price: 39.99, label: "50 Turns" },
-    { count: Infinity, price: 129.99, label: "Lifetime Unlimited" }
+    { count: 10, price: 19.99, label: "Starter Pack" },
+    { count: 30, price: 49.99, label: "Pro Pack" },
+    { count: 100, price: 149.99, label: "Expert Pack" },
+    { count: Infinity, price: 499.99, label: "LIFETIME UNLIMITED" }
   ],
   CREDITS: [
-    { count: 10, price: 8.99, label: "10 Credits" },
-    { count: 25, price: 17.99, label: "25 Credits" },
-    { count: 40, price: 22.99, label: "40 Credits" }
+    { count: 25, price: 14.99, label: "Lite Sync" },
+    { count: 100, price: 49.99, label: "Standard Sync" },
+    { count: 250, price: 99.99, label: "Enterprise Sync" }
   ]
 };
 
