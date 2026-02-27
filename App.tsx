@@ -47,6 +47,7 @@ import { LoginPage } from './components/LoginPage';
 import { Session } from '@supabase/supabase-js';
 import { LogOut } from 'lucide-react';
 import { ScrambleText } from './components/ScrambleText';
+import { WelcomePopup } from './components/WelcomePopup';
 
 
 const FadingPlaceholder: FC<{ isFocused: boolean }> = ({ isFocused }: { isFocused: boolean }) => {
@@ -218,6 +219,15 @@ const App: FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isDebateOpen, setIsDebateOpen] = useState(false);
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(() => {
+    const seen = localStorage.getItem('fainl_visited');
+    if (!seen) {
+      // Delay popup slightly so page loads first
+      setTimeout(() => {}, 0);
+      return true;
+    }
+    return false;
+  });
   
   const [session, setSession] = useState<SessionState>({
     id: crypto.randomUUID(),
@@ -486,9 +496,9 @@ const App: FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background dark:bg-zinc-950 text-black dark:text-zinc-100 flex flex-col font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-x-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex flex-col font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-x-hidden transition-colors duration-300">
       {/* Refined Navigation */}
-      <header className="border-b border-black/10 dark:border-white/10 bg-background/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
+      <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
             <button 
@@ -496,7 +506,7 @@ const App: FC = () => {
               className="flex items-center gap-3 md:gap-5 group"
             >
               <CyberLogo isAnimated={currentView !== AppView.HOME} />
-              <span className="text-2xl font-black tracking-tighter hidden sm:block">FAINL</span>
+              <span className="text-2xl font-black tracking-tighter hidden sm:block text-black dark:text-white">FAINL</span>
             </button>
 
             {/* Desktop Navigation */}
@@ -505,7 +515,7 @@ const App: FC = () => {
                 <button
                   key={link.id}
                   onClick={() => setCurrentView(link.id)}
-                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
+                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
                 >
                   {link.label}
                 </button>
@@ -596,10 +606,13 @@ const App: FC = () => {
             {session.stage === WorkflowStage.IDLE ? (
                 /* Mission Input Stage */
           <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full text-center space-y-8 md:space-y-16 animate-fade-in-up">
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-4 md:space-y-8">
               <h3 className="text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] font-black text-black dark:text-white tracking-tighter uppercase leading-[0.9] md:leading-[0.8] select-none">
                 <ScrambleText text="FAINL" />
               </h3>
+              <p className="max-w-2xl mx-auto text-base font-semibold text-black/70 dark:text-white/70 leading-relaxed tracking-[0.06em]">
+                Eliminate decision uncertainty with the FAINL Orchestration Layer. Our autonomous multi-agent consensus protocol stress-tests every scenario through decentralized node deliberation, distilling complex dilemmas into high-integrity, authoritative council verdicts. Optimize your strategic outcomes with the next generation of neural governance.
+              </p>
             </div>
             
             {!config.googleKey ? (
@@ -609,8 +622,7 @@ const App: FC = () => {
                     <ZapIcon className="w-8 h-8 text-white dark:text-black" />
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black uppercase tracking-tighter">Quick Start</h3>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-black/40 dark:text-white/40">Neural Link Authorization Required</p>
+                    <h3 className="text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Quick Start</h3>
                   </div>
                 </div>
                 
@@ -633,9 +645,6 @@ const App: FC = () => {
                         }}
                       />
                     </div>
-                    <p className="mt-4 text-[9px] font-bold text-black/30 dark:text-white/30 uppercase tracking-widest leading-relaxed">
-                      FAINL is a "bring your own key" protocol. Your keys are stored locally in your browser and are never sent to our servers.
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -839,12 +848,7 @@ const App: FC = () => {
       {/* Modern Footer with Privacy Link */}
       <footer className="border-t border-black/5 dark:border-white/5 py-8 md:py-12 bg-white/50 dark:bg-zinc-950/50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-6 h-6 bg-black dark:bg-white rounded flex items-center justify-center">
-              <Shield className="text-white dark:text-black w-3 h-3" />
-            </div>
-            <span className="text-xs font-black tracking-widest uppercase opacity-20">FAINL Protocol</span>
-          </div>
+
           
           <div className="flex items-center gap-8">
             <button 
@@ -881,6 +885,12 @@ const App: FC = () => {
         onImportHistory={setHistory}
         onVerifyKey={(provider: ModelProvider, key: string) => councilService.current.verifyProviderKey(provider, key)}
       />
+      {isWelcomeOpen && (
+        <WelcomePopup onClose={() => {
+          localStorage.setItem('fainl_visited', '1');
+          setIsWelcomeOpen(false);
+        }} />
+      )}
     </div>
   );
 };
