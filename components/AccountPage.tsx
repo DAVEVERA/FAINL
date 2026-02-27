@@ -176,6 +176,8 @@ export const AccountPage: FC<AccountPageProps> = ({
                             <button 
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
+                                title="Previous Page"
+                                aria-label="Previous Page"
                                 className="disabled:opacity-20 hover:scale-110 transition-transform text-black dark:text-white"
                             >
                                 <ChevronLeft className="w-5 h-5" />
@@ -186,6 +188,8 @@ export const AccountPage: FC<AccountPageProps> = ({
                             <button 
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
+                                title="Next Page"
+                                aria-label="Next Page"
                                 className="disabled:opacity-20 hover:scale-110 transition-transform text-black dark:text-white"
                             >
                                 <ChevronRight className="w-5 h-5" />
