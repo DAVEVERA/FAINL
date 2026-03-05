@@ -22,6 +22,7 @@ import { UnifiedCouncilService } from './services/councilService';
 import { SettingsModal } from './components/SettingsModal';
 import { CouncilCard } from './components/CouncilCard';
 import { PaywallModal } from './components/PaywallModal';
+import { AdModal } from './components/AdModal';
 import { PricingPage } from './components/PricingPage';
 import { AccountPage } from './components/AccountPage';
 import { CookbookPage } from './components/CookbookPage';
@@ -160,12 +161,15 @@ const App: FC = () => {
       turnsUsed: 0,
       creditsRemaining: 0,
       isLifetime: false,
+      totalTurnsAllowed: 2, // 2 free turns for new users
     };
   });
 
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+  const [isAdModalOpen, setIsAdModalOpen] = useState(false);
+  const [hasWatchedAd, setHasWatchedAd] = useState(false);
   const [authSession, setAuthSession] = useState<Session | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -265,6 +269,12 @@ const App: FC = () => {
 
     if (!isAllowed) {
       setIsPaywallOpen(true);
+      return;
+    }
+
+    // Intercept 2nd turn for Ad Sponsor (turn 0 is free, turn 1 is ad, turn 2+ is paywall)
+    if (config.turnsUsed === 1 && !hasWatchedAd && !config.isLifetime && !canUseCredits) {
+      setIsAdModalOpen(true);
       return;
     }
 
@@ -852,6 +862,15 @@ const App: FC = () => {
           setIsWelcomeOpen(false);
         }} />
       )}
+      <AdModal
+        isOpen={isAdModalOpen}
+        onAdComplete={() => {
+          setIsAdModalOpen(false);
+          setHasWatchedAd(true);
+          // Small delay to let modal close before starting heavy compute
+          setTimeout(() => handleStart(), 300);
+        }}
+      />
     </div>
   );
 };
