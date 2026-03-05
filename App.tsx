@@ -48,16 +48,10 @@ import { Session } from '@supabase/supabase-js';
 import { LogOut } from 'lucide-react';
 import { ScrambleText } from './components/ScrambleText';
 import { WelcomePopup } from './components/WelcomePopup';
+import { useLanguage } from './contexts/LanguageContext';
 
 
-const FadingPlaceholder: FC<{ isFocused: boolean }> = ({ isFocused }: { isFocused: boolean }) => {
-  const examples = [
-    "Should I learn Rust or Go?",
-    "Buy vs. Rent in 2026?",
-    "To be or not to be?",
-    "What came first: Chicken or the egg?"
-  ];
-
+const FadingPlaceholder: FC<{ isFocused: boolean; examples: string[] }> = ({ isFocused, examples }) => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -136,6 +130,8 @@ const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
 };
 
 const App: FC = () => {
+  const { t, language, setLanguage } = useLanguage();
+
   // Initialization with Persistent Config
   const [config, setConfig] = useState<AppConfig>(() => {
     const saved = localStorage.getItem('fainl_config_v2');
@@ -422,12 +418,12 @@ const App: FC = () => {
   }, []);
 
   const NavLinks = [
-    { id: AppView.HOME, label: 'Protocols', icon: ZapIcon },
-    { id: AppView.PRICING, label: 'Access', icon: Coins },
-    { id: AppView.ACCOUNT, label: 'My FAINLS', icon: LayoutDashboard },
-    { id: AppView.COOKBOOK, label: 'Cookbook', icon: BookOpen },
-    { id: AppView.FAQ, label: 'FAQ', icon: HelpCircle },
-    { id: AppView.CONTACT, label: 'Contact', icon: Mail },
+    { id: AppView.HOME, label: t.nav.protocols, icon: ZapIcon },
+    { id: AppView.PRICING, label: t.nav.access, icon: Coins },
+    { id: AppView.ACCOUNT, label: t.nav.myFainls, icon: LayoutDashboard },
+    { id: AppView.COOKBOOK, label: t.nav.cookbook, icon: BookOpen },
+    { id: AppView.FAQ, label: t.nav.faq, icon: HelpCircle },
+    { id: AppView.CONTACT, label: t.nav.contact, icon: Mail },
   ];
 
   const renderStageIndicator = () => {
@@ -488,6 +484,12 @@ const App: FC = () => {
 
           <div className="flex items-center gap-3">
             <button
+              onClick={() => setLanguage(language === 'nl' ? 'en' : 'nl')}
+              className="px-3 py-1 font-black text-[10px] uppercase tracking-widest bg-black/5 dark:bg-white/10 rounded-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors text-black dark:text-white"
+            >
+              {language === 'nl' ? 'EN' : 'NL'}
+            </button>
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
             >
@@ -541,7 +543,7 @@ const App: FC = () => {
                 className="w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
               >
                 <LogOut className="w-5 h-5" />
-                Sign Out
+                {t.nav.signOut}
               </button>
             )}
           </div>
@@ -574,7 +576,7 @@ const App: FC = () => {
                     <ScrambleText text="FAINL" />
                   </h3>
                   <p className="max-w-2xl mx-auto text-base font-semibold text-black/70 dark:text-white/70 leading-relaxed tracking-[0.06em]">
-                    Eliminate decision uncertainty with the FAINL Orchestration Layer. Our autonomous multi-agent consensus protocol stress-tests every scenario through decentralized node deliberation, distilling complex dilemmas into high-integrity, authoritative council verdicts. Optimize your strategic outcomes with the next generation of neural governance.
+                    {t.hero.description}
                   </p>
                 </div>
 
@@ -585,20 +587,20 @@ const App: FC = () => {
                         <ZapIcon className="w-8 h-8 text-white dark:text-black" />
                       </div>
                       <div>
-                        <h3 className="text-3xl font-black uppercase tracking-tighter text-black dark:text-white">Quick Start</h3>
+                        <h3 className="text-3xl font-black uppercase tracking-tighter text-black dark:text-white">{t.hero.quickStartTitle}</h3>
                       </div>
                     </div>
 
                     <div className="space-y-8">
                       <div>
                         <div className="flex justify-between items-center mb-4">
-                          <label className="text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white">Paste Google Gemini API Key</label>
-                          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline">Get Free Key</a>
+                          <label className="text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white">{t.hero.pasteKey}</label>
+                          <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline">{t.hero.getFreeKey}</a>
                         </div>
                         <div className="flex gap-4">
                           <input
                             type="password"
-                            placeholder="AIza..."
+                            placeholder={t.hero.apiKeyPlaceholder}
                             className="flex-1 bg-zinc-100 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl font-mono text-sm focus:bg-white dark:focus:bg-zinc-700 transition-all shadow-inner text-black dark:text-white"
                             onChange={(e) => {
                               const val = e.target.value.trim();
@@ -613,15 +615,15 @@ const App: FC = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="p-5 border-2 border-black/5 dark:border-white/5 rounded-2xl bg-zinc-50 dark:bg-zinc-800">
                           <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
-                            <Shield className="w-4 h-4" /> Zero-Data
+                            <Shield className="w-4 h-4" /> {t.hero.zeroDataTitle}
                           </div>
-                          <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">Missions are encrypted and stored only on your device.</p>
+                          <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">{t.hero.zeroDataDesc}</p>
                         </div>
                         <div className="p-5 border-2 border-black/5 dark:border-white/5 rounded-2xl bg-zinc-50 dark:bg-zinc-800">
                           <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
-                            <Globe className="w-4 h-4" /> Pure Logic
+                            <Globe className="w-4 h-4" /> {t.hero.pureLogicTitle}
                           </div>
-                          <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">No central filters. Direct access to raw neural reasoning.</p>
+                          <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">{t.hero.pureLogicDesc}</p>
                         </div>
                       </div>
                     </div>
@@ -632,7 +634,7 @@ const App: FC = () => {
                       <div className="relative w-full min-h-[200px] md:min-h-[350px]">
                         {!input && !isInputFocused && (
                           <div className="absolute top-0 left-0 pointer-events-none text-xl sm:text-2xl md:text-4xl font-black text-black/20 dark:text-white/20 font-serif italic">
-                            <FadingPlaceholder isFocused={isInputFocused} />
+                            <FadingPlaceholder isFocused={isInputFocused} examples={t.hero.placeholders} />
                           </div>
                         )}
                         <textarea
@@ -640,8 +642,8 @@ const App: FC = () => {
                           onChange={(e) => setInput(e.target.value.slice(0, MAX_CHARS))}
                           onFocus={() => setIsInputFocused(true)}
                           onBlur={() => setIsInputFocused(false)}
-                          aria-label="Enter your mission or directive"
-                          placeholder="Enter your mission..."
+                          aria-label={t.hero.fainlInputPlaceholder}
+                          placeholder={t.hero.fainlInputPlaceholder}
                           className="w-full h-full bg-transparent border-none p-0 text-xl sm:text-2xl md:text-4xl font-black text-black dark:text-white placeholder-transparent focus:ring-0 transition-all resize-none font-serif italic absolute top-0 left-0"
                         />
                       </div>
@@ -663,6 +665,130 @@ const App: FC = () => {
                     <p className="mt-4 md:mt-8 text-[8px] md:text-[10px] font-black text-black/20 dark:text-white/20 uppercase tracking-[0.2em] md:tracking-[0.3em]">Encrypted Session. Data persistent locally only.</p>
                   </div>
                 )}
+
+                {/* --- MARKETING SECTIONS --- */}
+                <div className="w-full space-y-12 md:space-y-24 mt-16 md:mt-32 text-left">
+                  {/* Direct Uitleg */}
+                  <div className="bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-8 md:p-16 rounded-3xl shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] dark:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.1)] hover:-translate-y-2 transition-transform duration-500">
+                    <h3 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-6">{t.marketing.directUitlegTitle}</h3>
+                    <p className="text-lg md:text-2xl font-bold text-black/70 dark:text-white/70 leading-relaxed">{t.marketing.directUitlegBody}</p>
+                  </div>
+
+                  {/* Waarom FAINL */}
+                  <div className="space-y-8">
+                    <div className="text-center mb-12">
+                      <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-6">{t.marketing.waaromTitle}</h3>
+                      <p className="text-lg font-bold text-black/60 dark:text-white/60 max-w-2xl mx-auto">{t.marketing.waaromIntro}</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {[
+                        { title: t.marketing.waarom1Title, desc: t.marketing.waarom1Desc },
+                        { title: t.marketing.waarom2Title, desc: t.marketing.waarom2Desc },
+                        { title: t.marketing.waarom3Title, desc: t.marketing.waarom3Desc },
+                        { title: t.marketing.waarom4Title, desc: t.marketing.waarom4Desc }
+                      ].map((w, i) => (
+                        <div key={i} className="bg-zinc-50 dark:bg-zinc-800/50 border-2 border-black/10 dark:border-white/10 p-8 rounded-2xl hover:border-black dark:hover:border-white transition-colors">
+                          <h4 className="text-xl font-black uppercase tracking-tight mb-4">{w.title}</h4>
+                          <p className="text-sm font-bold text-black/60 dark:text-white/60">{w.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Hoe Het Werkt */}
+                  <div className="bg-black dark:bg-white text-white dark:text-black p-8 md:p-16 rounded-3xl shadow-[16px_16px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)]">
+                    <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-12 text-center">{t.marketing.hoeWerktTitle}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      {[
+                        { title: t.marketing.hoeWerkt1Title, desc: t.marketing.hoeWerkt1Desc },
+                        { title: t.marketing.hoeWerkt2Title, desc: t.marketing.hoeWerkt2Desc },
+                        { title: t.marketing.hoeWerkt3Title, desc: t.marketing.hoeWerkt3Desc }
+                      ].map((step, i) => (
+                        <div key={i} className="flex flex-col items-center text-center space-y-4">
+                          <div className="w-12 h-12 rounded-full border-4 border-white dark:border-black flex items-center justify-center font-black text-xl">{i + 1}</div>
+                          <h4 className="text-lg font-black uppercase">{step.title}</h4>
+                          <p className="text-sm font-bold opacity-70">{step.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-center mt-12 text-xs font-black uppercase tracking-widest opacity-50">{t.marketing.hoeWerktFooter}</p>
+                  </div>
+
+                  {/* Vergelijking */}
+                  <div className="space-y-8">
+                    <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8 text-center">{t.marketing.vergelijkingTitle}</h3>
+                    <div className="overflow-x-auto rounded-2xl border-4 border-black dark:border-zinc-700">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                          <tr className="bg-zinc-100 dark:bg-zinc-800 border-b-4 border-black dark:border-zinc-700">
+                            <th className="p-4 md:p-6 font-black uppercase tracking-wider">Eigenschap</th>
+                            <th className="p-4 md:p-6 font-black uppercase tracking-wider text-black/50 dark:text-white/50">Gewone AI</th>
+                            <th className="p-4 md:p-6 font-black uppercase tracking-wider bg-black dark:bg-white text-white dark:text-black">FAINL</th>
+                          </tr>
+                        </thead>
+                        <tbody className="font-bold text-sm md:text-base">
+                          {[
+                            [t.marketing.v1Label, t.marketing.v1Left, t.marketing.v1Right],
+                            [t.marketing.v2Label, t.marketing.v2Left, t.marketing.v2Right],
+                            [t.marketing.v3Label, t.marketing.v3Left, t.marketing.v3Right],
+                            [t.marketing.v4Label, t.marketing.v4Left, t.marketing.v4Right],
+                            [t.marketing.v5Label, t.marketing.v5Left, t.marketing.v5Right],
+                            [t.marketing.v6Label, t.marketing.v6Left, t.marketing.v6Right],
+                            [t.marketing.v7Label, t.marketing.v7Left, t.marketing.v7Right],
+                            [t.marketing.v8Label, t.marketing.v8Left, t.marketing.v8Right],
+                          ].map((row, i) => (
+                            <tr key={i} className="border-b border-black/10 dark:border-white/10 last:border-0 hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+                              <td className="p-4 md:p-6 uppercase">{row[0]}</td>
+                              <td className="p-4 md:p-6 text-black/50 dark:text-white/50">{row[1]}</td>
+                              <td className="p-4 md:p-6 bg-black/5 dark:bg-white/5 font-black">{row[2]}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Use Cases */}
+                  <div className="space-y-8">
+                    <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8 text-center">{t.marketing.useCasesTitle}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      {[
+                        { title: t.marketing.uc1Title, desc: t.marketing.uc1Desc },
+                        { title: t.marketing.uc2Title, desc: t.marketing.uc2Desc },
+                        { title: t.marketing.uc3Title, desc: t.marketing.uc3Desc },
+                        { title: t.marketing.uc4Title, desc: t.marketing.uc4Desc },
+                        { title: t.marketing.uc5Title, desc: t.marketing.uc5Desc },
+                        { title: t.marketing.uc6Title, desc: t.marketing.uc6Desc }
+                      ].map((uc, i) => (
+                        <div key={i} className="bg-white dark:bg-zinc-900 border-2 border-black/10 dark:border-zinc-700 p-6 rounded-2xl hover:-translate-y-1 hover:shadow-lg transition-all">
+                          <h4 className="text-sm font-black uppercase tracking-widest mb-3">{uc.title}</h4>
+                          <p className="text-xs font-bold text-black/60 dark:text-white/60 leading-relaxed">{uc.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Conversie Block */}
+                  <div className="space-y-6 md:space-y-12 pb-12 text-center">
+                    <div className="p-8 md:p-12 border-y-4 border-black dark:border-white">
+                      <h4 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4">{t.marketing.conversie1Title}</h4>
+                      <p className="text-lg md:text-xl font-bold text-black/60 dark:text-white/60 max-w-3xl mx-auto">{t.marketing.conversie1Desc}</p>
+                    </div>
+                    <div className="p-8 md:p-12">
+                      <h4 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4">{t.marketing.conversie2Title}</h4>
+                      <p className="text-lg md:text-xl font-bold text-black/60 dark:text-white/60 max-w-3xl mx-auto">{t.marketing.conversie2Desc}</p>
+                    </div>
+                    <div className="p-8 md:p-12 border-y-4 border-black dark:border-white">
+                      <h4 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4">{t.marketing.conversie3Title}</h4>
+                      <p className="text-lg md:text-xl font-bold text-black/60 dark:text-white/60 max-w-3xl mx-auto">{t.marketing.conversie3Desc}</p>
+                    </div>
+
+                    <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="mt-8 px-10 py-5 bg-black dark:bg-white text-white dark:text-black font-black uppercase text-lg md:text-xl rounded-2xl shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] dark:shadow-[8px_8px_0px_1px_rgba(0,0,0,0.1)] hover:scale-105 active:scale-95 transition-all">
+                      {t.marketing.cta3}
+                    </button>
+                  </div>
+
+                </div>
               </div>
             ) : session.stage !== WorkflowStage.ERROR && (
               <div className="animate-fade-in-up space-y-8 md:space-y-16 w-full pb-12 md:pb-20">
@@ -811,20 +937,20 @@ const App: FC = () => {
       <footer className="border-t border-black/5 dark:border-white/5 py-8 md:py-12 bg-white/50 dark:bg-zinc-950/50">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <span className="text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">
-            Made by <span className="text-black dark:text-white">MNRV</span>
+            {t.common.madeBy} <span className="text-black dark:text-white">MNRV</span>
           </span>
           <div className="flex items-center gap-8">
             <button
               onClick={() => setCurrentView(AppView.PRIVACY)}
               className="text-[10px] font-black uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors"
             >
-              Privacy Policy
+              {t.nav.privacyPolicy}
             </button>
             <button
               onClick={() => setCurrentView(AppView.TERMS)}
               className="text-[10px] font-black uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors"
             >
-              Terms of Service
+              {t.nav.termsOfService}
             </button>
             <span className="text-[10px] font-black uppercase tracking-widest text-black/10 dark:text-white/10">© 2026</span>
           </div>

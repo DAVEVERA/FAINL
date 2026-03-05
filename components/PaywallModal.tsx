@@ -18,12 +18,15 @@ interface PaywallModalProps {
   onClose: () => void;
 }
 
+import { useLanguage } from '../contexts/LanguageContext';
+
 export const PaywallModal: FC<PaywallModalProps> = ({
   isOpen,
   isLoading,
   onPurchaseTurns,
   onClose
 }) => {
+  const { language } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -37,10 +40,12 @@ export const PaywallModal: FC<PaywallModalProps> = ({
               <Shield className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-none text-black dark:text-white">Intelligence Access Required</h2>
+              <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tighter leading-none text-black dark:text-white">
+                {language === 'nl' ? 'Toegang Vereist' : 'Intelligence Access Required'}
+              </h2>
               <p className="text-[10px] md:text-xs font-black text-black/40 dark:text-white/40 uppercase mt-1 tracking-widest flex items-center gap-2">
                 <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                Premium Neural Consensus Link
+                {language === 'nl' ? 'Premium Neuraal Consensus Link' : 'Premium Neural Consensus Link'}
               </p>
             </div>
           </div>
@@ -53,9 +58,11 @@ export const PaywallModal: FC<PaywallModalProps> = ({
         <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8">
 
           <div className="space-y-4">
-            <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-black dark:text-white text-center">Select Your Access Tier</h3>
+            <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-black dark:text-white text-center">
+              {language === 'nl' ? 'Kies Je Toegangsniveau' : 'Select Your Access Tier'}
+            </h3>
             <p className="text-sm font-bold text-black/60 dark:text-white/60 leading-relaxed text-center">
-              Unlock high-performance autonomous neural networks via Stripe's secure checkout.
+              {language === 'nl' ? "Krijg toegang tot krachtige autonome neurale netwerken via Stripe's veilige kassa." : "Unlock high-performance autonomous neural networks via Stripe's secure checkout."}
             </p>
           </div>
 
@@ -70,7 +77,9 @@ export const PaywallModal: FC<PaywallModalProps> = ({
               >
                 <Zap className="w-5 h-5 text-black/30 dark:text-white/30 mb-3 group-hover:text-black dark:group-hover:text-white transition-colors" />
                 <div className="text-3xl font-black mb-1 text-black dark:text-white">{pkg.count}</div>
-                <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">Turns</div>
+                <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">
+                  {language === 'nl' ? 'Beurten' : 'Turns'}
+                </div>
                 <div className="text-xl font-black text-black dark:text-white">€{pkg.price}</div>
                 <div className="mt-2 text-[9px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">{pkg.label}</div>
                 {isLoading && (
@@ -86,27 +95,29 @@ export const PaywallModal: FC<PaywallModalProps> = ({
           <div className="bg-white/50 dark:bg-zinc-950/50 border-4 border-black dark:border-white/20 rounded-2xl p-6 grid grid-cols-1 sm:grid-cols-3 gap-6 text-black dark:text-white">
             <div className="flex items-center gap-3">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Multi-Node Consensus</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">{language === 'nl' ? 'Multi-Node Consensus' : 'Multi-Node Consensus'}</span>
             </div>
             <div className="flex items-center gap-3">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Encrypted Local Logic</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">{language === 'nl' ? 'Versleutelde Logica' : 'Encrypted Local Logic'}</span>
             </div>
             <div className="flex items-center gap-3">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Zero Data Training</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">{language === 'nl' ? 'Zonder Data Training' : 'Zero Data Training'}</span>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-6 md:p-8 border-t-4 border-black dark:border-white/20 bg-white dark:bg-zinc-950 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[9px] font-black text-black/20 dark:text-white/20 uppercase tracking-[0.2em]">Secure Checkout via Stripe • Encrypted Protocol 2.5.1</p>
+          <p className="text-[9px] font-black text-black/20 dark:text-white/20 uppercase tracking-[0.2em]">
+            {language === 'nl' ? 'Veilig Afrekenen via Stripe • Versleuteld Protocol 2.5.1' : 'Secure Checkout via Stripe • Encrypted Protocol 2.5.1'}
+          </p>
           <button
             onClick={onClose}
             className="w-full sm:w-auto px-10 py-4 bg-black dark:bg-white text-white dark:text-black font-black text-xs uppercase tracking-[0.2em] rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl"
           >
-            I'll decide later
+            {language === 'nl' ? 'Ik beslis later' : "I'll decide later"}
           </button>
         </div>
       </div>

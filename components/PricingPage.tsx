@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { PRICING } from '../constants';
 import { ScrambleText } from './ScrambleText';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface PricingPageProps {
   hasOwnKeys: boolean;
@@ -17,14 +18,16 @@ interface PricingPageProps {
 export const PricingPage: FC<PricingPageProps> = ({
   onPurchaseTurns,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="max-w-3xl mx-auto px-4 md:px-6 py-10 md:py-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center mb-10 md:mb-16">
         <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-3 text-black dark:text-white">
-          <ScrambleText text="Neural Access Tiers" />
+          <ScrambleText text={t.pricing.title} />
         </h1>
         <p className="max-w-xl mx-auto text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.2em] text-[10px]">
-          Select your protocol access tier to begin deliberation. Secure checkout via Stripe.
+          {t.pricing.subtitle}
         </p>
       </div>
 
@@ -35,8 +38,8 @@ export const PricingPage: FC<PricingPageProps> = ({
             <Shield className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-black uppercase tracking-tighter text-black dark:text-white">Standard Access</h2>
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">Full consensus turns · One-time purchase</p>
+            <h2 className="text-base md:text-lg font-black uppercase tracking-tighter text-black dark:text-white">{t.pricing.standardAccess}</h2>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">{t.pricing.standardDesc}</p>
           </div>
         </div>
 
@@ -49,7 +52,7 @@ export const PricingPage: FC<PricingPageProps> = ({
             >
               <Zap className="w-5 h-5 text-black/20 dark:text-white/20 mb-4 group-hover:text-black dark:group-hover:text-white transition-colors" />
               <div className="text-4xl font-black mb-1 text-black dark:text-white">{pkg.count}</div>
-              <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-4">Turns</div>
+              <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-4">{t.pricing.turns}</div>
               <div className="text-2xl font-black text-black dark:text-white">€{pkg.price}</div>
               <div className="mt-6 flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-black/30 dark:text-white/30">
                 {pkg.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -59,7 +62,7 @@ export const PricingPage: FC<PricingPageProps> = ({
         </div>
 
         <p className="mt-8 text-center text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">
-          More tiers coming soon · Secure checkout via Stripe
+          {t.pricing.moreSoon}
         </p>
       </div>
     </div>
