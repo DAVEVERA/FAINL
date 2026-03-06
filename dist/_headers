@@ -1,0 +1,30 @@
+/*
+  # Security Headers for FAINL
+  # Applies to all routes via GitHub Pages / Netlify / Cloudflare Pages
+
+  # HSTS — force HTTPS, include subdomains, submit to preload list
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+  # Prevent clickjacking
+  X-Frame-Options: DENY
+
+  # Block MIME-type sniffing
+  X-Content-Type-Options: nosniff
+
+  # Control referrer information
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Restrict browser features
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+  # CSP — restrict script/style/connection sources
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://api.dicebear.com https://www.google-analytics.com https://api.anthropic.com https://api.openai.com https://api.groq.com https://api.mistral.ai https://openrouter.ai https://generativelanguage.googleapis.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'
+
+/robots.txt
+  Content-Type: text/plain
+
+/sitemap.xml
+  Content-Type: application/xml
+
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8

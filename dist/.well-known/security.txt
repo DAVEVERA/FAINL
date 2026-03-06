@@ -1,0 +1,4 @@
+Contact: mailto:security@fainl.com
+Policy: https://fainl.com/security-policy
+Preferred-Languages: nl, en
+Canonical: https://fainl.com/.well-known/security.txt
