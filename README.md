@@ -1,0 +1,1 @@
+FAINL: Fully Autonomous Intelligence Network & Logic. A consensus engine with granular control over model orchestration.

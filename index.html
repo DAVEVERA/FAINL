@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAINL — AI Consensus Protocol</title>
+    <meta
+      name="description"
+      content="FAINL brengt meerdere AI-modellen samen in één consensus-protocol. Stel je vraag en ontvang een diepgaand, gebalanceerd oordeel."
+    />
+    <link rel="canonical" href="https://fainl.com/" />
+
+    <!-- Google Analytics — only fires after cookie consent is granted via window.fainl_ga_consent -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      // Listen for consent signal from CookieConsent component
+      window.addEventListener("fainl:cookie-consent", function (e) {
+        if (e.detail && e.detail.analytics) {
+          var s = document.createElement("script");
+          s.async = true;
+          s.src = "https://www.googletagmanager.com/gtag/js?id=G-S3GL5DV7PF";
+          document.head.appendChild(s);
+          gtag("config", "G-S3GL5DV7PF");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
