@@ -13,6 +13,10 @@ import {
   Lock,
   Globe,
   CircleCheck,
+  Eye,
+  Swords,
+  PenLine,
+  CheckCircle2,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import {
@@ -698,106 +702,117 @@ const App: FC = () => {
                   description="Krijg antwoorden met de gecombineerde kracht van meerdere AI-systemen. FAINL biedt diepgaande reflectie en gewogen oordelen."
                   canonical="/"
                 />
-                <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 flex flex-col items-center justify-center min-h-[calc(100vh-120px)]">
-                  <div className="flex-1 flex flex-col items-center justify-center max-w-4xl mx-auto w-full text-center space-y-8 md:space-y-16 animate-fade-in-up">
-                    <div className="space-y-4 md:space-y-8">
-                      <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white leading-tight max-w-3xl mx-auto">
-                        Eén antwoord. Meerdere intelligenties.
-                      </h1>
-                      <p className="max-w-2xl mx-auto text-lg md:text-xl font-semibold text-black/70 dark:text-white/70 leading-relaxed tracking-[0.06em]">
-                        FAINL laat meerdere AI’s tegelijk naar jouw vraag
-                        kijken. Ze controleren elkaars redenering, filteren
-                        fouten en geven samen één intelligent antwoord. Zo krijg
-                        je meer zekerheid en betere resultaten.
-                      </p>
-                    </div>
 
-                    {!config.googleKey ? (
-                      <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 border-4 border-black dark:border-zinc-700 p-8 md:p-16 rounded-3xl shadow-[32px_32px_0px_0px_rgba(0,0,0,1)] dark:shadow-[32px_32px_0px_0px_rgba(255,255,255,0.1)] text-left animate-in zoom-in-95 duration-500">
-                        <div className="flex items-center gap-6 mb-10 pb-6 border-b-4 border-black dark:border-zinc-700">
-                          <div className="p-4 bg-black dark:bg-white rounded-2xl">
-                            <ZapIcon className="w-8 h-8 text-white dark:text-black" />
-                          </div>
-                          <div>
-                            <h3 className="text-3xl font-black uppercase tracking-tighter text-black dark:text-white">
-                              Quick Start
-                            </h3>
-                          </div>
-                        </div>
-
-                        <div className="space-y-8">
-                          <div>
-                            <div className="flex justify-between items-center mb-4">
-                              <label className="text-xs font-black uppercase tracking-[0.2em] text-black dark:text-white">
-                                Paste Google Gemini API Key
-                              </label>
-                              <a
-                                href="https://aistudio.google.com/app/apikey"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:underline"
-                              >
-                                Get Free Key
-                              </a>
-                            </div>
-                            <div className="flex gap-4">
-                              <input
-                                type="password"
-                                placeholder="AIza..."
-                                className="flex-1 bg-zinc-100 dark:bg-zinc-800 border-4 border-black dark:border-zinc-700 p-5 rounded-2xl font-mono text-sm focus:bg-white dark:focus:bg-zinc-700 transition-all shadow-inner text-black dark:text-white"
-                                onChange={(e) => {
-                                  const val = e.target.value.trim();
-                                  if (val.startsWith("AIza")) {
-                                    setConfig((prev) => ({
-                                      ...prev,
-                                      googleKey: val,
-                                    }));
-                                  }
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="p-5 border-2 border-black/5 dark:border-white/5 rounded-2xl bg-zinc-50 dark:bg-zinc-800">
-                              <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
-                                <Shield className="w-4 h-4" /> Zero-Data
-                              </div>
-                              <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">
-                                Missions are encrypted and stored only on your
-                                device.
-                              </p>
-                            </div>
-                            <div className="p-5 border-2 border-black/5 dark:border-white/5 rounded-2xl bg-zinc-50 dark:bg-zinc-800">
-                              <div className="flex items-center gap-3 mb-2 font-black text-[10px] uppercase tracking-widest">
-                                <Globe className="w-4 h-4" /> Pure Logic
-                              </div>
-                              <p className="text-[9px] text-black/40 dark:text-white/40 font-bold uppercase leading-tight">
-                                No central filters. Direct access to raw neural
-                                reasoning.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="w-full relative mt-8">
-                        <button
-                          type="button"
-                          onClick={() => navigate("/mission")}
-                          className="w-full relative bg-white dark:bg-zinc-900 border-2 md:border-4 border-black dark:border-zinc-700 rounded-xl p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all text-center group flex flex-col items-center justify-center min-h-[150px] md:min-h-[200px]"
-                        >
-                          <div className="text-xl sm:text-2xl md:text-3xl font-black text-black/40 dark:text-white/40 font-serif italic mb-6 group-hover:text-black dark:group-hover:text-white transition-colors">
-                            Start session
-                          </div>
-                          <div className="p-3 md:p-4 bg-black dark:bg-white text-white dark:text-black rounded-lg md:rounded-xl group-hover:scale-110 shadow-lg transition-transform flex items-center justify-center">
-                            <ArrowRight className="w-6 h-6 md:w-8 md:h-8" />
-                          </div>
-                        </button>
-                      </div>
-                    )}
+                {/* ── HERO ── */}
+                <section className="w-full max-w-5xl mx-auto px-4 md:px-6 pt-16 md:pt-28 pb-12 md:pb-20 text-center animate-fade-in-up">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/10 dark:border-white/10 text-[10px] font-black uppercase tracking-[0.25em] text-black/40 dark:text-white/40 mb-8">
+                    <Sparkles className="w-3 h-3" />
+                    5+ AI modellen · 1 ultiem antwoord
                   </div>
-                </div>
+                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.95] max-w-4xl mx-auto mb-6 md:mb-8">
+                    Eén antwoord.
+                    <br />
+                    <span className="text-black/30 dark:text-white/30">
+                      Meerdere intelligenties.
+                    </span>
+                  </h1>
+                  <p className="max-w-2xl mx-auto text-base md:text-xl font-semibold text-black/60 dark:text-white/60 leading-relaxed mb-10 md:mb-14">
+                    FAINL laat meerdere AI-modellen tegelijk jouw vraag
+                    analyseren, elkaars redenering controleren en samen tot één
+                    scherp, gewogen oordeel komen.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate("/mission")}
+                    className="inline-flex items-center gap-3 px-8 py-5 bg-black dark:bg-white text-white dark:text-black font-black text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-lg"
+                  >
+                    Start nu gratis
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                  <p className="mt-5 text-[10px] font-black uppercase tracking-[0.2em] text-black/20 dark:text-white/20">
+                    Geen account nodig · Jouw data blijft op jouw apparaat
+                  </p>
+                </section>
+
+                {/* ── 5-STEP JOURNEY ── */}
+                <section className="w-full max-w-3xl mx-auto px-4 md:px-6 pb-16 md:pb-28 space-y-4">
+                  <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-black/20 dark:text-white/20 mb-8">
+                    Hoe het werkt
+                  </p>
+
+                  {[
+                    {
+                      step: "01",
+                      icon: PenLine,
+                      title: "Voer je vraag in",
+                      desc: "Stel elke vraag — zakelijk, filosofisch of persoonlijk. FAINL verwerkt hem direct.",
+                    },
+                    {
+                      step: "02",
+                      icon: Users,
+                      title: "AI's gaan head-to-head",
+                      desc: "Meerdere modellen analyseren jouw vraag tegelijk en controleren elkaars redenering op fouten en blinde vlekken.",
+                    },
+                    {
+                      step: "03",
+                      icon: Eye,
+                      title: "Bekijk elke AI apart",
+                      desc: "Volledig transparant: zie exact wat elk AI-model individueel heeft geconcludeerd — zonder filters.",
+                    },
+                    {
+                      step: "04",
+                      icon: Swords,
+                      title: "Live debat — doe zelf mee",
+                      desc: "De modellen debatteren live met elkaar. Wil jij ook de ring in? Dat kan — gooi jouw perspectief ertussen.",
+                    },
+                    {
+                      step: "05",
+                      icon: Gavel,
+                      title: "Het ultieme eindoordeel",
+                      desc: "FAINL analyseert alle resultaten, voegt samen en geeft jou het meest complete, gewogen antwoord.",
+                    },
+                  ].map(({ step, icon: Icon, title, desc }, i) => (
+                    <div
+                      key={step}
+                      className="group flex items-start gap-5 p-6 md:p-8 bg-white dark:bg-zinc-900 border-2 border-black/5 dark:border-white/5 rounded-2xl hover:border-black dark:hover:border-white hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.15)] transition-all duration-200"
+                      style={{ animationDelay: `${i * 80}ms` }}
+                    >
+                      <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-black dark:bg-white rounded-xl group-hover:scale-110 transition-transform">
+                        <Icon className="w-5 h-5 md:w-6 md:h-6 text-white dark:text-black" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-1.5">
+                          <span className="text-[10px] font-black tracking-[0.25em] text-black/20 dark:text-white/20">
+                            {step}
+                          </span>
+                          <h3 className="text-base md:text-lg font-black uppercase tracking-tight text-black dark:text-white">
+                            {title}
+                          </h3>
+                        </div>
+                        <p className="text-sm font-medium text-black/50 dark:text-white/50 leading-relaxed">
+                          {desc}
+                        </p>
+                      </div>
+                      <ArrowRight className="flex-shrink-0 w-4 h-4 text-black/10 dark:text-white/10 group-hover:text-black dark:group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
+                    </div>
+                  ))}
+
+                  {/* Bottom CTA */}
+                  <div className="pt-8 flex flex-col items-center gap-4">
+                    <button
+                      type="button"
+                      onClick={() => navigate("/mission")}
+                      className="inline-flex items-center gap-3 px-8 py-5 bg-black dark:bg-white text-white dark:text-black font-black text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-lg"
+                    >
+                      Start je eerste sessie
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/20 dark:text-white/20 text-center">
+                      Gratis · Geen account nodig · Ondersteund door 5+ AI
+                      modellen
+                    </p>
+                  </div>
+                </section>
               </>
             }
           />
@@ -849,6 +864,30 @@ const App: FC = () => {
 
                   {session.stage === WorkflowStage.IDLE ? (
                     <div className="w-full relative">
+                      {/* No-key prompt */}
+                      {!config.googleKey &&
+                        !config.openaiKey &&
+                        !config.anthropicKey &&
+                        !config.groqKey &&
+                        !config.deepseekKey && (
+                          <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700/50 rounded-xl">
+                            <div className="flex items-center gap-3 flex-1">
+                              <ZapIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                              <p className="text-xs font-black uppercase tracking-wide text-amber-800 dark:text-amber-300">
+                                Voeg een API-sleutel toe om te beginnen —
+                                gebruik jouw eigen Gemini, OpenAI of een ander
+                                model.
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setIsSettingsOpen(true)}
+                              className="flex-shrink-0 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-black text-[10px] uppercase tracking-widest rounded-lg transition-colors"
+                            >
+                              Instellingen openen
+                            </button>
+                          </div>
+                        )}
                       <div className="relative bg-white dark:bg-zinc-900 border-2 md:border-4 border-black dark:border-zinc-700 rounded-xl p-6 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] md:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:md:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)] focus-within:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:focus-within:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)] md:focus-within:shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] dark:md:focus-within:shadow-[20px_20px_0px_0px_rgba(255,255,255,0.1)] transition-all">
                         <div className="relative w-full min-h-[200px] md:min-h-[350px]">
                           {!input && !isInputFocused && (
