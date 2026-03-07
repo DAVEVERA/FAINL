@@ -431,11 +431,11 @@ const App: FC = () => {
     try {
       const pkg =
         type === "turns" || type === "credits"
-          ? PRICING.TOKENS.find((p) => p.count === count)
-          : PRICING.SUBSCRIPTIONS[0];
+          ? PRICING.TURNS.find((p: any) => p.count === count)
+          : PRICING.TURNS[0];
 
-      if (pkg?.url) {
-        window.location.href = pkg.url;
+      if (pkg?.stripeUrl) {
+        window.location.href = pkg.stripeUrl;
         return;
       }
       throw new Error("Invalid package or URL");
@@ -908,6 +908,8 @@ const App: FC = () => {
                                   (r) => r.memberId === member.id,
                                 )
                               }
+                              isExpanded={false}
+                              onToggle={() => {}}
                             />
                           ))}
                         </div>
@@ -1105,6 +1107,10 @@ const App: FC = () => {
       <PaywallModal
         isOpen={isPaywallOpen}
         onClose={() => setIsPaywallOpen(false)}
+        hasOwnKeys={Object.values(ModelProvider).some((p) =>
+          councilService.current.isProviderReady(p),
+        )}
+        onPurchaseTurns={(count: number) => handlePurchase("turns", count)}
       />
 
       <TrialChoiceModal

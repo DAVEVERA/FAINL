@@ -107,4 +107,5 @@ export interface AppConfig {
   creditsRemaining: number;
   isLifetime: boolean;
   totalTurnsAllowed: number;
+  hasWatchedAd?: boolean;
 }
