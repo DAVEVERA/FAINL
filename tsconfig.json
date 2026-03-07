@@ -30,5 +30,23 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "*.tsx",
+    "*.ts",
+    "components/**/*.tsx",
+    "components/**/*.ts",
+    "services/**/*.tsx",
+    "services/**/*.ts",
+    "data/**/*.tsx",
+    "data/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "assets",
+    "supabase",
+    "temp",
+    "tmp"
+  ]
 }

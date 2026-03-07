@@ -51,7 +51,7 @@ const FAQS = [
   },
   {
     q: "Blijven mijn vragen privé bij FAINL?",
-    a: "Ja. FAINL is gebouwd met privacy als uitgangspunt. Uw gegevens en sessies worden lokaal op uw toestel beheerd of veilig verwerkt via uw eigen API-sleutels.",
+    a: "Ja. FAINL is gebouwd met privacy als uitgangspunt. Uw gegevens en sessies worden lokaal op uw toestel beheerd en veilig verwerkt via de door MNRV gefaciliteerde API-verbindingen.",
     icon: Lock,
   },
   {
