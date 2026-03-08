@@ -120,18 +120,60 @@ const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
 const App: FC = () => {
   const { t, language, setLanguage } = useLanguage();
 
+  const defaultConfig = {
+    // Provider keys (kept for backward/forward compatibility in localStorage config)
+    googleKey: '',
+    openRouterKey: '',
+    openaiKey: '',
+    anthropicKey: '',
+    deepseekKey: '',
+    groqKey: '',
+    mistralKey: '',
+    customKey: '',
+    mimoKey: '',
+    devstralKey: '',
+    katKey: '',
+    olmoKey: '',
+    nemotronKey: '',
+    gemmaKey: '',
+    glmKey: '',
+    // App settings
+    activeCouncil: DEFAULT_COUNCIL,
+    customNodes: [] as any[],
+    chairmanId: DEFAULT_CHAIRMAN.id,
+    modelCount: 3 as 3 | 5,
+    turnsUsed: 0,
+    creditsRemaining: 0,
+    isLifetime: false,
+    totalTurnsAllowed: 2,
+    hasWatchedAd: false,
+  };
+
+  const normalizeConfig = (raw: any) => {
+    const merged = { ...defaultConfig, ...(raw || {}) };
+    return {
+      ...merged,
+      activeCouncil: Array.isArray(merged.activeCouncil) && merged.activeCouncil.length > 0
+        ? merged.activeCouncil
+        : DEFAULT_COUNCIL,
+      customNodes: Array.isArray(merged.customNodes) ? merged.customNodes : [],
+      modelCount: merged.modelCount === 5 ? 5 : 3,
+      turnsUsed: Number.isFinite(merged.turnsUsed) ? merged.turnsUsed : 0,
+      creditsRemaining: Number.isFinite(merged.creditsRemaining) ? merged.creditsRemaining : 0,
+      totalTurnsAllowed: Number.isFinite(merged.totalTurnsAllowed) ? merged.totalTurnsAllowed : 2,
+      isLifetime: !!merged.isLifetime,
+      hasWatchedAd: !!merged.hasWatchedAd,
+    };
+  };
+
   const [config, setConfig] = useState<AppConfig>(() => {
     const saved = localStorage.getItem('fainl_config_v2');
-    return saved ? JSON.parse(saved) : {
-      activeCouncil: DEFAULT_COUNCIL,
-      customNodes: [],
-      chairmanId: DEFAULT_CHAIRMAN.id,
-      modelCount: 3,
-      turnsUsed: 0,
-      creditsRemaining: 0,
-      isLifetime: false,
-      totalTurnsAllowed: 2,
-    };
+    if (!saved) return normalizeConfig(null) as AppConfig;
+    try {
+      return normalizeConfig(JSON.parse(saved)) as AppConfig;
+    } catch {
+      return normalizeConfig(null) as AppConfig;
+    }
   });
 
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
@@ -225,7 +267,8 @@ const App: FC = () => {
     }
 
     const baseMembers = config.modelCount === 5 ? PRESETS[1].members : DEFAULT_COUNCIL;
-    const allMembers = [...baseMembers, ...config.customNodes];
+    const customNodes = Array.isArray((config as any).customNodes) ? (config as any).customNodes : [];
+    const allMembers = [...baseMembers, ...customNodes];
     const readyMembers = councilService.current.getReadyMembers(allMembers);
 
     if (readyMembers.length < 2) {
@@ -289,7 +332,8 @@ const App: FC = () => {
     }));
 
     const baseMembers = config.modelCount === 5 ? PRESETS[1].members : DEFAULT_COUNCIL;
-    const allMembers = [...baseMembers, ...config.customNodes];
+    const customNodes = Array.isArray((config as any).customNodes) ? (config as any).customNodes : [];
+    const allMembers = [...baseMembers, ...customNodes];
     const readyMembers = councilService.current.getReadyMembers(allMembers);
 
     try {
