@@ -38,6 +38,7 @@ import { FAQPage } from './components/FAQPage';
 import { ContactPage } from './components/ContactPage';
 import { PrivacyPolicyPage } from './components/PrivacyPolicyPage';
 import { TermsOfServicePage } from './components/TermsOfServicePage';
+import { SettingsModal } from './components/SettingsModal';
 import { DebateRoom } from './components/DebateRoom';
 import { supabase } from './services/supabaseClient';
 import { LoginPage } from './components/LoginPage';
@@ -177,6 +178,7 @@ const App: FC = () => {
   });
 
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [authSession, setAuthSession] = useState<Session | null>(null);
@@ -277,6 +279,7 @@ const App: FC = () => {
         stage: WorkflowStage.ERROR,
         error: "Insufficient active nodes for consensus protocol. Minimum 2 nodes required."
       }));
+      setIsSettingsOpen(true);
       return;
     }
 
@@ -476,6 +479,15 @@ const App: FC = () => {
               {language === 'nl' ? 'EN' : 'NL'}
             </button>
             <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
+              title="Open keys settings"
+              aria-label="Open keys settings"
+            >
+              <Lock className="w-4 h-4" />
+              <span className="font-black text-[10px] uppercase tracking-widest">Keys</span>
+            </button>
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
             >
@@ -536,7 +548,7 @@ const App: FC = () => {
                 <h3 className="text-xl md:text-3xl font-black uppercase mb-3 tracking-tighter">Protocol Halt</h3>
                 <p className="text-black/50 dark:text-white/50 font-bold mb-6 leading-relaxed text-sm md:text-lg">{session.error}</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button onClick={() => setCurrentView(AppView.ACCOUNT)} className="px-6 py-3 md:px-10 md:py-5 bg-black dark:bg-white text-white dark:text-black font-black rounded uppercase tracking-[0.2em] text-[9px] md:text-[10px] transition-all">My Nodes</button>
+                  <button onClick={() => setIsSettingsOpen(true)} className="px-6 py-3 md:px-10 md:py-5 bg-black dark:bg-white text-white dark:text-black font-black rounded uppercase tracking-[0.2em] text-[9px] md:text-[10px] transition-all">My Nodes</button>
                   <button onClick={() => setSession({ ...session, stage: WorkflowStage.IDLE })} className="px-6 py-3 md:px-10 md:py-5 bg-white dark:bg-zinc-900 border-2 border-black dark:border-zinc-700 font-black rounded uppercase tracking-[0.2em] text-[9px] md:text-[10px] transition-all text-black dark:text-white">Recalibrate</button>
                 </div>
               </div>
@@ -700,6 +712,15 @@ const App: FC = () => {
         hasOwnKeys={config.creditsRemaining > 0}
         onPurchaseTurns={handlePurchaseTurns}
         onClose={() => setIsPaywallOpen(false)}
+      />
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        config={config}
+        onSave={setConfig}
+        history={history}
+        onImportHistory={setHistory}
+        onVerifyKey={(provider: ModelProvider, key: string) => councilService.current.verifyProviderKey(provider, key)}
       />
 
       {isWelcomeOpen && (
