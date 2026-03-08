@@ -55,39 +55,59 @@ export const PaywallModal: FC<PaywallModalProps> = ({
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8">
+        <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 custom-scrollbar">
 
           <div className="space-y-4">
-            <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-black dark:text-white text-center">
-              {language === 'nl' ? 'Kies Je Toegangsniveau' : 'Select Your Access Tier'}
+            <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-black dark:text-white text-center">
+              {language === 'nl' ? 'Kies Je Capaciteit' : 'Select Your Capacity'}
             </h3>
-            <p className="text-sm font-bold text-black/60 dark:text-white/60 leading-relaxed text-center">
-              {language === 'nl' ? "Krijg toegang tot krachtige autonome neurale netwerken via Stripe's veilige kassa." : "Unlock high-performance autonomous neural networks via Stripe's secure checkout."}
+            <p className="text-sm font-bold text-black/60 dark:text-white/60 leading-relaxed text-center max-w-md mx-auto">
+              {language === 'nl' ? "Krijg direct toegang tot het volledige neurale consensus protocol. Geen abonnement nodig voor losse credits." : "Unlock the full neural consensus protocol instantly. No subscription required for single credit packs."}
             </p>
           </div>
 
-          {/* 3-tier grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {PRICING.TURNS.map((pkg, idx) => (
-              <button
+          {/* New Card grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pb-4">
+            {PRICING.CREDITS.map((pkg, idx) => (
+              <div
                 key={idx}
-                onClick={() => onPurchaseTurns(pkg.count)}
-                disabled={isLoading}
-                className="flex flex-col items-center justify-center p-6 bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`card-fainl !min-height-[auto] !p-5 ${isLoading ? 'loading' : ''}`}
               >
-                <Zap className="w-5 h-5 text-black/30 dark:text-white/30 mb-3 group-hover:text-black dark:group-hover:text-white transition-colors" />
-                <div className="text-3xl font-black mb-1 text-black dark:text-white">{pkg.count}</div>
-                <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">
-                  {language === 'nl' ? 'Beurten' : 'Turns'}
+                <div className="card__badge !py-1.5 !mb-3">
+                  {pkg.count} {pkg.count === 1 ? (language === 'nl' ? 'CREDIT' : 'CREDIT') : (language === 'nl' ? 'CREDITS' : 'CREDITS')}
                 </div>
-                <div className="text-xl font-black text-black dark:text-white">€{pkg.price}</div>
-                <div className="mt-2 text-[9px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">{pkg.label}</div>
-                {isLoading && (
-                  <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  </div>
-                )}
-              </button>
+                <div className="flex justify-between items-end mb-4">
+                  <span className="card__title !text-2xl !mb-0 !border-b-2">€{pkg.price}</span>
+                  <span className="text-[10px] font-black uppercase text-black/40 dark:text-white/40 mb-1">{pkg.label}</span>
+                </div>
+
+                <ul className="card__lists !mb-6 !gap-2">
+                  <li className="card__list !gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-3.5 h-3.5 flex-shrink-0">
+                      <path fill="#FDC700" d="M21.5821 5.54289C21.9726 5.93342 21.9726 6.56658 21.5821 6.95711L10.2526 18.2867C9.86452 18.6747 9.23627 18.6775 8.84475 18.293L2.29929 11.8644C1.90527 11.4774 1.89956 10.8443 2.28655 10.4503C2.67354 10.0562 3.30668 10.0505 3.70071 10.4375L9.53911 16.1717L20.1679 5.54289C20.5584 5.15237 21.1916 5.15237 21.5821 5.54289Z" clipRule="evenodd" fillRule="evenodd" />
+                    </svg>
+                    <span className="!text-xs">Directe Beraadslaging</span>
+                  </li>
+                  <li className="card__list !gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-3.5 h-3.5 flex-shrink-0">
+                      <path fill="#FDC700" d="M21.5821 5.54289C21.9726 5.93342 21.9726 6.56658 21.5821 6.95711L10.2526 18.2867C9.86452 18.6747 9.23627 18.6775 8.84475 18.293L2.29929 11.8644C1.90527 11.4774 1.89956 10.8443 2.28655 10.4503C2.67354 10.0562 3.30668 10.0505 3.70071 10.4375L9.53911 16.1717L20.1679 5.54289C20.5584 5.15237 21.1916 5.15237 21.5821 5.54289Z" clipRule="evenodd" fillRule="evenodd" />
+                    </svg>
+                    <span className="!text-xs">Multi-AI Consensus</span>
+                  </li>
+                </ul>
+
+                <button
+                  onClick={() => onPurchaseTurns(pkg.count)}
+                  disabled={isLoading}
+                  className="card__cta !py-3 !text-sm flex items-center justify-center gap-2"
+                >
+                  {isLoading ? (
+                    <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <> {language === 'nl' ? 'Selecteren' : 'Select'} </>
+                  )}
+                </button>
+              </div>
             ))}
           </div>
 

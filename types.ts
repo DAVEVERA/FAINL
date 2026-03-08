@@ -20,7 +20,7 @@ export enum ModelProvider {
 export interface CouncilMember {
   id: string;
   name: string;
-  role: "MEMBER" | "CHAIRMAN";
+  role: string;
   provider: ModelProvider;
   modelId: string; // The API model string
   baseUrl?: string; // For custom endpoints (Groq, LocalAI)
@@ -84,24 +84,10 @@ export interface SessionState {
 }
 
 export interface AppConfig {
-  googleKey: string;
-  openRouterKey: string;
-  openaiKey: string;
-  anthropicKey: string;
-  deepseekKey: string;
-  groqKey: string;
-  mistralKey: string;
-  customKey: string;
-  // New Keys
-  mimoKey: string;
-  devstralKey: string;
-  katKey: string;
-  olmoKey: string;
-  nemotronKey: string;
-  gemmaKey: string;
-  glmKey: string;
   activeCouncil: CouncilMember[];
+  customNodes: CouncilMember[];
   chairmanId: string;
+  modelCount: 3 | 5;
   // Usage Tracking
   turnsUsed: number;
   creditsRemaining: number;

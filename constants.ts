@@ -136,14 +136,20 @@ export const PRESETS = [
 ];
 
 export const PRICING = {
-  TURNS: [
-    { count: 10, price: 19.99, label: "Starter Pack", stripeUrl: "https://buy.stripe.com/8x228k6Ca1Bxf7X1rM7Re04" },
-    { count: 30, price: 49.99, label: "Pro Pack", stripeUrl: "https://buy.stripe.com/28E3cogcKfsne3T1rM7Re06" },
-    { count: 100, price: 149.99, label: "Expert Pack", stripeUrl: "https://buy.stripe.com/6oU7sE5y6a83f7XfiC7Re07" },
+  CREDITS: [
+    { count: 1, price: 2.99, label: "1 Credit = 1 Vraag", stripeUrl: "#" },
+    { count: 5, price: 9.99, label: "5 Credits = 5 Vragen", stripeUrl: "#" },
+    { count: 10, price: 17.99, label: "10 Credits = 10 Vragen", stripeUrl: "#" },
+    { count: 30, price: 44.99, label: "30 Credits = 30 Vragen", stripeUrl: "#" },
+    { count: 100, price: 119.99, label: "100 Credits = 100 Vragen", stripeUrl: "#" },
   ],
+  SUBSCRIPTIONS: [
+    { count: 50, price: 49.99, label: "Starter abo", period: "p/m", stripeUrl: "#" },
+    { count: 300, price: 219.99, label: "Pro abo", period: "p/m", stripeUrl: "#" }
+  ]
 };
 
 export const USAGE_LIMITS = {
-  FREE_TURNS: 1,
+  FREE_CREDITS: 1,
   CREDITS_PER_TURN: 1
 };

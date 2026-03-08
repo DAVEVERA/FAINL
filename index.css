@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+/* @custom-variant dark (&:where(.dark, .dark *)); */
 
 @layer base {
   body {
@@ -14,14 +14,17 @@
   }
 
   .dark body {
-    background-color: #09090b; /* zinc-950 */
-    color: #f4f4f5; /* zinc-100 */
+    background-color: #09090b;
+    /* zinc-950 */
+    color: #f4f4f5;
+    /* zinc-100 */
   }
 
   /* Standardize link colors */
   a {
     transition: 0.2s;
   }
+
   .dark a {
     color: white;
   }
@@ -32,18 +35,24 @@
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-zinc-200);
 }
+
 .dark ::-webkit-scrollbar-track {
-  background: #18181b; /* zinc-900 */
+  background: #18181b;
+  /* zinc-900 */
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.4)) blur(0px);
     opacity: 0.8;
   }
+
   50% {
     filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) blur(0.5px);
     opacity: 1;
@@ -51,13 +60,23 @@
 }
 
 @keyframes orbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes reverse-orbit {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
 }
 
 .animate-pulse-glow {
@@ -71,18 +90,169 @@
 .animate-reverse-orbit {
   animation: reverse-orbit 15s linear infinite;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-zinc-400);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
+
 .dark ::-webkit-scrollbar-thumb {
-  background: #52525b; /* zinc-600 */
+  background: #52525b;
+  /* zinc-600 */
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-zinc-500);
 }
+
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #71717a; /* zinc-500 */
+  background: #71717a;
+  /* zinc-500 */
+}
+
+/* Custom Pricing Cards */
+.card-fainl {
+  width: 100%;
+  max-width: 320px;
+  min-height: 440px;
+  margin: 0 auto;
+  padding: 24px;
+  background: white;
+  border: 4px solid black;
+  box-shadow: 8px 8px 0 0 black;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dark .card-fainl {
+  background: #18181b;
+  border-color: #3f3f46;
+  box-shadow: 8px 8px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.card-fainl:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 12px 12px 0 0 black;
+}
+
+.card__badge {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  background: black;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.dark .card__badge {
+  background: white;
+  color: black;
+}
+
+.card__title {
+  font-size: 32px;
+  font-weight: 900;
+  color: black;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+  border-bottom: 3px solid black;
+  width: fit-content;
+  padding-right: 12px;
+}
+
+.dark .card__title {
+  color: white;
+  border-color: #3f3f46;
+}
+
+.card__subtitle {
+  font-size: 14px;
+  line-height: 1.3;
+  color: #3f3f46;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.dark .card__subtitle {
+  color: #a1a1aa;
+}
+
+.card__lists {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-transform: uppercase;
+  font-weight: 800;
+  flex-grow: 1;
+}
+
+.card__list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: black;
+}
+
+.dark .card__list {
+  color: white;
+}
+
+.card__list svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.card__list span {
+  font-size: 13px;
+}
+
+.card__cta {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #FDC700;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 16px;
+  text-transform: uppercase;
+  border: 4px solid black;
+  box-shadow: 4px 4px 0 0 black;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dark .card__cta {
+  border-color: #3f3f46;
+  box-shadow: 4px 4px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.card__cta:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 0 black;
+  background: #fde047;
+}
+
+.card-fainl.loading {
+  opacity: 0.6;
+  pointer-events: none;
 }

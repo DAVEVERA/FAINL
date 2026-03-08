@@ -134,10 +134,18 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
                     </div>
                 ) : (
                     filteredDirectives.map((directive) => (
-                        <button
+                        <div
                             key={directive.id}
                             onClick={() => onSelectMission(directive.query)}
-                            className="group text-left bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-2xl md:rounded-[2rem] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.05)] hover:-translate-y-1 transition-all relative overflow-hidden"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    onSelectMission(directive.query);
+                                }
+                            }}
+                            role="button"
+                            tabIndex={0}
+                            className="group text-left bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-2xl md:rounded-[2rem] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[12px_12px_0px_1px_rgba(255,255,255,0.05)] hover:-translate-y-1 transition-all relative overflow-hidden cursor-pointer focus:outline-none focus:ring-4 focus:ring-yellow-400"
                         >
                             {/* Recommended ribbon removed */}
 
@@ -152,6 +160,7 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
                                     <button
                                         onClick={(e) => handleVote(directive.id, 1, e)}
                                         title={language === 'nl' ? 'Upvote om community score te verhogen' : 'Upvote to increase community ranking'}
+                                        aria-label={language === 'nl' ? 'Upvote om community score te verhogen' : 'Upvote to increase community ranking'}
                                         className="p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded transition-colors text-black/40 dark:text-white/40 hover:text-green-500 flex items-center gap-1 group/vote"
                                     >
                                         <ChevronUp className="w-4 h-4 group-hover/vote:scale-110 transition-transform" />
@@ -162,6 +171,7 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
                                     <button
                                         onClick={(e) => handleVote(directive.id, -1, e)}
                                         title={language === 'nl' ? 'Downvote om community score te verlagen' : 'Downvote to decrease community ranking'}
+                                        aria-label={language === 'nl' ? 'Downvote om community score te verlagen' : 'Downvote to decrease community ranking'}
                                         className="p-1 hover:bg-black/10 dark:hover:bg-white/10 rounded transition-colors text-black/40 dark:text-white/40 hover:text-red-500 flex items-center gap-1 group/vote"
                                     >
                                         <ChevronDown className="w-4 h-4 group-hover/vote:scale-110 transition-transform" />
@@ -189,7 +199,7 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
                                     INIT <ArrowRight className="w-3.5 h-3.5" />
                                 </div>
                             </div>
-                        </button>
+                        </div>
                     ))
                 )}
             </div>

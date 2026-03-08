@@ -26,13 +26,16 @@ export const translations = {
         },
         // Homepage - Hero
         hero: {
+            title: "EÉN ANTWOORD.\nMEERDERE INTELLIGENTIES.",
+            cta: "START NU GRATIS ->",
+            footer: "GEEN ACCOUNT NODIG — JOUW DATA BLIJFT OP JOUW APPARAAT",
             placeholders: [
                 "Moet ik investeren in AI of wachten?",
                 "Kopen of huren in 2026?",
                 "Welke marketingstrategie levert de beste ROI?",
                 "Wat zijn de risico's van deze overname?"
             ],
-            description: "FAINL laat meerdere AI's tegelijk naar jouw vraag kijken. Ze analyseren, vergelijken en controleren elkaars redenering — en leveren samen één betrouwbaar antwoord. Slimmer dan één AI alleen.",
+            description: "FAINL laat meerdere AI-modellen tegelijk jouw vraag analyseren, elkaars redenering controleren en samen tot één scherp, gewogen oordeel komen.",
             quickStartTitle: "Snelle Start",
             pasteKey: "Plak Google Gemini API Key",
             getFreeKey: "Haal Gratis Key",
@@ -45,6 +48,8 @@ export const translations = {
             loginDesc: "Gebruik FAINL beurten zonder eigen API keys.",
             loginBtn: "Account Toegang",
             fainlInputPlaceholder: "Voer missie of vraagstuk in...",
+            modelChoice3: "3 AI MODELLEN (BASIS)",
+            modelChoice5: "5 AI MODELLEN (COMPLEX)",
             initiateBtn: "Start Sessie",
             initiateFree: "Sessie Starten (Gratis)"
         },
@@ -65,13 +70,15 @@ export const translations = {
             waarom4Desc: "Typ je vraag. Dat is alles. Wij regelen de consensus.",
 
             hoeWerktTitle: "Hoe het werkt",
-            hoeWerkt1Title: "Stap 01 — Typ je vraag",
-            hoeWerkt1Desc: "Stel elke vraag die je wilt — van eenvoudig tot complex. Geen speciale kennis vereist.",
-            hoeWerkt2Title: "Stap 02 — Meerdere AI's analyseren",
-            hoeWerkt2Desc: "Meerdere AI-systemen bekijken jouw vraag tegelijk, onafhankelijk van elkaar. Ze vergelijken bevindingen en controleren elkaars redenering.",
-            hoeWerkt3Title: "Stap 03 — Jij krijgt het beste antwoord",
-            hoeWerkt3Desc: "Het gecheckte, samengestelde antwoord verschijnt. Geen ruis. Geen verrassingen. Vertrouwbaar.",
-            hoeWerktFooter: "Van vraag tot betrouwbaar antwoord — in seconden. Zonder technische kennis. Zonder extra stappen.",
+            hoeWerkt1Title: "01 — VOER JE VRAAG IN",
+            hoeWerkt1Desc: "Stel elke vraag - zakelijk, filosofisch of persoonlijk. FAINL verwerkt hem direct.",
+            hoeWerkt2Title: "02 — AI'S GAAN HEAD-TO-HEAD",
+            hoeWerkt2Desc: "Meerdere modellen analyseren jouw vraag tegelijk en controleren elkaars redenering op fouten en blinde vlekken.",
+            hoeWerkt3Title: "03 — BEKIJK ELKE AI APART",
+            hoeWerkt3Desc: "Volledig transparant: zie exact wat elk AI-model individueel heeft geconcludeerd — zonder filters.",
+            hoeWerkt4Title: "04 — LIVE DEBAT - DOE ZELF MEE",
+            hoeWerkt4Desc: "Zie AI's in realtime met elkaar debatteren om tot de beste consensus te komen.",
+            hoeWerktFooter: "GEEN ACCOUNT NODIG — JOUW DATA BLIJFT OP JOUW APPARAAT",
 
             vergelijkingTitle: "Gewone AI vs. FAINL",
             v1Label: "Aantal AI's", v1Left: "Één systeem", v1Right: "Meerdere tegelijk",
@@ -128,9 +135,9 @@ export const translations = {
         pricing: {
             title: "Neurale Toegangsniveaus",
             subtitle: "Kies je protocol toegangsniveau. Veilig afrekenen via Stripe.",
-            standardAccess: "Standaard Toegang",
+            standardAccess: "Credits Toegang",
             standardDesc: "Volledige consensus beurten · Eenmalige aankoop",
-            turns: "Beurten",
+            turns: "Credits",
             moreSoon: "Binnenkort meer niveaus · Veilig afrekenen via Stripe"
         },
         paywall: {
@@ -140,7 +147,7 @@ export const translations = {
             apiKeyDesc: "Je kunt een eigen Gemini API sleutel gebruiken om gratis toegang te krijgen tot de basisfuncties.",
             addKeyBtn: "Sleutel Toevoegen",
             or: "OF",
-            purchaseTitle: "FAINL Toegang Verkrijgen",
+            purchaseTitle: "Credits Verkrijgen",
             purchaseDesc: "Koop direct toegang tot alle consensus modellen zonder eigen API sleutels."
         }
     },
@@ -271,9 +278,9 @@ export const translations = {
         pricing: {
             title: "Neural Access Tiers",
             subtitle: "Select your protocol access tier to begin deliberation. Secure checkout via Stripe.",
-            standardAccess: "Standard Access",
+            standardAccess: "Credit Access",
             standardDesc: "Full consensus turns · One-time purchase",
-            turns: "Turns",
+            turns: "Credits",
             moreSoon: "More tiers coming soon · Secure checkout via Stripe"
         },
         paywall: {
