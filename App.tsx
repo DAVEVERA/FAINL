@@ -562,7 +562,7 @@ const App: FC = () => {
                 <button
                   key={link.id}
                   onClick={() => navigate(link.id)}
-                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${location.pathname === link.id ? 'bg-black text-white' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
+                  className={`px-4 py-2.5 font-black text-sm uppercase tracking-widest transition-all rounded-lg ${location.pathname === link.id ? 'bg-black text-white' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
                 >
                   {link.label}
                 </button>
@@ -596,7 +596,7 @@ const App: FC = () => {
               <button
                 key={link.id}
                 onClick={() => { navigate(link.id); setIsMenuOpen(false); }}
-                className={`w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all ${location.pathname === link.id ? 'bg-black text-white' : 'bg-zinc-50 text-black/40'}`}
+                className={`w-full flex items-center gap-4 p-4 font-black text-sm md:text-base uppercase tracking-[0.15em] rounded-xl transition-all ${location.pathname === link.id ? 'bg-black text-white' : 'bg-zinc-50 text-black/60'}`}
               >
                 <link.icon className="w-5 h-5" />
                 {link.label}
@@ -605,7 +605,7 @@ const App: FC = () => {
             {authSession && (
               <button
                 onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                className="w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
+                className="w-full flex items-center gap-4 p-4 font-black text-sm uppercase tracking-[0.15em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
               >
                 <LogOut className="w-5 h-5" />
                 {t.nav.signOut}

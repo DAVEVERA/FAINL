@@ -102,15 +102,15 @@ const FAQItem: FC<{ q: string; a: string }> = ({ q, a }) => {
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between py-5 text-left gap-4 group"
       >
-        <span className="font-black text-sm md:text-base uppercase tracking-tight text-black dark:text-white group-hover:text-[#d1b411] transition-colors">
+        <span className="font-black text-base md:text-xl uppercase tracking-tight text-black group-hover:text-[#d1b411] transition-colors">
           {q}
         </span>
         <ChevronDown
-          className={`w-5 h-5 shrink-0 text-black/40 dark:text-white/40 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-6 h-6 shrink-0 text-black/40 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
-        <p className="pb-5 text-base md:text-lg text-black leading-relaxed">
+        <p className="pb-5 text-lg md:text-xl text-black leading-relaxed">
           {a}
         </p>
       )}
@@ -224,7 +224,7 @@ export const LandingPage: FC = () => {
           <span className="text-[#d1b411]">AI-model.</span>
         </h1>
 
-        <p className="max-w-lg sm:max-w-xl mx-auto text-base sm:text-lg md:text-xl font-semibold text-black leading-relaxed mb-8 sm:mb-10 md:mb-14">
+        <p className="max-w-lg sm:max-w-xl mx-auto text-xl sm:text-2xl md:text-2xl font-semibold text-black leading-relaxed mb-8 sm:mb-10 md:mb-14">
           Eén model geeft een antwoord. Meerdere modellen doorgronden de kern.
           Met FAINL krijg je het best haalbare antwoord — aangedreven door AI-modellen
           die concurreren, toetsen en samensmelten tot één superieur eindresultaat.
@@ -290,7 +290,7 @@ export const LandingPage: FC = () => {
         <h2 className="text-center text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4">
           Hoe werkt het?
         </h2>
-        <p className="text-center text-base md:text-lg text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto">
+        <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto leading-relaxed">
           Van jouw vraag tot het meest onderbouwde antwoord — in vijf
           geautomatiseerde stappen.
         </p>
@@ -325,16 +325,16 @@ export const LandingPage: FC = () => {
           ].map(({ icon: Icon, title, desc }) => (
             <li
               key={title}
-              className="group flex items-start gap-5 p-6 md:p-8 bg-white dark:bg-zinc-900 border-2 border-black/5 dark:border-white/5 rounded-2xl hover:border-[#d1b411] dark:hover:border-[#d1b411] hover:shadow-[6px_6px_0px_0px_#d1b411] transition-all duration-200"
+              className="group flex items-start gap-5 p-6 md:p-8 bg-white border-2 border-black/5 rounded-2xl hover:border-[#d1b411] hover:shadow-[6px_6px_0px_0px_#d1b411] transition-all duration-200"
             >
-              <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-black dark:bg-white rounded-xl group-hover:scale-110 transition-transform">
-                <Icon className="w-5 h-5 md:w-6 md:h-6 text-white dark:text-black" />
+              <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-black rounded-xl group-hover:scale-110 transition-transform">
+                <Icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-base md:text-lg font-black uppercase tracking-tight text-black dark:text-white mb-1.5">
+                <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-black mb-2">
                   {title}
                 </h3>
-                <p className="text-base md:text-lg font-medium text-black leading-relaxed">
+                <p className="text-xl md:text-2xl font-medium text-black leading-relaxed">
                   {desc}
                 </p>
               </div>
@@ -352,7 +352,7 @@ export const LandingPage: FC = () => {
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4 text-center">
             Waarom FAINL?
           </h2>
-          <p className="text-center text-base md:text-lg text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto">
+          <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto leading-relaxed">
             Gebouwd voor wie niet genoeg heeft aan een gewoon AI-antwoord.
           </p>
 
@@ -391,15 +391,15 @@ export const LandingPage: FC = () => {
             ].map(({ icon: Icon, title, desc }) => (
               <article
                 key={title}
-                className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 md:p-8 hover:bg-black/10 dark:hover:bg-white/10 hover:border-[#d1b411] dark:hover:border-[#d1b411] transition-all"
+                className="bg-black/5 border border-black/10 rounded-2xl p-6 md:p-8 hover:bg-black/10 hover:border-[#d1b411] transition-all"
               >
-                <div className="w-10 h-10 bg-black/10 dark:bg-white/10 rounded-xl flex items-center justify-center mb-4">
-                  <Icon className="w-5 h-5 text-black dark:text-white" />
+                <div className="w-12 h-12 bg-black/10 rounded-xl flex items-center justify-center mb-4">
+                  <Icon className="w-6 h-6 text-black" />
                 </div>
-                <h3 className="font-black text-sm uppercase tracking-tight text-black dark:text-white mb-2">
+                <h3 className="font-black text-lg md:text-xl uppercase tracking-tight text-black mb-3">
                   {title}
                 </h3>
-                <p className="text-base text-black leading-relaxed">{desc}</p>
+                <p className="text-lg md:text-xl text-black leading-relaxed">{desc}</p>
               </article>
             ))}
           </div>
@@ -414,7 +414,7 @@ export const LandingPage: FC = () => {
         <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4 text-center">
           Voor wie?
         </h2>
-        <p className="text-center text-base md:text-lg text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto">
+        <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 md:mb-16 max-w-xl mx-auto leading-relaxed">
           FAINL werkt voor elke situatie waar één perspectief niet genoeg is.
         </p>
 
@@ -429,7 +429,7 @@ export const LandingPage: FC = () => {
                 "Kopen of huren voor ons kantoor?",
                 "Is deze businesscase realistisch?",
               ],
-              color: "border-blue-500 dark:border-blue-400",
+              color: "border-blue-500",
             },
             {
               icon: GraduationCap,
@@ -440,7 +440,7 @@ export const LandingPage: FC = () => {
                 "Klopt deze statistiek over klimaatverandering?",
                 "Vergelijk drie filosofische stromingen over vrije wil.",
               ],
-              color: "border-purple-500 dark:border-purple-400",
+              color: "border-purple-500",
             },
             {
               icon: Lightbulb,
@@ -451,7 +451,7 @@ export const LandingPage: FC = () => {
                 "Is een vegan dieet gezonder?",
                 "Zijn of niet zijn — dat is de vraag.",
               ],
-              color: "border-amber-500 dark:border-amber-400",
+              color: "border-amber-500",
             },
             {
               icon: Globe,
@@ -462,29 +462,29 @@ export const LandingPage: FC = () => {
                 "Wat is het eerlijkste belastingsysteem?",
                 "Hoe pakt Europa migratie het best aan?",
               ],
-              color: "border-emerald-500 dark:border-emerald-400",
+              color: "border-emerald-500",
             },
           ].map(({ icon: Icon, label, title, examples, color }) => (
             <article
               key={title}
-              className={`bg-white dark:bg-zinc-900 border-2 ${color} rounded-2xl p-6 md:p-8`}
+              className={`bg-white border-2 ${color} rounded-2xl p-6 md:p-8`}
             >
               <div className="flex items-center gap-3 mb-4">
-                <Icon className="w-5 h-5 text-black dark:text-white" />
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-black/40 dark:text-white/40">
+                <Icon className="w-6 h-6 text-black" />
+                <span className="text-xs font-black uppercase tracking-[0.3em] text-black/40">
                   {label}
                 </span>
               </div>
-              <h3 className="font-black text-lg uppercase tracking-tight text-black dark:text-white mb-4">
+              <h3 className="font-black text-xl md:text-2xl uppercase tracking-tight text-black mb-4">
                 {title}
               </h3>
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {examples.map((ex) => (
                   <li
                     key={ex}
-                    className="flex items-start gap-2 text-base text-black"
+                    className="flex items-start gap-2 text-lg md:text-xl text-black"
                   >
-                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-black/30 dark:text-white/30" />
+                    <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-black/30" />
                     <span className="italic">"{ex}"</span>
                   </li>
                 ))}
@@ -492,7 +492,7 @@ export const LandingPage: FC = () => {
               <button
                 type="button"
                 onClick={() => navigate("/mission")}
-                className="mt-6 text-[10px] font-black uppercase tracking-widest text-black dark:text-white border-b-2 border-black/20 dark:border-white/20 hover:border-[#d1b411] hover:text-[#d1b411] dark:hover:border-[#d1b411] dark:hover:text-[#d1b411] transition-colors pb-0.5"
+                className="mt-6 text-sm font-black uppercase tracking-widest text-black border-b-2 border-black/20 hover:border-[#d1b411] hover:text-[#d1b411] transition-colors pb-0.5"
               >
                 Probeer gratis →
               </button>
@@ -510,26 +510,26 @@ export const LandingPage: FC = () => {
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4 text-center">
             FAINL vs. gewone AI
           </h2>
-          <p className="text-center text-base md:text-lg text-black font-semibold mb-12">
+          <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 leading-relaxed">
             Waarom is één model nooit genoeg?
           </p>
 
-          <div className="overflow-x-auto rounded-2xl border-2 border-black dark:border-white/20 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-none">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            <table className="w-full">
               <thead>
-                <tr className="bg-black dark:bg-white text-white dark:text-black">
-                  <th className="text-left px-6 py-4 font-black uppercase tracking-widest text-[10px]">
+                <tr className="bg-black text-white">
+                  <th className="text-left px-6 py-4 font-black uppercase tracking-widest text-sm">
                     Eigenschap
                   </th>
-                  <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-center">
+                  <th className="px-6 py-4 font-black uppercase tracking-widest text-sm text-center">
                     ChatGPT / Gemini alone
                   </th>
-                  <th className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-center text-[#d1b411]">
+                  <th className="px-6 py-4 font-black uppercase tracking-widest text-sm text-center text-[#d1b411]">
                     FAINL
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/10 dark:divide-white/10 bg-white dark:bg-zinc-900">
+              <tbody className="divide-y divide-black/10 bg-white">
                 {[
                   ["Meerdere AI-modellen parallel", false, true],
                   ["Live debat tussen modellen", false, true],
@@ -542,27 +542,27 @@ export const LandingPage: FC = () => {
                 ].map(([label, single, fainl]) => (
                   <tr
                     key={String(label)}
-                    className="hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                    className="hover:bg-zinc-50 transition-colors"
                   >
-                    <td className="px-6 py-4 font-bold text-black dark:text-white">
+                    <td className="px-6 py-4 font-bold text-black text-base md:text-lg">
                       {label}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {single === true ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" />
+                        <CheckCircle2 className="w-6 h-6 text-green-500 mx-auto" />
                       ) : single === false ? (
-                        <span className="text-red-400 font-black text-lg">✕</span>
+                        <span className="text-red-400 font-black text-xl">✕</span>
                       ) : (
-                        <span className="text-xs text-black/40 dark:text-white/40 font-bold">
+                        <span className="text-sm text-black/40 font-bold">
                           {single}
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {fainl ? (
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" />
+                        <CheckCircle2 className="w-6 h-6 text-green-500 mx-auto" />
                       ) : (
-                        <span className="text-red-400 font-black text-lg">✕</span>
+                        <span className="text-red-400 font-black text-xl">✕</span>
                       )}
                     </td>
                   </tr>
@@ -582,17 +582,17 @@ export const LandingPage: FC = () => {
           <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4 text-center">
             Veelgestelde vragen
           </h2>
-          <p className="text-center text-base md:text-lg text-black font-semibold mb-12">
+          <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 leading-relaxed">
             Alles wat je wil weten over FAINL.
           </p>
 
-          <div className="bg-white dark:bg-zinc-900 border-2 border-black/10 dark:border-white/10 rounded-2xl px-6 md:px-8">
+          <div className="bg-white border-2 border-black/10 rounded-2xl px-6 md:px-8">
             {FAQS.map((faq) => (
               <FAQItem key={faq.q} q={faq.q} a={faq.a} />
             ))}
           </div>
 
-          <p className="text-center mt-8 text-sm text-black font-bold">
+          <p className="text-center mt-8 text-base md:text-lg text-black font-bold">
             Meer vragen?{" "}
             <Link
               to="/faq"
@@ -620,7 +620,7 @@ export const LandingPage: FC = () => {
         <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-black dark:text-white mb-4 text-center">
           Eerlijke prijs
         </h2>
-        <p className="text-center text-base md:text-lg text-black font-semibold mb-12">
+        <p className="text-center text-xl md:text-2xl text-black font-semibold mb-12 leading-relaxed">
           Begin gratis. Betaal alleen als je meer wilt.
         </p>
 
@@ -679,17 +679,17 @@ export const LandingPage: FC = () => {
       >
         <div className="inline-flex items-center gap-1.5 mb-6">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-[#d1b411] text-[#d1b411]" />
+            <Star key={i} className="w-5 h-5 fill-[#d1b411] text-[#d1b411]" />
           ))}
-          <span className="ml-2 text-xs font-black text-black uppercase tracking-widest">
+          <span className="ml-2 text-sm md:text-base font-black text-black uppercase tracking-widest">
             4.8 / 5 — 247 gebruikers
           </span>
         </div>
 
-        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.95] mb-6">
+        <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black leading-[0.95] mb-6">
           Klaar voor het scherpste AI-oordeel?
         </h2>
-        <p className="text-lg md:text-xl font-semibold text-black mb-10 max-w-xl mx-auto leading-relaxed">
+        <p className="text-xl md:text-2xl font-semibold text-black mb-10 max-w-xl mx-auto leading-relaxed">
           Stel jouw vraag. Laat de modellen strijden. Ontvang de waarheid.
           Twee sessies gratis — geen account, geen creditcard.
         </p>
@@ -697,13 +697,13 @@ export const LandingPage: FC = () => {
         <button
           type="button"
           onClick={() => navigate("/mission")}
-          className="inline-flex items-center gap-3 px-12 py-6 bg-black dark:bg-white text-white dark:text-black font-black text-base uppercase tracking-[0.2em] rounded-xl hover:scale-105 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[12px_12px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-xl"
+          className="inline-flex items-center gap-3 px-12 py-6 bg-black text-white font-black text-base uppercase tracking-[0.2em] rounded-xl hover:scale-105 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,0.15)] active:scale-95 transition-all shadow-xl"
         >
           Start nu gratis
           <ArrowRight className="w-6 h-6" />
         </button>
 
-        <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-black/50">
+        <p className="mt-6 text-sm md:text-base font-black uppercase tracking-[0.2em] text-black/50">
           Gebruik je eigen API-sleutels? Dan is FAINL altijd 100% gratis.
         </p>
       </section>
