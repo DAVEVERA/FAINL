@@ -10,7 +10,6 @@ import {
   Loader2,
   Shield,
   AlertTriangle,
-  Lock,
   Globe,
   CircleCheck,
   Eye,
@@ -74,7 +73,6 @@ import { ScrambleText } from "./components/ScrambleText";
 import { WelcomePopup } from "./components/WelcomePopup";
 import { CookieConsent } from "./components/CookieConsent";
 import { LandingPage } from "./components/LandingPage";
-import { SettingsModal } from "./components/SettingsModal";
 import { useLanguage } from "./contexts/LanguageContext";
 
 
@@ -208,7 +206,6 @@ const App: FC = () => {
   });
 
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [authSession, setAuthSession] = useState<Session | null>(null);
@@ -312,7 +309,6 @@ const App: FC = () => {
         error:
           "Geen nodes gevonden. Voeg minimaal één node toe aan je raad.",
       }));
-      setIsSettingsOpen(true);
       return;
     }
 
@@ -514,15 +510,6 @@ const App: FC = () => {
               className="px-3 py-1 font-black text-[10px] uppercase tracking-widest bg-black/5 dark:bg-white/10 rounded-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors text-black dark:text-white"
             >
               {language === 'nl' ? 'EN' : 'NL'}
-            </button>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
-              title="Open keys settings"
-              aria-label="Open keys settings"
-            >
-              <Lock className="w-4 h-4" />
-              <span className="font-black text-[10px] uppercase tracking-widest">Keys</span>
             </button>
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -777,15 +764,6 @@ const App: FC = () => {
         onClose={() => setIsPaywallOpen(false)}
       />
 
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        config={config}
-        onSave={setConfig}
-        history={history}
-        onImportHistory={setHistory}
-        onVerifyKey={(provider: ModelProvider, key: string) => councilService.current.verifyProviderKey(provider, key)}
-      />
 
       {isWelcomeOpen && (
         <WelcomePopup onClose={() => {
