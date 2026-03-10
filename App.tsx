@@ -498,9 +498,15 @@ const App: FC = () => {
       <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
-            <button onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-5 group">
-              <CyberLogo isAnimated={location.pathname !== "/"} />
-              <span className="text-2xl font-black tracking-tighter hidden sm:block text-black dark:text-white">FAINL</span>
+            <button onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-4 group">
+              <img
+                src="/FAINLLOGO.png"
+                alt="FAINL logo"
+                className="h-8 md:h-10 w-auto object-contain"
+              />
+              <span className="text-2xl font-black tracking-tighter hidden sm:block text-black">
+                <ScrambleText text="FAINL" />
+              </span>
             </button>
             <nav className="hidden lg:flex items-center gap-1">
               {NavLinks.map(link => (
