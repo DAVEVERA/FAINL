@@ -31,6 +31,7 @@ import {
   SessionState,
   AppConfig,
   ModelProvider,
+  AppView,
 } from "./types";
 import { UnifiedCouncilService } from "./services/councilService";
 import { CouncilCard } from "./components/CouncilCard";
