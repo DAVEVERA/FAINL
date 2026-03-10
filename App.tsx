@@ -331,13 +331,36 @@ const App: FC = () => {
         membersToUse,
       );
 
-      // Council done — stage stays at PROCESSING_COUNCIL until user opens debate
+      // 2. Immediately start chairman synthesis
       setSession((prev: SessionState) => ({
         ...prev,
         councilResponses: responses,
-        stage: WorkflowStage.COMPLETED,
+        stage: WorkflowStage.SYNTHESIZING,
+        synthesis: '',
         debateMessages: []
       }));
+
+      const synthesis = await councilService.current.synthesizeStream(
+        input,
+        responses,
+        [],
+        [],
+        membersToUse,
+        DEFAULT_CHAIRMAN,
+        (chunk) => {
+          setSession((prev: SessionState) => ({
+            ...prev,
+            synthesis: (prev.synthesis || '') + chunk
+          }));
+        }
+      );
+
+      setSession((prev: SessionState) => {
+        const completedSession = { ...prev, synthesis, stage: WorkflowStage.COMPLETED };
+        setHistory((h: SessionState[]) => [completedSession, ...h]);
+        return completedSession;
+      });
+
     } catch (err: any) {
       console.error(err);
       setSession((prev: SessionState) => ({
