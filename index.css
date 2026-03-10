@@ -1,19 +1,8 @@
 @import "tailwindcss";
 /* @custom-variant dark (&:where(.dark, .dark *)); */
 
-/* color-scheme: tells the browser to render native UI (scrollbars, inputs,
-   select dropdowns) in the correct mode — works in all modern browsers */
 :root {
   color-scheme: light;
-}
-
-.dark {
-  color-scheme: dark;
-}
-
-/* Suppress all transitions on initial page load to prevent flash-then-fade */
-.no-transition * {
-  transition: none !important;
 }
 
 @layer base {

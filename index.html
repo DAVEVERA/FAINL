@@ -64,24 +64,6 @@
       })();
     </script>
 
-    <!-- Dark mode: apply class before React mounts to prevent FOUC -->
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem('fainl_theme');
-          if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {}
-        // Suppress CSS transitions on initial load so there's no flash-then-fade
-        document.documentElement.classList.add('no-transition');
-        window.addEventListener('load', function () {
-          requestAnimationFrame(function () {
-            document.documentElement.classList.remove('no-transition');
-          });
-        });
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>

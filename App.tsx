@@ -53,8 +53,6 @@ import {
   HelpCircle,
   Mail,
   Zap as ZapIcon,
-  Sun,
-  Moon,
 } from "lucide-react";
 import { supabase } from "./services/supabaseClient";
 import {
@@ -207,22 +205,10 @@ const App: FC = () => {
     }
   });
 
-  const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [authSession, setAuthSession] = useState<Session | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('fainl_theme') === 'dark' ||
-        (!localStorage.getItem('fainl_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('fainl_theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -236,7 +222,7 @@ const App: FC = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setCurrentView(AppView.HOME);
+    navigate("/");
   };
 
   const [history, setHistory] = useState<SessionState[]>(() => {
@@ -489,16 +475,16 @@ const App: FC = () => {
       <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
-            <button onClick={() => setCurrentView(AppView.HOME)} className="flex items-center gap-3 md:gap-5 group">
-              <CyberLogo isAnimated={currentView !== AppView.HOME} />
+            <button onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-5 group">
+              <CyberLogo isAnimated={location.pathname !== "/"} />
               <span className="text-2xl font-black tracking-tighter hidden sm:block text-black dark:text-white">FAINL</span>
             </button>
             <nav className="hidden lg:flex items-center gap-1">
               {NavLinks.map(link => (
                 <button
                   key={link.id}
-                  onClick={() => setCurrentView(link.id)}
-                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
+                  onClick={() => navigate(link.id)}
+                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${location.pathname === link.id ? 'bg-black text-white' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
                 >
                   {link.label}
                 </button>
@@ -513,13 +499,6 @@ const App: FC = () => {
             >
               {language === 'nl' ? 'EN' : 'NL'}
             </button>
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg active:scale-95 transition-all"
@@ -544,8 +523,8 @@ const App: FC = () => {
             {NavLinks.map(link => (
               <button
                 key={link.id}
-                onClick={() => { setCurrentView(link.id); setIsMenuOpen(false); }}
-                className={`w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-zinc-50 dark:bg-zinc-800 text-black/40 dark:text-white/40'}`}
+                onClick={() => { navigate(link.id); setIsMenuOpen(false); }}
+                className={`w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all ${location.pathname === link.id ? 'bg-black text-white' : 'bg-zinc-50 text-black/40'}`}
               >
                 <link.icon className="w-5 h-5" />
                 {link.label}
@@ -758,6 +737,50 @@ const App: FC = () => {
               </>
             }
           />
+
+          {/* Kookboek */}
+          <Route
+            path="/cookbook"
+            element={
+              <CookbookPage
+                onSelectMission={(query) => {
+                  setInput(query);
+                  navigate('/mission');
+                }}
+              />
+            }
+          />
+
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <AccountPage
+                config={config}
+                onUpdateConfig={(c) => setConfig(c)}
+                history={history}
+                onLoadSession={(s) => { setSession(s); navigate('/mission'); }}
+                onDeleteSessions={(ids) => setHistory(h => h.filter(s => !ids.includes(s.id)))}
+                onArchiveSessions={(ids) => setHistory(h => h.map(s => ids.includes(s.id) ? { ...s, isArchived: true } : s))}
+              />
+            }
+          />
+
+          {/* FAQ */}
+          <Route path="/faq" element={<FAQPage />} />
+
+          {/* Contact */}
+          <Route path="/contact" element={<ContactPage />} />
+
+          {/* Auth */}
+          <Route path="/login" element={<LoginPage onLoginSuccess={() => navigate('/')} />} />
+
+          {/* Legal */}
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
