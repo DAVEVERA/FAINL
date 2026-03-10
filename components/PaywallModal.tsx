@@ -78,7 +78,7 @@ export const PaywallModal: FC<PaywallModalProps> = ({
                 <Zap className="w-5 h-5 text-black/30 dark:text-white/30 mb-3 group-hover:text-black dark:group-hover:text-white transition-colors" />
                 <div className="text-3xl font-black mb-1 text-black dark:text-white">{pkg.count}</div>
                 <div className="text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">
-                  {language === 'nl' ? 'Beurten' : 'Turns'}
+                  {language === 'nl' ? 'Credits' : 'Credits'}
                 </div>
                 <div className="text-xl font-black text-black dark:text-white">€{pkg.price}</div>
                 <div className="mt-2 text-[9px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">{pkg.label}</div>

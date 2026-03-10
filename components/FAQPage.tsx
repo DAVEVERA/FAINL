@@ -11,7 +11,6 @@ import {
   Globe,
   MessageSquare
 } from 'lucide-react';
-import { ScrambleText } from './ScrambleText';
 
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -32,7 +31,7 @@ export const FAQPage: FC = () => {
     },
     {
       q: language === 'nl' ? "Hoeveel kost het?" : "How much does it cost?",
-      a: language === 'nl' ? "De eerste 2 opdrachten zijn helemaal gratis — zonder account. Daarna kun je bundels kopen vanaf 10 beurten. Geen abonnement, je betaalt alleen voor wat je gebruikt." : "The first 2 missions are completely free — no account required. After that, you can purchase bundles starting at 10 turns. No subscription, pay only for what you use.",
+      a: language === 'nl' ? "De eerste 2 opdrachten zijn helemaal gratis — zonder account. Daarna kun je credits kopen vanaf €2,99. Geen abonnement verplicht, je betaalt alleen voor wat je gebruikt." : "The first 2 missions are completely free — no account required. After that, you can purchase credits from €2.99. No subscription required, pay only for what you use.",
       icon: Coins
     },
     {
@@ -56,7 +55,7 @@ export const FAQPage: FC = () => {
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="text-center mb-16 md:mb-24">
         <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4 text-black dark:text-white">
-          <ScrambleText text={language === 'nl' ? 'Veelgestelde Vragen' : 'Internal Protocol'} />
+          {language === 'nl' ? 'Veelgestelde Vragen' : 'Internal Protocol'}
         </h1>
         <p className="max-w-2xl mx-auto text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
           {language === 'nl'

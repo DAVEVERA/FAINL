@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { DIRECTIVES } from "../data/directives";
 import { SEO } from "./SEO";
-import { ScrambleText } from "./ScrambleText";
 
 export const QuestionPage: FC = () => {
   const { id } = useParams<{ id: string }>();
