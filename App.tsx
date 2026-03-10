@@ -146,7 +146,7 @@ const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
 };
 
 const App: FC = () => {
-  const { t, language, setLanguage } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const defaultConfig = {
@@ -516,12 +516,6 @@ const App: FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLanguage(language === 'nl' ? 'en' : 'nl')}
-              className="px-3 py-1 font-black text-[10px] uppercase tracking-widest bg-black/5 dark:bg-white/10 rounded-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors text-black dark:text-white"
-            >
-              {language === 'nl' ? 'EN' : 'NL'}
-            </button>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg active:scale-95 transition-all"

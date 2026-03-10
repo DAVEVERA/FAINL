@@ -217,36 +217,34 @@ export const LandingPage: FC = () => {
       {/* ══ HERO ══ */}
       <section
         aria-label="Introductie"
-        className="w-full max-w-5xl mx-auto px-4 md:px-6 pt-16 md:pt-32 pb-12 md:pb-20 text-center"
+        className="w-full max-w-4xl mx-auto px-5 sm:px-8 md:px-10 pt-10 sm:pt-16 md:pt-28 pb-10 md:pb-20 text-center"
       >
-        <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter text-black dark:text-white leading-[1.05] max-w-4xl mx-auto mb-6 md:mb-8">
+        <h1 className="text-[2.4rem] leading-[1.06] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.25rem] font-black uppercase tracking-tighter text-black max-w-3xl mx-auto mb-5 sm:mb-6 md:mb-8">
           Jouw vraag verdient meer dan één{" "}
           <span className="text-[#d1b411]">AI-model.</span>
         </h1>
 
-        <p className="max-w-2xl mx-auto text-base md:text-xl font-semibold text-black/60 dark:text-white/50 leading-relaxed mb-10 md:mb-14">
+        <p className="max-w-lg sm:max-w-xl mx-auto text-[0.95rem] sm:text-base md:text-lg font-semibold text-black/55 leading-relaxed mb-8 sm:mb-10 md:mb-14">
           Eén model geeft een antwoord. Meerdere modellen doorgronden de kern.
-          <br />
-          Met FAINL krijg je het best haalbare antwoord.
-          <br />
-          Aangedreven door meerdere AI-modellen die concurreren, toetsen en samensmelten tot één superieur eindresultaat.
+          Met FAINL krijg je het best haalbare antwoord — aangedreven door AI-modellen
+          die concurreren, toetsen en samensmelten tot één superieur eindresultaat.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+        <div className="flex flex-col xs:flex-row items-center justify-center gap-3 sm:gap-4 mb-8">
           <button
             type="button"
             onClick={() => navigate("/mission")}
-            className="inline-flex items-center gap-3 px-10 py-5 bg-black dark:bg-white text-white dark:text-black font-black text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-lg"
+            className="w-full xs:w-auto inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-black text-white font-black text-xs sm:text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] active:scale-95 transition-all shadow-lg"
           >
             Start gratis
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
           <Link
             to="/cookbook"
-            className="inline-flex items-center gap-2 px-8 py-5 border-2 border-black/20 dark:border-white/20 text-black/60 dark:text-white/60 font-black text-sm uppercase tracking-widest rounded-xl hover:border-[#d1b411] hover:text-[#d1b411] dark:hover:border-[#d1b411] dark:hover:text-[#d1b411] transition-all"
+            className="w-full xs:w-auto inline-flex items-center justify-center gap-2 px-7 sm:px-8 py-4 sm:py-5 border-2 border-black/20 text-black/60 font-black text-xs sm:text-sm uppercase tracking-widest rounded-xl hover:border-[#d1b411] hover:text-[#d1b411] transition-all"
           >
             <BookOpen className="w-4 h-4" />
-            Bekijk voorbeeldvragen
+            Voorbeeldvragen
           </Link>
         </div>
       </section>
