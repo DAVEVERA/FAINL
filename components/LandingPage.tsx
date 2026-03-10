@@ -220,13 +220,16 @@ export const LandingPage: FC = () => {
         className="w-full max-w-5xl mx-auto px-4 md:px-6 pt-16 md:pt-32 pb-12 md:pb-20 text-center"
       >
         <h1 className="text-5xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter text-black dark:text-white leading-[1.05] max-w-4xl mx-auto mb-6 md:mb-8">
-          Jouw vraag verdient meer dan{" "}
-          <span className="text-[#d1b411]">één</span> model.
+          Jouw vraag verdient meer dan één{" "}
+          <span className="text-[#d1b411]">AI-model.</span>
         </h1>
 
         <p className="max-w-2xl mx-auto text-base md:text-xl font-semibold text-black/60 dark:text-white/50 leading-relaxed mb-10 md:mb-14">
-          Eén model reageert, meerdere doorgronden. Klaar voor het scherpste AI-oordeel?
-          Laat de modellen strijden en ontvang het krachtigste antwoord.
+          Eén model geeft een antwoord. Meerdere modellen doorgronden de kern.
+          <br />
+          Met FAINL krijg je het best haalbare antwoord.
+          <br />
+          Aangedreven door meerdere AI-modellen die concurreren, toetsen en samensmelten tot één superieur eindresultaat.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
