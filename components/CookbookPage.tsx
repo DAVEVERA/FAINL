@@ -60,7 +60,7 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-20 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-16 md:mb-24">
                 <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4 text-black dark:text-white">
-                    Cookbook
+                    Kookboek
                 </h1>
                 <p className="max-w-2xl mx-auto text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
                     {language === 'nl'

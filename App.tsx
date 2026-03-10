@@ -451,7 +451,7 @@ const App: FC = () => {
     { id: "/", label: "Protocols", icon: ZapIcon },
     { id: "/tokens", label: "Credits", icon: Coins },
     { id: "/dashboard", label: "My FAINLS", icon: LayoutDashboard },
-    { id: "/cookbook", label: "Cookbook", icon: BookOpen },
+    { id: "/cookbook", label: "Kookboek", icon: BookOpen },
     { id: "/faq", label: "FAQ", icon: HelpCircle },
     { id: "/contact", label: "Contact", icon: Mail },
   ];
