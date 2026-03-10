@@ -1,7 +1,7 @@
-﻿import { useState, useRef, useEffect, FC } from "react";
+
+import { useState, useRef, useEffect, FC } from 'react';
 import {
   Send,
-  Settings as SettingsIcon,
   Users,
   MessageSquare,
   Gavel,
@@ -74,19 +74,11 @@ import { ScrambleText } from "./components/ScrambleText";
 import { WelcomePopup } from "./components/WelcomePopup";
 import { CookieConsent } from "./components/CookieConsent";
 import { LandingPage } from "./components/LandingPage";
+import { SettingsModal } from "./components/SettingsModal";
+import { useLanguage } from "./contexts/LanguageContext";
 
-const FadingPlaceholder: FC<{ isFocused: boolean }> = ({
-  isFocused,
-}: {
-  isFocused: boolean;
-}) => {
-  const examples = [
-    "Welke programmeertaal moet ik leren?",
-    "Kopen of huren in 2026?",
-    "Zijn of niet zijn?",
-    "Wat kwam eerst: de kip of het ei?",
-  ];
 
+const FadingPlaceholder: FC<{ isFocused: boolean; examples: string[] }> = ({ isFocused, examples }) => {
   const [index, setIndex] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -98,8 +90,8 @@ const FadingPlaceholder: FC<{ isFocused: boolean }> = ({
       setTimeout(() => {
         setIndex((prev) => (prev + 1) % examples.length);
         setFade(true);
-      }, 500); // Wait for fade out before changing text
-    }, 4000); // Change text every 4 seconds
+      }, 500);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [isFocused, examples.length]);
@@ -107,9 +99,7 @@ const FadingPlaceholder: FC<{ isFocused: boolean }> = ({
   if (isFocused) return null;
 
   return (
-    <span
-      className={`transition-opacity duration-500 ${fade ? "opacity-100" : "opacity-0"}`}
-    >
+    <span className={`transition-opacity duration-500 ${fade ? 'opacity-100' : 'opacity-0'}`}>
       {examples[index]}
     </span>
   );
@@ -131,37 +121,27 @@ const AnimatedSendIcon: FC = () => {
 
   return (
     <div className="relative">
-      <Send
-        className={`w-6 h-6 md:w-10 md:h-10 transition-transform duration-100 ${glitch ? "translate-x-0.5 -translate-y-0.5 opacity-80" : ""}`}
-      />
+      <Send className={`w-6 h-6 md:w-10 md:h-10 transition-transform duration-100 ${glitch ? 'translate-x-0.5 -translate-y-0.5 opacity-80' : ''}`} />
       {glitch && (
         <Send className="w-6 h-6 md:w-10 md:h-10 absolute top-0 left-0 text-red-500 opacity-50 -translate-x-0.5 translate-y-0.5 mix-blend-screen" />
       )}
     </div>
   );
 };
+
 const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
   return (
     <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center group overflow-visible">
-      {/* Outer Glow Ring */}
       <div className="absolute inset-0 bg-white/10 dark:bg-white/5 rounded-full blur-xl group-hover:bg-white/20 transition-all duration-500 animate-pulse-glow" />
-
-      {/* Orbital Layers */}
       {isAnimated && (
         <>
           <div className="absolute inset-x-0.5 inset-y-0.5 border border-white/20 rounded-full animate-orbit pointer-events-none" />
           <div className="absolute inset-x-2 inset-y-2 border border-white/10 dark:border-white/5 rounded-full animate-reverse-orbit pointer-events-none" />
         </>
       )}
-
-      {/* Core Geometry (Shield with Glassmorphism) */}
       <div className="relative w-8 h-8 md:w-10 md:h-10 bg-white/10 dark:bg-white/5 backdrop-blur-md rounded-xl border border-white/30 dark:border-white/20 flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:border-white/50 transition-all duration-500 overflow-hidden">
-        {/* Internal Light Source */}
         <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.4)_0%,transparent_60%)] opacity-50 group-hover:opacity-80 transition-opacity" />
-
         <Shield className="text-white dark:text-white w-4 h-4 md:w-5 md:h-5 relative z-10 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
-
-        {/* Glass Glint */}
         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
       </div>
     </div>
@@ -169,111 +149,138 @@ const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
 };
 
 const App: FC = () => {
-  // Initialization with Persistent Config
+  const { t, language, setLanguage } = useLanguage();
+
+  const defaultConfig = {
+    // Provider keys (kept for backward/forward compatibility in localStorage config)
+    googleKey: '',
+    openRouterKey: '',
+    openaiKey: '',
+    anthropicKey: '',
+    deepseekKey: '',
+    groqKey: '',
+    mistralKey: '',
+    customKey: '',
+    mimoKey: '',
+    devstralKey: '',
+    katKey: '',
+    olmoKey: '',
+    nemotronKey: '',
+    gemmaKey: '',
+    glmKey: '',
+    // App settings
+    activeCouncil: DEFAULT_COUNCIL,
+    customNodes: [] as any[],
+    chairmanId: DEFAULT_CHAIRMAN.id,
+    modelCount: 3 as 3 | 5,
+    turnsUsed: 0,
+    creditsRemaining: 0,
+    isLifetime: false,
+    totalTurnsAllowed: 2,
+    hasWatchedAd: false,
+  };
+
+  const normalizeConfig = (raw: any) => {
+    const merged = { ...defaultConfig, ...(raw || {}) };
+    return {
+      ...merged,
+      activeCouncil: Array.isArray(merged.activeCouncil) && merged.activeCouncil.length > 0
+        ? merged.activeCouncil
+        : DEFAULT_COUNCIL,
+      customNodes: Array.isArray(merged.customNodes) ? merged.customNodes : [],
+      modelCount: merged.modelCount === 5 ? 5 : 3,
+      turnsUsed: Number.isFinite(merged.turnsUsed) ? merged.turnsUsed : 0,
+      creditsRemaining: Number.isFinite(merged.creditsRemaining) ? merged.creditsRemaining : 0,
+      totalTurnsAllowed: Number.isFinite(merged.totalTurnsAllowed) ? merged.totalTurnsAllowed : 2,
+      isLifetime: !!merged.isLifetime,
+      hasWatchedAd: !!merged.hasWatchedAd,
+    };
+  };
+
   const [config, setConfig] = useState<AppConfig>(() => {
     const saved = localStorage.getItem("fainl_config_v2");
-    return saved
-      ? JSON.parse(saved)
-      : {
-          activeCouncil: DEFAULT_COUNCIL,
-          chairmanId: DEFAULT_CHAIRMAN.id,
-          turnsUsed: 0,
-          creditsRemaining: 0,
-          isLifetime: false,
-          totalTurnsAllowed: 2, // 2 free turns for new visitors
-          hasWatchedAd: false,
-          hasSubscribed: false,
-        };
+    if (!saved) return normalizeConfig(null) as AppConfig;
+    try {
+      return normalizeConfig(JSON.parse(saved)) as AppConfig;
+    } catch {
+      return normalizeConfig(null) as AppConfig;
+    }
   });
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
   const [authSession, setAuthSession] = useState<Session | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return (
-        localStorage.getItem("fainl_theme") === "dark" ||
-        (!localStorage.getItem("fainl_theme") &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      );
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('fainl_theme') === 'dark' ||
+        (!localStorage.getItem('fainl_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
     return false;
   });
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-    localStorage.setItem("fainl_theme", isDarkMode ? "dark" : "light");
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('fainl_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setAuthSession(session);
     });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setAuthSession(session);
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/");
+    setCurrentView(AppView.HOME);
   };
 
   const [history, setHistory] = useState<SessionState[]>(() => {
-    const saved = localStorage.getItem("fainl_history");
+    const saved = localStorage.getItem('fainl_history');
     if (!saved) return [];
     try {
       const parsed = JSON.parse(saved);
-      // Migrate: Ensure all sessions have an ID
-      const migrated = parsed.map((s: any) => ({
+      return parsed.map((s: any) => ({
         ...s,
         id: s.id || crypto.randomUUID(),
-        isArchived: !!s.isArchived,
+        isArchived: !!s.isArchived
       }));
-      return migrated;
     } catch (e) {
       return [];
     }
   });
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
   const [isDebateOpen, setIsDebateOpen] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(() => {
-    const seen = localStorage.getItem("fainl_visited");
-    if (!seen) {
-      // Delay popup slightly so page loads first
-      setTimeout(() => {}, 0);
-      return true;
-    }
-    return false;
+    const seen = localStorage.getItem('fainl_visited');
+    return !seen;
   });
 
   const [session, setSession] = useState<SessionState>({
     id: crypto.randomUUID(),
     stage: WorkflowStage.IDLE,
-    query: "",
+    query: '',
     councilResponses: [],
     debateMessages: [],
     reviews: [],
-    synthesis: "",
+    synthesis: ''
   });
 
   const councilService = useRef(new UnifiedCouncilService(config));
 
   useEffect(() => {
     councilService.current = new UnifiedCouncilService(config);
-    localStorage.setItem("fainl_config_v2", JSON.stringify(config));
+    localStorage.setItem('fainl_config_v2', JSON.stringify(config));
   }, [config]);
 
   useEffect(() => {
-    localStorage.setItem("fainl_history", JSON.stringify(history));
+    localStorage.setItem('fainl_history', JSON.stringify(history));
   }, [history]);
 
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -282,10 +289,9 @@ const App: FC = () => {
   const handleStart = async () => {
     if (!input.trim()) return;
 
-    // Usage check
+    const hasCredits = config.creditsRemaining > 0;
     const hasTurnsRemaining = config.turnsUsed < config.totalTurnsAllowed;
-    const canUseCredits = config.creditsRemaining > 0;
-    const isAllowed = config.isLifetime || hasTurnsRemaining || canUseCredits;
+    const isAllowed = config.isLifetime || hasTurnsRemaining || hasCredits;
 
     if (!isAllowed) {
       setIsPaywallOpen(true);
@@ -306,8 +312,23 @@ const App: FC = () => {
         error:
           "Geen nodes gevonden. Voeg minimaal één node toe aan je raad.",
       }));
+      setIsSettingsOpen(true);
       return;
     }
+
+    setConfig((current: AppConfig) => {
+      if (current.creditsRemaining > 0) {
+        return {
+          ...current,
+          creditsRemaining: current.creditsRemaining - USAGE_LIMITS.CREDITS_PER_TURN
+        };
+      } else {
+        return {
+          ...current,
+          turnsUsed: current.turnsUsed + 1
+        };
+      }
+    });
 
     setSession({
       id: crypto.randomUUID(),
@@ -316,7 +337,7 @@ const App: FC = () => {
       councilResponses: [],
       debateMessages: [],
       reviews: [],
-      synthesis: "",
+      synthesis: ''
     });
 
     try {
@@ -331,28 +352,25 @@ const App: FC = () => {
         ...prev,
         councilResponses: responses,
         stage: WorkflowStage.COMPLETED,
-        debateMessages: [],
+        debateMessages: []
       }));
     } catch (err: any) {
       console.error(err);
       setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
-        error: err.message || "Autonomous consensus protocol interrupted.",
+        error: err.message || "Autonomous consensus protocol interrupted."
       }));
     }
   };
 
-  const handleEndDebate = async (
-    debateMessages: import("./types").DebateMessage[],
-  ) => {
+  const handleEndDebate = async (debateMessages: import('./types').DebateMessage[]) => {
     setIsDebateOpen(false);
-
     setSession((prev: SessionState) => ({
       ...prev,
       debateMessages,
       stage: WorkflowStage.SYNTHESIZING,
-      synthesis: "",
+      synthesis: ''
     }));
 
     const readyForSynth = councilService.current.getReadyMembers(config.activeCouncil);
@@ -362,124 +380,74 @@ const App: FC = () => {
       const synthesis = await councilService.current.synthesizeStream(
         session.query,
         session.councilResponses,
-        [], // Skip peer reviews for now
+        [],
         session.debateMessages,
         membersForSynth,
         DEFAULT_CHAIRMAN,
         (chunk) => {
           setSession((prev: SessionState) => ({
             ...prev,
-            synthesis: (prev.synthesis || "") + chunk,
+            synthesis: (prev.synthesis || '') + chunk
           }));
-        },
+        }
       );
 
       setSession((prev: SessionState) => {
-        const completedSession = {
-          ...prev,
-          synthesis,
-          stage: WorkflowStage.COMPLETED,
-        };
+        const completedSession = { ...prev, synthesis, stage: WorkflowStage.COMPLETED };
         setHistory((h: SessionState[]) => [completedSession, ...h]);
-
-        // Update Usage Tracking
-        setConfig((current: AppConfig) => {
-          if (current.creditsRemaining > 0) {
-            return {
-              ...current,
-              creditsRemaining:
-                current.creditsRemaining - USAGE_LIMITS.CREDITS_PER_TURN,
-            };
-          } else {
-            return {
-              ...current,
-              turnsUsed: current.turnsUsed + 1,
-            };
-          }
-        });
-
         return completedSession;
       });
     } catch (err: any) {
       setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
-        error: err.message || "Synthesis failed.",
+        error: err.message || "Synthesis failed."
       }));
     }
   };
 
-  const handleAddDebateMessage = (msg: import("./types").DebateMessage) => {
+  const handleAddDebateMessage = (msg: import('./types').DebateMessage) => {
     setSession((prev: SessionState) => ({
       ...prev,
-      debateMessages: [...prev.debateMessages, msg],
+      debateMessages: [...prev.debateMessages, msg]
     }));
   };
 
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
-
-  const handlePurchase = async (
-    type: "turns" | "subscription" | "credits",
-    count: number,
-  ) => {
-    setIsPaymentLoading(true);
-    try {
-      const pkg =
-        type === "turns" || type === "credits"
-          ? PRICING.TURNS.find((p: any) => p.count === count)
-          : PRICING.TURNS[0];
-
-      if (pkg?.stripeUrl) {
-        window.location.href = pkg.stripeUrl;
-        return;
-      }
-      throw new Error("Invalid package or URL");
-    } catch (err: any) {
-      console.error("Payment initialization failed:", err);
-      setIsPaywallOpen(false);
-      setIsPaymentLoading(false);
+  const handlePurchaseTurns = (count: number) => {
+    let pkg = PRICING.CREDITS.find(p => p.count === count);
+    if (!pkg) pkg = PRICING.SUBSCRIPTIONS.find(p => p.count === count);
+    if (!pkg?.stripeUrl || pkg.stripeUrl === '#') {
+      alert("Deze betaallink is nog niet actief.");
+      return;
     }
-  };
-
-  const handleWatchAd = () => {
-    setConfig((prev) => ({
-      ...prev,
-      hasWatchedAd: true,
-      totalTurnsAllowed: prev.totalTurnsAllowed + 1,
-    }));
+    const successUrl = encodeURIComponent(
+      `${window.location.origin}${window.location.pathname}?payment_confirm=true&type=${PRICING.CREDITS.find(p => p.count === count) ? 'credits' : 'turns'}&count=${count}`
+    );
+    window.location.href = `${pkg.stripeUrl}?success_url=${successUrl}`;
   };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    if (params.get('payment_confirm') === 'true') {
+      const type = params.get('type');
+      const countStr = params.get('count');
+      const count = countStr === 'infinity' ? Infinity : parseInt(countStr || '0', 10);
 
-    // Handle mission query param
-    const queryParam = params.get("q");
-    if (queryParam && location.pathname === "/mission") {
-      setInput(queryParam);
-    }
-
-    if (params.get("payment_confirm") === "true") {
-      const type = params.get("type");
-      const countStr = params.get("count");
-      const count =
-        countStr === "infinity" ? Infinity : parseInt(countStr || "0", 10);
-
-      if (type === "turns") {
-        setConfig((prev) => ({
+      if (type === 'turns') {
+        setConfig(prev => ({
           ...prev,
-          totalTurnsAllowed: prev.totalTurnsAllowed + count,
+          isLifetime: count === Infinity ? true : prev.isLifetime,
+          totalTurnsAllowed: count === Infinity ? prev.totalTurnsAllowed : prev.totalTurnsAllowed + count
         }));
-      } else if (type === "subscription") {
-        setConfig((prev) => ({
+      } else if (type === 'credits') {
+        setConfig(prev => ({
           ...prev,
-          isLifetime: true, // Treat subscription as unlimited for now or handle appropriately
+          creditsRemaining: prev.creditsRemaining + (count as number)
         }));
       }
-
-      // Clean URL
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, [location]);
+  }, []);
 
   const NavLinks = [
     { id: "/", label: "Protocols", icon: ZapIcon },
@@ -492,48 +460,24 @@ const App: FC = () => {
 
   const renderStageIndicator = () => {
     const stages = [
-      {
-        id: WorkflowStage.PROCESSING_COUNCIL,
-        label: "Neural Deliberation",
-        icon: Users,
-      },
+      { id: WorkflowStage.PROCESSING_COUNCIL, label: "Neural Deliberation", icon: Users },
       { id: WorkflowStage.DEBATE, label: "Live Debate", icon: MessageSquare },
-      {
-        id: WorkflowStage.SYNTHESIZING,
-        label: "Verdict Synthesis",
-        icon: Gavel,
-      },
+      { id: WorkflowStage.SYNTHESIZING, label: "Verdict Synthesis", icon: Gavel },
     ];
-    if (
-      session.stage === WorkflowStage.IDLE ||
-      session.stage === WorkflowStage.ERROR
-    )
-      return null;
+    if (session.stage === WorkflowStage.IDLE || session.stage === WorkflowStage.ERROR) return null;
     return (
       <div className="flex justify-center mb-8 md:mb-16 w-full">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 bg-white/20 dark:bg-white/5 p-2.5 rounded-3xl sm:rounded-full border border-black/10 dark:border-white/10 backdrop-blur-sm w-full sm:w-auto overflow-x-auto">
           {stages.map((s, idx) => {
             const isActive = session.stage === s.id;
-            const isCompleted = [
-              WorkflowStage.COMPLETED,
-              ...stages.slice(idx + 1).map((st) => st.id),
-            ].includes(session.stage);
+            const isCompleted = [WorkflowStage.COMPLETED, ...stages.slice(idx + 1).map(st => st.id)].includes(session.stage);
             return (
-              <div
-                key={s.id}
-                className="flex items-center gap-3 w-full sm:w-auto"
-              >
-                <div
-                  className={`flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.2em] uppercase transition-all border-2 w-full sm:w-auto justify-center sm:justify-start ${isActive ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] dark:sm:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)]" : isCompleted ? "bg-white dark:bg-zinc-800 text-black dark:text-white border-black dark:border-white/20" : "text-black/20 dark:text-white/20 border-transparent"}`}
-                >
-                  <s.icon
-                    className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isActive ? "animate-pulse" : ""}`}
-                  />
+              <div key={s.id} className="flex items-center gap-3 w-full sm:w-auto">
+                <div className={`flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-[9px] sm:text-[10px] font-black tracking-[0.2em] uppercase transition-all border-2 w-full sm:w-auto justify-center sm:justify-start ${isActive ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] sm:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] dark:sm:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.1)]' : isCompleted ? 'bg-white dark:bg-zinc-800 text-black dark:text-white border-black dark:border-white/20' : 'text-black/20 dark:text-white/20 border-transparent'}`}>
+                  <s.icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isActive ? 'animate-pulse' : ''}`} />
                   <span className="whitespace-nowrap">{s.label}</span>
                 </div>
-                {idx < stages.length - 1 && (
-                  <ArrowRight className="hidden sm:block w-4 h-4 text-black/10 dark:text-white/10" />
-                )}
+                {idx < stages.length - 1 && <ArrowRight className="hidden sm:block w-4 h-4 text-black/10 dark:text-white/10" />}
               </div>
             );
           })}
@@ -544,56 +488,50 @@ const App: FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex flex-col font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-x-hidden transition-colors duration-300">
-      {/* Refined Navigation */}
       <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
-            <button
-              type="button"
-              onClick={() => navigate("/")}
-              aria-label="Go to homepage"
-              className="flex items-center gap-3 md:gap-5 group"
-            >
-              <CyberLogo isAnimated={location.pathname !== "/"} />
-              <div className="text-2xl font-black tracking-tighter hidden sm:block text-black dark:text-white relative top-[2px]">
-                <ScrambleText text="FAINL" />
-              </div>
+            <button onClick={() => setCurrentView(AppView.HOME)} className="flex items-center gap-3 md:gap-5 group">
+              <CyberLogo isAnimated={currentView !== AppView.HOME} />
+              <span className="text-2xl font-black tracking-tighter hidden sm:block text-black dark:text-white">FAINL</span>
             </button>
-
-            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-1">
-              {NavLinks.map((link) => (
-                <Link
+              {NavLinks.map(link => (
+                <button
                   key={link.id}
-                  to={link.id}
-                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${
-                    location.pathname === link.id
-                      ? "bg-black text-white dark:bg-white dark:text-black"
-                      : "text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10"
-                  }`}
+                  onClick={() => setCurrentView(link.id)}
+                  className={`px-4 py-2 font-black text-[10px] uppercase tracking-widest transition-all rounded-lg ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-black/60 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
                 >
                   {link.label}
-                </Link>
+                </button>
               ))}
             </nav>
           </div>
 
           <div className="flex items-center gap-3">
             <button
-              type="button"
+              onClick={() => setLanguage(language === 'nl' ? 'en' : 'nl')}
+              className="px-3 py-1 font-black text-[10px] uppercase tracking-widest bg-black/5 dark:bg-white/10 rounded-lg hover:bg-black/10 dark:hover:bg-white/20 transition-colors text-black dark:text-white"
+            >
+              {language === 'nl' ? 'EN' : 'NL'}
+            </button>
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
+              title="Open keys settings"
+              aria-label="Open keys settings"
+            >
+              <Lock className="w-4 h-4" />
+              <span className="font-black text-[10px] uppercase tracking-widest">Keys</span>
+            </button>
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-black dark:text-white"
             >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            {/* Mobile Menu Toggle */}
             <button
-              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg active:scale-95 transition-all"
             >
@@ -602,7 +540,6 @@ const App: FC = () => {
 
             {authSession && (
               <button
-                type="button"
                 onClick={handleLogout}
                 className="hidden sm:flex items-center gap-2 p-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200"
                 title="Sign Out"
@@ -613,35 +550,25 @@ const App: FC = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Dropdown */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border-b-4 border-black dark:border-zinc-700 p-4 space-y-2 shadow-2xl animate-in slide-in-from-top-4 duration-300">
-            {NavLinks.map((link) => (
+            {NavLinks.map(link => (
               <button
-                type="button"
                 key={link.id}
-                onClick={() => {
-                  navigate(link.id);
-                  setIsMenuOpen(false);
-                }}
-                className={`w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all ${location.pathname === link.id ? "bg-black text-white dark:bg-white dark:text-black" : "bg-zinc-50 dark:bg-zinc-800 text-black/40 dark:text-white/40"}`}
+                onClick={() => { setCurrentView(link.id); setIsMenuOpen(false); }}
+                className={`w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all ${currentView === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-zinc-50 dark:bg-zinc-800 text-black/40 dark:text-white/40'}`}
               >
                 <link.icon className="w-5 h-5" />
                 {link.label}
               </button>
             ))}
-
             {authSession && (
               <button
-                type="button"
-                onClick={() => {
-                  handleLogout();
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => { handleLogout(); setIsMenuOpen(false); }}
                 className="w-full flex items-center gap-4 p-4 font-black text-xs uppercase tracking-[0.2em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
               >
                 <LogOut className="w-5 h-5" />
-                Sign Out
+                {t.nav.signOut}
               </button>
             )}
           </div>
@@ -836,175 +763,38 @@ const App: FC = () => {
               </>
             }
           />
-
-          {/* Account / Dashboard */}
-          <Route
-            path="/dashboard"
-            element={
-              !authSession ? (
-                <LoginPage onLoginSuccess={() => navigate("/dashboard")} />
-              ) : (
-                <>
-                  <SEO
-                    title="Mijn Dashboard"
-                    description="Beheer je sessies, bekijk je geschiedenis en configureer je persoonlijke AI-raad."
-                    canonical="/dashboard"
-                  />
-                  <AccountPage
-                    config={config}
-                    history={history}
-                    onLoadSession={(sess: SessionState) => {
-                      setSession(sess);
-                      navigate("/mission");
-                    }}
-                    onDeleteSessions={(ids: string[]) => {
-                      setHistory((prev) =>
-                        prev.filter((s) => !ids.includes(s.id)),
-                      );
-                    }}
-                    onArchiveSessions={(ids: string[]) => {
-                      setHistory((prev) =>
-                        prev.map((s) =>
-                          ids.includes(s.id)
-                            ? { ...s, isArchived: !s.isArchived }
-                            : s,
-                        ),
-                      );
-                    }}
-                  />
-                </>
-              )
-            }
-          />
-
-          {/* Cookbook */}
-          <Route
-            path="/cookbook"
-            element={
-              <>
-                <SEO
-                  title="Het Kookboek"
-                  description="Een verzameling van 400 diepgaande levensvragen, geoptimaliseerd voor collectieve AI-reflectie."
-                  canonical="/cookbook"
-                />
-                <CookbookPage
-                  onSelectMission={(q: string) => {
-                    setInput(q);
-                    navigate("/mission");
-                  }}
-                />
-              </>
-            }
-          />
-
-          <Route path="/cookbook/:id" element={<QuestionPage />} />
-
-          {/* Static Pages */}
-          <Route
-            path="/faq"
-            element={
-              <>
-                <SEO
-                  title="Veelgestelde Vragen"
-                  description="Antwoorden op al je vragen over FAINL, AI-consensus en privacy."
-                  canonical="/faq"
-                />
-                <FAQPage />
-              </>
-            }
-          />
-          <Route
-            path="/contact"
-            element={
-              <>
-                <SEO
-                  title="Contact"
-                  description="Neem contact met ons op voor vragen, suggesties of ondersteuning."
-                  canonical="/contact"
-                />
-                <ContactPage />
-              </>
-            }
-          />
-          <Route
-            path="/privacy"
-            element={
-              <>
-                <SEO
-                  title="Privacybeleid"
-                  description="Hoe wij omgaan met jouw data. Bij FAINL staat jouw privacy centraal."
-                  canonical="/privacy"
-                />
-                <PrivacyPolicyPage />
-              </>
-            }
-          />
-          <Route
-            path="/terms"
-            element={
-              <>
-                <SEO
-                  title="Algemene Voorwaarden"
-                  description="De spelregels van FAINL. Transparant en eerlijk."
-                  canonical="/terms"
-                />
-                <TermsOfServicePage />
-              </>
-            }
-          />
-
-          {/* Catch-all Redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
 
-      {/* Modern Footer with Privacy Link */}
-      <footer className="border-t border-black/5 dark:border-white/5 py-8 md:py-12 bg-white/50 dark:bg-zinc-950/50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-8">
-            <button
-              type="button"
-              onClick={() => navigate("/privacy")}
-              className="text-[10px] font-black uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors"
-            >
-              Privacy Policy
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate("/terms")}
-              className="text-[10px] font-black uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors"
-            >
-              Terms of Service
-            </button>
-            <span className="text-[10px] font-black uppercase tracking-widest text-black/10 dark:text-white/10">
-              © 2026
-            </span>
-          </div>
-        </div>
+      <footer className="border-t border-black/5 py-8 md:py-12 text-center">
+        <span className="text-[10px] font-black uppercase tracking-widest text-black/30">{t.common.madeBy} MNRV</span>
       </footer>
 
       <PaywallModal
         isOpen={isPaywallOpen}
+        hasOwnKeys={config.creditsRemaining > 0}
+        onPurchaseTurns={handlePurchaseTurns}
         onClose={() => setIsPaywallOpen(false)}
-        hasOwnKeys={Object.values(ModelProvider).some((p) =>
-          councilService.current.isProviderReady(p),
-        )}
-        onPurchaseTurns={(count: number) => handlePurchase("turns", count)}
       />
 
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        config={config}
+        onSave={setConfig}
+        history={history}
+        onImportHistory={setHistory}
+        onVerifyKey={(provider: ModelProvider, key: string) => councilService.current.verifyProviderKey(provider, key)}
+      />
 
       {isWelcomeOpen && (
-        <WelcomePopup
-          onClose={() => {
-            localStorage.setItem("fainl_visited", "1");
-            setIsWelcomeOpen(false);
-          }}
-        />
+        <WelcomePopup onClose={() => {
+          localStorage.setItem('fainl_visited', '1');
+          setIsWelcomeOpen(false);
+        }} />
       )}
-
-      {/* GDPR Cookie Consent Banner */}
-      <CookieConsent />
     </div>
   );
 };
+
 export default App;

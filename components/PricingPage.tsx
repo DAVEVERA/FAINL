@@ -16,10 +16,22 @@ interface PricingPageProps {
   onPurchaseCredits?: (count: number) => void;
 }
 
+const CheckIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0">
+    <path fill="#FDC700" d="M21.5821 5.54289C21.9726 5.93342 21.9726 6.56658 21.5821 6.95711L10.2526 18.2867C9.86452 18.6747 9.23627 18.6775 8.84475 18.293L2.29929 11.8644C1.90527 11.4774 1.89956 10.8443 2.28655 10.4503C2.67354 10.0562 3.30668 10.0505 3.70071 10.4375L9.53911 16.1717L20.1679 5.54289C20.5584 5.15237 21.1916 5.15237 21.5821 5.54289Z" clipRule="evenodd" fillRule="evenodd" />
+  </svg>
+);
+
 export const PricingPage: FC<PricingPageProps> = ({
-  onPurchaseTurns,
+  onPurchaseCredits,
 }) => {
   const { language } = useLanguage();
+
+  const handlePurchase = (count: number) => {
+    if (onPurchaseCredits) {
+      onPurchaseCredits(count);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-6 py-10 md:py-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -35,38 +47,40 @@ export const PricingPage: FC<PricingPageProps> = ({
       </div>
 
       {/* One-time credits */}
-      <div className="mb-12 md:mb-16">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="bg-black dark:bg-zinc-800 p-3 rounded-xl shadow-lg">
+      <div className="mb-20">
+        <div className="flex items-center gap-4 mb-10 justify-center sm:justify-start">
+          <div className="bg-black dark:bg-zinc-800 p-3 border-2 border-black dark:border-zinc-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
             <Shield className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-black uppercase tracking-tighter text-black dark:text-white">
+            <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-black dark:text-white">
               {language === 'nl' ? 'Credits Kopen' : 'Buy Credits'}
             </h2>
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
               {language === 'nl' ? 'Eenmalige credits, verlopen nooit.' : 'One-time credits, never expire.'}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
           {PRICING.CREDITS.map((pkg, idx) => (
-            <button
-              key={idx}
-              onClick={() => onPurchaseTurns(pkg.count)}
-              className="group flex flex-col items-start p-5 md:p-6 border-4 rounded-2xl bg-white dark:bg-zinc-900 border-black dark:border-white/20 text-black dark:text-white hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.1)] hover:-translate-y-1 transition-all relative overflow-hidden"
-            >
-              <Zap className="w-5 h-5 text-black/20 dark:text-white/20 mb-3 group-hover:text-black dark:group-hover:text-white transition-colors" />
-              <div className="text-3xl md:text-4xl font-black mb-1 text-black dark:text-white">{pkg.count}</div>
-              <div className="text-[9px] font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">
-                {language === 'nl' ? 'Credits' : 'Credits'}
-              </div>
-              <div className="text-xl font-black text-black dark:text-white">€{pkg.price}</div>
-              <div className="mt-4 flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.2em] text-black/30 dark:text-white/30">
-                {pkg.label} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </button>
+            <div key={idx} className="card-fainl">
+              <div className="card__badge">{pkg.count} {pkg.count === 1 ? 'CREDIT' : 'CREDITS'}</div>
+              <span className="card__title">€{pkg.price}</span>
+              <p className="card__subtitle">Multi-AI analyse.</p>
+
+              <ul className="card__lists">
+                <li className="card__list"><CheckIcon /> <span>Standaard</span></li>
+                <li className="card__list"><CheckIcon /> <span>{pkg.count} {pkg.count === 1 ? 'credit = 1 vraag' : `credits = ${pkg.count} vragen`}</span></li>
+                <li className="card__list"><CheckIcon /> <span>Complete analyse</span></li>
+                <li className="card__list"><CheckIcon /> <span>Multi AI inzet</span></li>
+                <li className="card__list"><CheckIcon /> <span>Opslaan &amp; delen</span></li>
+              </ul>
+
+              <button onClick={() => handlePurchase(pkg.count)} className="card__cta">
+                {language === 'nl' ? `Koop ${pkg.count} ${pkg.count === 1 ? 'credit' : 'credits'}` : `Buy ${pkg.count} ${pkg.count === 1 ? 'credit' : 'credits'}`}
+              </button>
+            </div>
           ))}
         </div>
 
@@ -79,53 +93,48 @@ export const PricingPage: FC<PricingPageProps> = ({
 
       {/* Subscriptions */}
       <div>
-        <div className="flex items-center gap-4 mb-6">
-          <div className="bg-yellow-400 p-3 rounded-xl shadow-lg">
-            <RefreshCw className="w-6 h-6 text-black" />
+        <div className="flex items-center gap-4 mb-10 justify-center sm:justify-start">
+          <div className="bg-[#FDC700] p-3 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-black">
+            <Zap className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-black uppercase tracking-tighter text-black dark:text-white">
+            <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-black dark:text-white">
               {language === 'nl' ? 'Maandelijks Abonnement' : 'Monthly Subscription'}
             </h2>
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
               {language === 'nl' ? 'Automatisch hernieuwd elke maand.' : 'Automatically renewed each month.'}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {PRICING.SUBSCRIPTIONS.map((sub, idx) => (
-            <div
-              key={sub.id}
-              className={`relative flex flex-col p-8 md:p-10 border-4 rounded-[2rem] bg-white dark:bg-zinc-900 text-black dark:text-white ${idx === 1 ? 'border-yellow-400' : 'border-black dark:border-white/20'} shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)]`}
-            >
-              {idx === 1 && (
-                <div className="absolute top-0 right-0 bg-yellow-400 text-black text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl rounded-tr-[1.8rem] flex items-center gap-1.5">
-                  <Crown className="w-3 h-3" />
-                  {language === 'nl' ? 'Populairst' : 'Most Popular'}
-                </div>
-              )}
-              <div className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2">{sub.name}</div>
-              <div className="text-4xl md:text-5xl font-black mb-1">€{sub.price}</div>
-              <div className="text-[9px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40 mb-6">
-                {language === 'nl' ? '/ maand' : '/ month'}
-              </div>
-              <div className="text-sm font-black text-black/60 dark:text-white/60 mb-8">
-                <span className="text-2xl font-black text-black dark:text-white">{sub.creditsPerMonth}</span>{' '}
-                {language === 'nl' ? 'credits per maand' : 'credits per month'}
-              </div>
-              <button
-                type="button"
-                onClick={() => window.open(sub.stripeUrl || '#', '_blank')}
-                className={`w-full py-5 rounded-xl font-black uppercase tracking-[0.3em] text-[10px] transition-all flex items-center justify-center gap-3 ${idx === 1 ? 'bg-yellow-400 text-black hover:bg-yellow-300' : 'bg-black dark:bg-white text-white dark:text-black hover:scale-[1.02]'} active:scale-[0.98] shadow-lg`}
-              >
-                {language === 'nl' ? 'Abonnement Starten' : 'Start Subscription'}
-                <ArrowRight className="w-4 h-4" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center sm:justify-start">
+          {PRICING.SUBSCRIPTIONS.map((pkg, idx) => (
+            <div key={idx} className="card-fainl !border-[#FDC700] hover:!shadow-[12px_12px_0_0_#FDC700]">
+              <div className="card__badge !bg-[#FDC700] !text-black">{pkg.label}</div>
+              <span className="card__title">€{pkg.price}<span className="text-sm lowercase ml-1">{pkg.period}</span></span>
+              <p className="card__subtitle">{language === 'nl' ? 'Onbeperkt archief.' : 'Unlimited archive.'}</p>
+
+              <ul className="card__lists">
+                <li className="card__list"><CheckIcon /> <span>{pkg.count} {language === 'nl' ? 'Vragen p/m' : 'Queries p/m'}</span></li>
+                <li className="card__list"><CheckIcon /> <span>{language === 'nl' ? 'Hogere prioriteit' : 'Higher priority'}</span></li>
+                <li className="card__list"><CheckIcon /> <span>{language === 'nl' ? 'Directe beraadslaging' : 'Instant deliberation'}</span></li>
+                <li className="card__list"><CheckIcon /> <span>Multi AI inzet</span></li>
+                <li className="card__list"><CheckIcon /> <span>{language === 'nl' ? 'Exclusieve modellen' : 'Exclusive models'}</span></li>
+              </ul>
+
+              <button onClick={() => handlePurchase(pkg.count)} className="card__cta">
+                {language === 'nl' ? `Start ${pkg.label}` : `Start ${pkg.label}`}
               </button>
             </div>
           ))}
         </div>
       </div>
+
+      <p className="mt-16 text-center text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">
+        {language === 'nl'
+          ? 'Binnenkort meer niveaus · Veilig afrekenen via Stripe'
+          : 'More tiers coming soon · Secure checkout via Stripe'}
+      </p>
     </div>
   );
 };

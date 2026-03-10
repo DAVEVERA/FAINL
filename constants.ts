@@ -76,7 +76,7 @@ export const SYSTEM_PROMPTS = {
     ROLE: Secure Consensus Agent.
     OBJECTIVE: Analyze the following directive.
     ROLE_SPECIFIC_CONTEXT: ${specificRole ? specificRole : "Standard investigative logic."}
-    
+
     IMPORTANT: Detect the language of the DIRECTIVE. Your entire response MUST be in that same language.
 
     DIRECTIVE: ${query}
@@ -87,11 +87,11 @@ export const SYSTEM_PROMPTS = {
     QUERY_CONTEXT: "${query}"
     TARGET_NODE: ${peerName}
     TARGET_OUTPUT: "${peerResponse}"
-    
+
     IMPORTANT: Detect the language of the QUERY_CONTEXT. Your entire response MUST be in that same language.
 
     TASK: Critique logical consistency and assign a score (1-10).
-    FORMAT: 
+    FORMAT:
     Critique: [Analysis]
     Score: [Value]
   `,
@@ -99,11 +99,11 @@ export const SYSTEM_PROMPTS = {
   CHAIRMAN: (query: string, context: string) => `
     ROLE: Protocol Chairman.
     QUERY: "${query}"
-    
+
     IMPORTANT: Detect the language of the QUERY. Your entire response MUST be in that same language.
 
     ${context}
-    
+
     TASK: Construct a FINAL CONSOLIDATED VERDICT. Focus on high-confidence insights and actionable conclusions.
   `
 };
@@ -146,8 +146,8 @@ export const PRICING = {
   ],
   // Maandabonnementen
   SUBSCRIPTIONS: [
-    { id: "starter", name: "Starter", creditsPerMonth: 50,  price: 49.99,  stripeUrl: "https://buy.stripe.com/28E3cobWu4NJ0d32vQ7Re0f" },
-    { id: "pro",     name: "Pro",     creditsPerMonth: 300, price: 219.99, stripeUrl: "https://buy.stripe.com/dRmcMY6Ca93Z0d3b2m7Re0h" },
+    { id: "starter", name: "Starter", count: 50,  creditsPerMonth: 50,  price: 49.99,  label: "Starter abo", period: "p/m", stripeUrl: "https://buy.stripe.com/28E3cobWu4NJ0d32vQ7Re0f" },
+    { id: "pro",     name: "Pro",     count: 300, creditsPerMonth: 300, price: 219.99, label: "Pro abo",     period: "p/m", stripeUrl: "https://buy.stripe.com/dRmcMY6Ca93Z0d3b2m7Re0h" },
   ],
   // Alias voor backwards-compatibiliteit
   get TURNS() { return this.CREDITS; },
