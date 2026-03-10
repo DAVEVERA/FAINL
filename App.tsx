@@ -149,6 +149,7 @@ const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
 
 const App: FC = () => {
   const { t, language, setLanguage } = useLanguage();
+  const navigate = useNavigate();
 
   const defaultConfig = {
     // Provider keys (kept for backward/forward compatibility in localStorage config)
@@ -613,7 +614,13 @@ const App: FC = () => {
                         <div className="relative w-full min-h-[200px] md:min-h-[350px]">
                           {!input && !isInputFocused && (
                             <div className="absolute top-0 left-0 pointer-events-none text-xl sm:text-2xl md:text-4xl font-black text-black/20 dark:text-white/20 font-serif italic">
-                              <FadingPlaceholder isFocused={isInputFocused} />
+                              <FadingPlaceholder isFocused={isInputFocused} examples={[
+                                "Moet ik van baan wisselen?",
+                                "Is kernenergie de oplossing?",
+                                "Welke markt moet ik betreden in 2026?",
+                                "Wat zijn de ethische implicaties van AGI?",
+                                "Is een vegan dieet gezonder?",
+                              ]} />
                             </div>
                           )}
                           <textarea
@@ -742,10 +749,10 @@ const App: FC = () => {
                     councilService.current.isProviderReady(p),
                   )}
                   onPurchaseTurns={(count: number | typeof Infinity) =>
-                    handlePurchase("turns", count)
+                    handlePurchaseTurns(count as number)
                   }
                   onPurchaseCredits={(count: number) =>
-                    handlePurchase("credits", count)
+                    handlePurchaseTurns(count)
                   }
                 />
               </>
