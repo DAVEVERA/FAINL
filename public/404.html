@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // GitHub Pages SPA redirect
+      // When GitHub Pages serves this 404.html for an unknown path,
+      // store the full URL and redirect to / so React Router can handle it.
+      sessionStorage.setItem('spa_redirect', location.href);
+      location.replace('/');
+    </script>
+  </head>
+  <body></body>
+</html>
