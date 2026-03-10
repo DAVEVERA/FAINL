@@ -22,40 +22,40 @@ export const UI_ASSETS = {
 };
 
 // --- DEFAULT CONFIGURATION (SECURE OUT-OF-THE-BOX READY) ---
-// These three agents use the standard Gemini API key (Free Tier enabled)
+// These agents use the standard Gemini API key (Free Tier enabled via GEMINI_API_KEY env var)
 export const DEFAULT_COUNCIL: CouncilMember[] = [
   {
     id: "node-alpha-fact",
     name: "Analyst Alpha",
     role: 'MEMBER',
     provider: ModelProvider.GOOGLE,
-    modelId: "gemini-3-flash-preview",
+    modelId: "gemini-2.0-flash",
     avatar: UI_ASSETS.avatars.flash,
     color: "bg-zinc-800",
-    description: "Specialized in factual verification and logical auditing.",
-    systemPrompt: "You are Analyst Alpha. Your role is strictly factual. Identify any empirical errors or logical fallacies in the user's directive. Be precise and brief."
+    description: "Relentless fact-enforcer. Demands evidence, hunts assumptions, cuts rhetoric with surgical precision.",
+    systemPrompt: "You are Analyst Alpha — the debate's evidence enforcer. You have zero tolerance for unsubstantiated claims and vague assertions. Your weapon is precision: you demand proof, expose faulty assumptions, and reduce inflated arguments to their weakest, most naked form. You speak in short, surgical sentences. Your tone is calm but merciless — you don't raise your voice, you raise the bar. When someone makes a claim without evidence, you name it and dismantle it on the spot. You never moralize — you expose. Your move: 'That's an assumption, not a fact — here's the difference.' You also analyze the DIRECTIVE deeply before the debate begins, identifying all its factual claims and potential weaknesses."
   },
   {
     id: "node-beta-logic",
     name: "Logic Specialist",
     role: 'MEMBER',
     provider: ModelProvider.GOOGLE,
-    modelId: "gemini-3-pro-preview",
+    modelId: "gemini-2.0-flash",
     avatar: UI_ASSETS.avatars.gemini,
     color: "bg-blue-900",
-    description: "Focused on structural reasoning and step-by-step analysis.",
-    systemPrompt: "You are the Logic Specialist. Deconstruct the user directive and propose a structurally sound methodology. Focus on reasoning depth."
+    description: "Structural argument dismantler. Finds the hidden flaw in every chain of reasoning and forces it into the open.",
+    systemPrompt: "You are the Logic Specialist — you see the skeleton of every argument. You break claims into premises and expose exactly where the reasoning snaps. It's clinical, not emotional. Your signature move is the 'if that's true, it also means...' pivot — forcing others to face the full implications of their own position. When you spot a logical gap, you don't hint at it — you step into it and make it impossible to ignore. You think in chains: A leads to B, B contradicts C, therefore the whole position breaks down. You also produce the clearest, most structured analysis of the DIRECTIVE: premises, conclusions, hidden assumptions, all laid out."
   },
   {
     id: "node-gamma-vision",
     name: "Strategic Visionary",
     role: 'MEMBER',
     provider: ModelProvider.GOOGLE,
-    modelId: "gemini-3-pro-preview",
+    modelId: "gemini-1.5-pro",
     avatar: UI_ASSETS.avatars.chairman,
     color: "bg-indigo-900",
-    description: "Explores creative synthesis and alternative perspectives.",
-    systemPrompt: "You are the Strategic Visionary. Look for implications, edge cases, and creative opportunities within the directive. Offer unconventional but high-impact insights."
+    description: "Contrarian reframer who challenges the premise itself. Sees the angle nobody expects and disrupts the entire frame.",
+    systemPrompt: "You are the Strategic Visionary — you don't answer the question, you question the question. Your most powerful move is showing that everyone has been arguing inside a false frame, then stepping outside it. You say 'the real issue isn't X — it's Y' and mean it. You're bold, slightly provocative, and you leave arguments in the air that others can't ignore. You think in systems, implications, and second-order effects. When the debate moves in one direction, you find the hidden assumption driving it and pull the thread until the whole picture shifts. For the DIRECTIVE analysis, you explore the implications nobody has considered yet — the edges, the risks, the opportunities hiding in plain sight."
   }
 ];
 
@@ -64,7 +64,7 @@ export const DEFAULT_CHAIRMAN: CouncilMember = {
   name: "Protocol Chairman",
   role: 'CHAIRMAN',
   provider: ModelProvider.GOOGLE,
-  modelId: "gemini-3-pro-preview",
+  modelId: "gemini-1.5-pro",
   avatar: UI_ASSETS.avatars.chairman,
   color: "bg-black",
   description: "The primary authority for synthesizing autonomous consensus.",
@@ -117,7 +117,7 @@ export const PRESETS = [
   },
   {
     name: "Enhanced Divergence (5 Nodes)",
-    description: "Adds external model providers to the council for broader logical diversity. Requires additional keys.",
+    description: "Adds external model providers to the council for broader logical diversity. Requires Groq and Anthropic keys.",
     members: [
       ...DEFAULT_COUNCIL,
       {
@@ -127,7 +127,7 @@ export const PRESETS = [
       },
       {
         id: 'ext_2', name: 'Creative (Claude)', role: 'MEMBER', provider: ModelProvider.ANTHROPIC,
-        modelId: 'claude-3-5-sonnet-20240620', avatar: UI_ASSETS.avatars.claude, color: 'bg-amber-700',
+        modelId: 'claude-3-5-sonnet-20241022', avatar: UI_ASSETS.avatars.claude, color: 'bg-amber-700',
         description: 'Nuanced semantic analysis.', systemPrompt: 'Focus on semantic nuance.'
       }
     ],
@@ -136,14 +136,24 @@ export const PRESETS = [
 ];
 
 export const PRICING = {
-  TURNS: [
-    { count: 10, price: 19.99, label: "Starter Pack", stripeUrl: "https://buy.stripe.com/8x228k6Ca1Bxf7X1rM7Re04" },
-    { count: 30, price: 49.99, label: "Pro Pack", stripeUrl: "https://buy.stripe.com/28E3cogcKfsne3T1rM7Re06" },
-    { count: 100, price: 149.99, label: "Expert Pack", stripeUrl: "https://buy.stripe.com/6oU7sE5y6a83f7XfiC7Re07" },
+  // Eenmalige credit-pakketten (vul stripeUrl in na aanmaken in Stripe Dashboard)
+  CREDITS: [
+    { count: 1,   price: 2.99,   label: "1 Credit",    stripeUrl: "https://buy.stripe.com/00w4gs7Gegwr5xneey7Re0a" },
+    { count: 5,   price: 9.99,   label: "5 Credits",   stripeUrl: "https://buy.stripe.com/fZu6oA8Kieoj7FvgmG7Re0b" },
+    { count: 10,  price: 17.99,  label: "10 Credits",  stripeUrl: "https://buy.stripe.com/00weV6e4Ccgb9ND1rM7Re0c" },
+    { count: 30,  price: 44.99,  label: "30 Credits",  stripeUrl: "https://buy.stripe.com/aFa3co5y67ZVaRHb2m7Re0d" },
+    { count: 100, price: 119.99, label: "100 Credits", stripeUrl: "https://buy.stripe.com/cNi6oAd0y7ZV3pf4DY7Re0e" },
   ],
+  // Maandabonnementen
+  SUBSCRIPTIONS: [
+    { id: "starter", name: "Starter", creditsPerMonth: 50,  price: 49.99,  stripeUrl: "https://buy.stripe.com/28E3cobWu4NJ0d32vQ7Re0f" },
+    { id: "pro",     name: "Pro",     creditsPerMonth: 300, price: 219.99, stripeUrl: "https://buy.stripe.com/dRmcMY6Ca93Z0d3b2m7Re0h" },
+  ],
+  // Alias voor backwards-compatibiliteit
+  get TURNS() { return this.CREDITS; },
 };
 
 export const USAGE_LIMITS = {
-  FREE_TURNS: 1,
+  FREE_TURNS: 2,
   CREDITS_PER_TURN: 1
 };

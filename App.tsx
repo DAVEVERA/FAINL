@@ -36,7 +36,6 @@ import {
 import { UnifiedCouncilService } from "./services/councilService";
 import { CouncilCard } from "./components/CouncilCard";
 import { PaywallModal } from "./components/PaywallModal";
-import { TrialChoiceModal } from "./components/TrialChoiceModal";
 import { PricingPage } from "./components/PricingPage";
 import { AccountPage } from "./components/AccountPage";
 import { CookbookPage } from "./components/CookbookPage";
@@ -74,6 +73,7 @@ import { LogOut } from "lucide-react";
 import { ScrambleText } from "./components/ScrambleText";
 import { WelcomePopup } from "./components/WelcomePopup";
 import { CookieConsent } from "./components/CookieConsent";
+import { LandingPage } from "./components/LandingPage";
 
 const FadingPlaceholder: FC<{ isFocused: boolean }> = ({
   isFocused,
@@ -180,7 +180,7 @@ const App: FC = () => {
           turnsUsed: 0,
           creditsRemaining: 0,
           isLifetime: false,
-          totalTurnsAllowed: 1, // Default to 1 free turn
+          totalTurnsAllowed: 2, // 2 free turns for new visitors
           hasWatchedAd: false,
           hasSubscribed: false,
         };
@@ -245,7 +245,6 @@ const App: FC = () => {
 
   const [input, setInput] = useState("");
   const [isDebateOpen, setIsDebateOpen] = useState(false);
-  const [isTrialChoiceOpen, setIsTrialChoiceOpen] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(() => {
     const seen = localStorage.getItem("fainl_visited");
     if (!seen) {
@@ -289,26 +288,23 @@ const App: FC = () => {
     const isAllowed = config.isLifetime || hasTurnsRemaining || canUseCredits;
 
     if (!isAllowed) {
-      if (config.turnsUsed === 1 && !config.hasWatchedAd) {
-        setIsTrialChoiceOpen(true);
-      } else {
-        setIsPaywallOpen(true);
-      }
+      setIsPaywallOpen(true);
       return;
     }
 
-    // Detect active nodes
-    const readyMembers = councilService.current.getReadyMembers(
-      config.activeCouncil,
-    );
+    // Use all active council members; individual nodes handle missing keys gracefully
+    const allMembers = config.activeCouncil;
+    const readyMembers = councilService.current.getReadyMembers(allMembers);
 
-    // Ensure we meet the minimum requirement for consensus logic
-    if (readyMembers.length < 2) {
+    // Fall back to all members if none pass the key-check (keys may be embedded via env)
+    const membersToUse = readyMembers.length > 0 ? readyMembers : allMembers;
+
+    if (membersToUse.length < 1) {
       setSession((prev: SessionState) => ({
         ...prev,
         stage: WorkflowStage.ERROR,
         error:
-          "Insufficient active nodes for consensus protocol. Minimum 2 nodes required.",
+          "Geen nodes gevonden. Voeg minimaal één node toe aan je raad.",
       }));
       return;
     }
@@ -327,7 +323,7 @@ const App: FC = () => {
       // 1. Council Analysis Phase
       const responses = await councilService.current.getCouncilResponses(
         input,
-        readyMembers,
+        membersToUse,
       );
 
       // Council done — stage stays at PROCESSING_COUNCIL until user opens debate
@@ -359,9 +355,8 @@ const App: FC = () => {
       synthesis: "",
     }));
 
-    const readyMembers = councilService.current.getReadyMembers(
-      config.activeCouncil,
-    );
+    const readyForSynth = councilService.current.getReadyMembers(config.activeCouncil);
+    const membersForSynth = readyForSynth.length > 0 ? readyForSynth : config.activeCouncil;
 
     try {
       const synthesis = await councilService.current.synthesizeStream(
@@ -369,7 +364,7 @@ const App: FC = () => {
         session.councilResponses,
         [], // Skip peer reviews for now
         session.debateMessages,
-        readyMembers,
+        membersForSynth,
         DEFAULT_CHAIRMAN,
         (chunk) => {
           setSession((prev: SessionState) => ({
@@ -488,7 +483,7 @@ const App: FC = () => {
 
   const NavLinks = [
     { id: "/", label: "Protocols", icon: ZapIcon },
-    { id: "/tokens", label: "Tokens", icon: Coins },
+    { id: "/tokens", label: "Credits", icon: Coins },
     { id: "/dashboard", label: "My FAINLS", icon: LayoutDashboard },
     { id: "/cookbook", label: "Cookbook", icon: BookOpen },
     { id: "/faq", label: "FAQ", icon: HelpCircle },
@@ -656,124 +651,7 @@ const App: FC = () => {
       <main className="flex-1 w-full mx-auto">
         <Routes>
           {/* Home / Landing Page */}
-          <Route
-            path="/"
-            element={
-              <>
-                <SEO
-                  title="Revolutionaire AI Consensus"
-                  description="Krijg antwoorden met de gecombineerde kracht van meerdere AI-systemen. FAINL biedt diepgaande reflectie en gewogen oordelen."
-                  canonical="/"
-                />
-
-                {/* ── HERO ── */}
-                <section className="w-full max-w-5xl mx-auto px-4 md:px-6 pt-16 md:pt-28 pb-12 md:pb-20 text-center animate-fade-in-up">
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.95] max-w-4xl mx-auto mb-6 md:mb-8">
-                    Eén antwoord.
-                    <br />
-                    <span className="text-black/30 dark:text-white/30">
-                      Meerdere intelligenties.
-                    </span>
-                  </h1>
-                  <p className="max-w-2xl mx-auto text-base md:text-xl font-semibold text-black/60 dark:text-white/60 leading-relaxed mb-10 md:mb-14">
-                    FAINL laat meerdere AI-modellen tegelijk jouw vraag
-                    analyseren, elkaars redenering controleren en samen tot één
-                    scherp, gewogen oordeel komen.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/mission")}
-                    className="inline-flex items-center gap-3 px-8 py-5 bg-black dark:bg-white text-white dark:text-black font-black text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-lg"
-                  >
-                    Start nu gratis
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
-                  <p className="mt-5 text-[10px] font-black uppercase tracking-[0.2em] text-black/20 dark:text-white/20">
-                    Geen account nodig · Jouw data blijft op jouw apparaat
-                  </p>
-                </section>
-
-                {/* ── 5-STEP JOURNEY ── */}
-                <section className="w-full max-w-3xl mx-auto px-4 md:px-6 pb-16 md:pb-28 space-y-4">
-                  <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-black/20 dark:text-white/20 mb-8">
-                    Hoe het werkt
-                  </p>
-
-                  {[
-                    {
-                      step: "01",
-                      icon: PenLine,
-                      title: "Voer je vraag in",
-                      desc: "Stel elke vraag — zakelijk, filosofisch of persoonlijk. FAINL verwerkt hem direct.",
-                    },
-                    {
-                      step: "02",
-                      icon: Users,
-                      title: "AI's gaan head-to-head",
-                      desc: "Meerdere modellen analyseren jouw vraag tegelijk en controleren elkaars redenering op fouten en blinde vlekken.",
-                    },
-                    {
-                      step: "03",
-                      icon: Eye,
-                      title: "Bekijk elke AI apart",
-                      desc: "Volledig transparant: zie exact wat elk AI-model individueel heeft geconcludeerd — zonder filters.",
-                    },
-                    {
-                      step: "04",
-                      icon: Swords,
-                      title: "Live debat — doe zelf mee",
-                      desc: "De modellen debatteren live met elkaar. Wil jij ook de ring in? Dat kan — gooi jouw perspectief ertussen.",
-                    },
-                    {
-                      step: "05",
-                      icon: Gavel,
-                      title: "Het ultieme eindoordeel",
-                      desc: "FAINL analyseert alle resultaten, voegt samen en geeft jou het meest complete, gewogen antwoord.",
-                    },
-                  ].map(({ step, icon: Icon, title, desc }, i) => (
-                    <div
-                      key={step}
-                      className="group flex items-start gap-5 p-6 md:p-8 bg-white dark:bg-zinc-900 border-2 border-black/5 dark:border-white/5 rounded-2xl hover:border-black dark:hover:border-white hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:hover:shadow-[6px_6px_0px_0px_rgba(255,255,255,0.15)] transition-all duration-200 journey-step"
-                    >
-                      <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-black dark:bg-white rounded-xl group-hover:scale-110 transition-transform">
-                        <Icon className="w-5 h-5 md:w-6 md:h-6 text-white dark:text-black" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-1.5">
-                          <span className="text-[10px] font-black tracking-[0.25em] text-black/20 dark:text-white/20">
-                            {step}
-                          </span>
-                          <h3 className="text-base md:text-lg font-black uppercase tracking-tight text-black dark:text-white">
-                            {title}
-                          </h3>
-                        </div>
-                        <p className="text-sm font-medium text-black/50 dark:text-white/50 leading-relaxed">
-                          {desc}
-                        </p>
-                      </div>
-                      <ArrowRight className="flex-shrink-0 w-4 h-4 text-black/10 dark:text-white/10 group-hover:text-black dark:group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
-                    </div>
-                  ))}
-
-                  {/* Bottom CTA */}
-                  <div className="pt-8 flex flex-col items-center gap-4">
-                    <button
-                      type="button"
-                      onClick={() => navigate("/mission")}
-                      className="inline-flex items-center gap-3 px-8 py-5 bg-black dark:bg-white text-white dark:text-black font-black text-sm uppercase tracking-widest rounded-xl hover:scale-105 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)] active:scale-95 transition-all shadow-lg"
-                    >
-                      Start je eerste sessie
-                      <ArrowRight className="w-5 h-5" />
-                    </button>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/20 dark:text-white/20 text-center">
-                      Gratis · Geen account nodig · Ondersteund door 5+ AI
-                      modellen
-                    </p>
-                  </div>
-                </section>
-              </>
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
 
           {/* Mission / Chat Area */}
           <Route
@@ -781,9 +659,10 @@ const App: FC = () => {
             element={
               <>
                 <SEO
-                  title="Missie Controle"
-                  description="Start je AI-sessie en zie hoe meerdere modellen tot een consensus komen."
+                  title="Start AI Consensus Sessie — Stel jouw vraag"
+                  description="Stel jouw vraag aan meerdere AI-modellen tegelijk. Gemini, GPT-4 en Claude analyseren parallel, debatteren live en geven één gewogen eindoordeel."
                   canonical="/mission"
+                  keywords="AI vraag stellen, meerdere AI modellen, AI consensus sessie"
                 />
                 <div className="max-w-7xl mx-auto px-4 md:px-6 py-8 md:py-12 flex flex-col items-center justify-center min-h-[calc(100vh-120px)]">
                   {renderStageIndicator()}
@@ -939,8 +818,8 @@ const App: FC = () => {
             element={
               <>
                 <SEO
-                  title="Tokens & Abonnementen"
-                  description="Kies het pakket dat bij je past. Tokens voor incidentele vragen of een maandelijks abonnement voor onbeperkte toegang."
+                  title="Credits & Abonnementen"
+                  description="Kies het pakket dat bij je past. Credits voor incidentele vragen of een maandelijks abonnement voor onbeperkte toegang."
                   canonical="/tokens"
                 />
                 <PricingPage
@@ -1113,15 +992,6 @@ const App: FC = () => {
         onPurchaseTurns={(count: number) => handlePurchase("turns", count)}
       />
 
-      <TrialChoiceModal
-        isOpen={isTrialChoiceOpen}
-        onClose={() => setIsTrialChoiceOpen(false)}
-        onWatchAd={handleWatchAd}
-        onBuyTokens={() => {
-          setIsTrialChoiceOpen(false);
-          navigate("/tokens");
-        }}
-      />
 
       {isWelcomeOpen && (
         <WelcomePopup

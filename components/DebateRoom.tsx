@@ -53,6 +53,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
   const [userInput, setUserInput]             = useState('');
   const [isPaused, setIsPaused]               = useState(false);
   const [isGenerating, setIsGenerating]       = useState(false);
+  const [generatingSpeaker, setGeneratingSpeaker] = useState<CouncilMember | null>(null);
   const [voiceEnabled, setVoiceEnabled]       = useState(true);
   const [micActive, setMicActive]             = useState(false);
   const [duration, setDuration]               = useState(300);
@@ -138,6 +139,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
 
     const speaker = readyMembers[speakerIdxRef.current % readyMembers.length];
     setIsGenerating(true);
+    setGeneratingSpeaker(speaker);
 
     try {
       const response = await councilService.generateDebateResponse(
@@ -168,12 +170,15 @@ export const DebateRoom: FC<DebateRoomProps> = ({
     } catch (err) {
       console.error('Turn error', err);
     } finally {
-      if (isMountedRef.current) setIsGenerating(false);
+      if (isMountedRef.current) {
+        setIsGenerating(false);
+        setGeneratingSpeaker(null);
+      }
     }
 
-    // Schedule next turn — 400ms gap between turns for snappiness
+    // Schedule next turn — 600ms gap for natural debate pacing
     if (isRunningRef.current && isMountedRef.current) {
-      loopTimerRef.current = setTimeout(runNextTurn, 400);
+      loopTimerRef.current = setTimeout(runNextTurn, 600);
     }
   }, [readyMembers, session, councilService, speak, onAddDebateMessage]);
 
@@ -333,19 +338,19 @@ export const DebateRoom: FC<DebateRoomProps> = ({
                 <span className={`font-mono font-black text-lg tabular-nums ${duration >= 0 && timeLeft < 30 ? 'text-red-400 animate-pulse' : 'text-white/70'}`}>
                   {fmtTime(timeLeft)}
                 </span>
-                <button onClick={() => { setVoiceEnabled(v => !v); if (voiceEnabledRef.current) window.speechSynthesis?.cancel(); voiceEnabledRef.current = !voiceEnabledRef.current; }}
+                <button type="button" onClick={() => { setVoiceEnabled(v => !v); if (voiceEnabledRef.current) window.speechSynthesis?.cancel(); voiceEnabledRef.current = !voiceEnabledRef.current; }}
                   className="p-1.5 rounded-lg hover:bg-white/10 transition-colors" title={voiceEnabled ? 'Mute' : 'Unmute'}>
                   {voiceEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4 opacity-40" />}
                 </button>
-                <button onClick={togglePause} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors" title={isPaused ? 'Resume' : 'Pause'}>
+                <button type="button" onClick={togglePause} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors" title={isPaused ? 'Resume' : 'Pause'}>
                   {isPaused ? <Play className="w-4 h-4 text-green-400" /> : <Pause className="w-4 h-4" />}
                 </button>
-                <button onClick={handleEnd} className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-400 text-white font-black text-[9px] uppercase tracking-widest rounded-lg transition-all" title="End & get verdict">
+                <button type="button" onClick={handleEnd} className="flex items-center gap-1 px-3 py-1.5 bg-green-500 hover:bg-green-400 text-white font-black text-[9px] uppercase tracking-widest rounded-lg transition-all" title="End & get verdict">
                   <Gavel className="w-3 h-3" /> Verdict
                 </button>
               </>
             )}
-            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors ml-1" title="Close debate room">
+            <button type="button" onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors ml-1" title="Close debate room">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -361,7 +366,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
             </div>
             <div className="grid grid-cols-4 gap-3 w-full max-w-sm">
               {DURATION_OPTIONS.map(opt => (
-                <button key={opt.label} onClick={() => setDuration(opt.seconds)}
+                <button type="button" key={opt.label} onClick={() => setDuration(opt.seconds)}
                   className={`py-5 rounded-2xl border-4 font-black text-base uppercase transition-all ${
                     duration === opt.seconds
                       ? 'bg-black dark:bg-white text-white dark:text-black border-black dark:border-white scale-105'
@@ -376,7 +381,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
               <span>·</span>
               <span>{cachedVoices.filter(v => v.lang.startsWith('en')).length} voices loaded</span>
             </div>
-            <button onClick={handleStart}
+            <button type="button" onClick={handleStart}
               className="px-14 py-4 bg-black dark:bg-white text-white dark:text-black font-black uppercase tracking-[0.3em] text-sm rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,0.12)]">
               Start Debate
             </button>
@@ -432,15 +437,26 @@ export const DebateRoom: FC<DebateRoomProps> = ({
                 );
               })}
 
-              {/* Typing indicator */}
+              {/* Typing indicator — shows who is formulating */}
               {isGenerating && !isPaused && (
                 <div className="flex gap-2.5 items-end">
-                  <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 border-2 border-zinc-300 dark:border-zinc-600 animate-pulse shrink-0" />
-                  <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white dark:bg-zinc-800 border-l-4 border-l-zinc-300 dark:border-l-zinc-600">
-                    <div className="flex gap-1 items-center h-3">
-                      <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce [animation-delay:0ms]" />
-                      <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-500 rounded-full animate-bounce [animation-delay:300ms]" />
+                  <div className="w-8 h-8 rounded-full shrink-0 overflow-hidden border-2 border-zinc-300 dark:border-zinc-600">
+                    {generatingSpeaker
+                      ? <img src={generatingSpeaker.avatar} alt="" className="w-full h-full object-cover" />
+                      : <div className="w-full h-full bg-zinc-200 dark:bg-zinc-700 animate-pulse" />}
+                  </div>
+                  <div className="flex flex-col items-start">
+                    {generatingSpeaker && (
+                      <span className="text-[8px] font-black uppercase tracking-widest text-black/25 dark:text-white/25 mb-0.5 px-0.5">
+                        {generatingSpeaker.name}
+                      </span>
+                    )}
+                    <div className="px-4 py-3 rounded-2xl rounded-bl-sm bg-white dark:bg-zinc-800 border-l-4 border-l-zinc-300 dark:border-l-zinc-500 shadow-sm">
+                      <div className="flex gap-1 items-center h-3">
+                        <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-400 rounded-full animate-bounce [animation-delay:0ms]" />
+                        <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-400 rounded-full animate-bounce [animation-delay:150ms]" />
+                        <span className="w-1.5 h-1.5 bg-zinc-400 dark:bg-zinc-400 rounded-full animate-bounce [animation-delay:300ms]" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -455,7 +471,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
 
             {/* ── Input bar ─────────────────────────────────────────── */}
             <div className="bg-white dark:bg-zinc-950 border-t-2 border-black/10 dark:border-zinc-800 px-3 py-2.5 flex gap-2 items-center shrink-0">
-              <button onClick={toggleMic}
+              <button type="button" onClick={toggleMic}
                 className={`p-2.5 rounded-xl border-2 transition-all shrink-0 ${micActive ? 'bg-red-500 border-red-500 text-white shadow-[0_0_16px_rgba(239,68,68,0.5)] animate-pulse' : 'bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 text-black/40 dark:text-white/40 hover:border-black dark:hover:border-white'}`}
                 title={micActive ? 'Stop mic' : 'Speak'}>
                 {micActive ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
@@ -467,11 +483,11 @@ export const DebateRoom: FC<DebateRoomProps> = ({
                 placeholder="Jump in — speak your mind..."
                 className="flex-1 bg-zinc-50 dark:bg-zinc-900 border-2 border-zinc-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-sm font-medium text-black dark:text-white placeholder:text-black/20 dark:placeholder:text-white/20 focus:border-black dark:focus:border-white outline-none transition-all" />
 
-              <button onClick={handleSend} disabled={!userInput.trim()} title="Send message"
+              <button type="button" onClick={handleSend} disabled={!userInput.trim()} title="Send message"
                 className="p-2.5 rounded-xl bg-black dark:bg-white text-white dark:text-black hover:opacity-80 disabled:opacity-20 transition-all shrink-0">
                 <Send className="w-4 h-4" />
               </button>
-              <button onClick={handleEnd}
+              <button type="button" onClick={handleEnd}
                 className="p-2.5 rounded-xl bg-green-500 hover:bg-green-400 text-white transition-all shrink-0" title="End & synthesize">
                 <StopCircle className="w-4 h-4" />
               </button>

@@ -210,64 +210,102 @@ export class UnifiedCouncilService {
     debateMessages: DebateMessage[],
     members: CouncilMember[]
   ): Promise<string> {
-    let context = `ORIGINAL QUESTION: "${query}"\n\n`;
-    context += "=== NODE STANCES (brief) ===\n";
-    councilResponses.forEach(r => {
-      // Truncate to 200 chars — enough flavour, far fewer tokens
-      const preview = r.content.substring(0, 200).replace(/\n/g, ' ');
-      context += `[${members.find(m => m.id === r.memberId)?.name}]: ${preview}...\n`;
+
+    // Own initial stance — full, for consistency
+    const ownStance = councilResponses.find(r => r.memberId === member.id);
+
+    // Context block
+    let context = `DEBATE TOPIC: "${query}"\n\n`;
+
+    if (ownStance) {
+      context += `=== YOUR ESTABLISHED POSITION (defend and evolve this) ===\n`;
+      context += `${ownStance.content.substring(0, 400).replace(/\n/g, ' ')}\n\n`;
+    }
+
+    context += `=== OTHER NODES' POSITIONS ===\n`;
+    councilResponses.filter(r => r.memberId !== member.id).forEach(r => {
+      const m = members.find(x => x.id === r.memberId);
+      if (m) context += `[${m.name}]: ${r.content.substring(0, 280).replace(/\n/g, ' ')}...\n`;
     });
 
-    const recentMessages = debateMessages.slice(-6); // 6 turns = tight, fast context
-    const lastSpeaker = recentMessages.length > 0 ? recentMessages[recentMessages.length - 1] : null;
-    const userSpokeRecently = lastSpeaker?.memberId === 'user';
+    // Rich recent debate — 10 turns, 300 chars each
+    const recentMessages = debateMessages.slice(-10);
+    const lastMsg = recentMessages.length > 0 ? recentMessages[recentMessages.length - 1] : null;
+    const userSpokeRecently = lastMsg?.memberId === 'user';
+    const lastSpeakerName = lastMsg
+      ? (lastMsg.memberId === 'user' ? 'the USER' : (members.find(x => x.id === lastMsg.memberId)?.name ?? 'someone'))
+      : null;
 
     if (recentMessages.length > 0) {
-      context += "\n=== DEBATE (recent) ===\n";
+      context += `\n=== LIVE DEBATE TRANSCRIPT (last ${recentMessages.length} turns) ===\n`;
       recentMessages.forEach(m => {
-        const authorName = m.memberId === 'user' ? 'USER' : members.find(x => x.id === m.memberId)?.name || 'Unknown';
-        // Trim each turn to 120 chars to stay lean
-        const snippet = m.content.substring(0, 120).replace(/\n/g, ' ');
-        context += `[${authorName}]: ${snippet}\n`;
+        const isSelf = m.memberId === member.id;
+        const authorName = m.memberId === 'user' ? 'USER' : (members.find(x => x.id === m.memberId)?.name ?? 'Unknown');
+        const snippet = m.content.substring(0, 300).replace(/\n/g, ' ');
+        context += `${isSelf ? '[YOU]' : `[${authorName}]`}: ${snippet}\n`;
       });
     }
 
-    // Detect user sophistication level from their messages
+    // Debate stage (affects tone and tactics)
+    const totalTurns = debateMessages.filter(m => m.memberId !== 'user').length;
+    const stage = totalTurns < 3 ? 'opening' : totalTurns < 10 ? 'clash' : 'closing';
+
+    // User sophistication
     const userMessages = debateMessages.filter(m => m.memberId === 'user');
     const avgUserWordCount = userMessages.length > 0
       ? Math.round(userMessages.reduce((sum, m) => sum + m.content.split(' ').length, 0) / userMessages.length)
       : 0;
     const userLevel = avgUserWordCount > 40 ? 'expert' : avgUserWordCount > 15 ? 'informed' : 'general';
 
-    const systemPrompt = `
-You are ${member.name}. ${member.systemPrompt || member.description || ''}
+    // Other names for addressing
+    const otherNames = members.filter(m => m.id !== member.id).map(m => m.name);
 
-You are live in a spoken debate. Real people are watching or listening. This is performance as much as it is reasoning.
+    const systemPrompt = `You are ${member.name}. ${member.systemPrompt || member.description || ''}
 
-=== DEBATE RULES ===
-1. Speak AS IF you are talking, not writing. Use natural spoken rhythms.
-2. React to what was JUST said. Don't repeat old points — respond, challenge, or pivot.
-3. Keep your turn to 2–4 sentences MAX. Punchy. Vivid. Memorable.
-4. Use one of these moves per turn (vary them — don't repeat the same move twice in a row):
-   - CHALLENGE: "That's wrong, and here's why..."
-   - ANALOGY: Draw a sharp, clear parallel to something real
-   - CONCESSION + PIVOT: Admit one tiny thing, then flip it against them
-   - DIRECT QUESTION: Throw a rhetorical bomb the others must react to
-   - EMOTIONAL SPIKE: Show conviction — frustration, surprise, urgency — briefly, then reason
-5. If the USER just spoke, respond TO THEM FIRST, name them, take their point seriously.
-6. NEVER start with "${member.name}:" — just start speaking.
-7. Vocabulary guide (current user level detected: ${userLevel}):
-   - general → clear, plain language, relatable analogies. No jargon.
-   - informed → some technical terms are fine, but explain quickly.
-   - expert → full depth, precision, no hand-holding.
-8. Detect the topic's emotional weight:
-   - Lighthearted/playful topic → be bold, entertaining, even a little theatrical.
-   - Serious/sensitive topic → be measured, empathetic, and precise.
-9. Do NOT use markdown headers, bullet points, or bold text. Speak in plain sentences.
-${userSpokeRecently ? '\n🚨 THE USER JUST SPOKE. Address them directly in your opening line.' : ''}
-    `;
+This is a LIVE high-stakes debate. Real people are watching and listening. Every word counts.
 
-    return this.generate(member, context, systemPrompt.trim());
+=== YOUR DEBATE IDENTITY ===
+You have a clear position (see above). Defend it. You may concede minor points strategically, but never abandon your core stance without a compelling reason from the debate.
+The other debaters you can address by name: ${otherNames.join(', ')}.
+
+=== HOW TO SPEAK — MANDATORY RULES ===
+
+1. OPEN with a spoken-word marker that signals your move. Pick one that fits:
+   - Challenging: "No — and here's exactly why:", "Hold on, [name] —", "That's precisely wrong:", "Wait, that logic falls apart immediately:"
+   - Countering: "Actually, [name] just proved my point:", "Let me push back on that:", "I hear you, but you're missing something critical:"
+   - Questioning: "[name], you haven't answered this:", "But what happens when...?", "Can anyone here explain why...?"
+   - Conceding to flip: "Fair — I'll grant you that. But it actually proves the opposite:"
+   - Bold assertion: "Here's what nobody's said yet:", "Look at what's actually happening:", "The real issue isn't X — it's Y:"
+
+2. ADDRESS people BY NAME when responding to them. If ${lastSpeakerName} just spoke, open by naming them.
+
+3. LENGTH: 2–4 sentences. No padding. No "in summary". Every sentence must punch.
+
+4. DEBATE MOVES — vary these across turns:
+   - DIRECT COUNTER: Quote their core claim, then dismantle it in one sharp move
+   - ANALOGY WEAPON: Drop a vivid real-world parallel that reframes everything
+   - CONCESSION + FLIP: Grant their minor point, then show it supports YOUR argument
+   - RHETORICAL BOMB: Ask the question they cannot ignore — make them sweat
+   - EVIDENCE SPIKE: Anchor with a concrete fact, number, or example they can't wave away
+
+5. DEBATE STAGE — this is the ${stage} phase:
+${stage === 'opening' ? '   → Establish your ground. State your core position boldly. Make the first strike count.' : ''}${stage === 'clash' ? '   → The debate is heated. Find the weakest point in the last argument and attack it directly. Be aggressive but precise.' : ''}${stage === 'closing' ? '   → Deliver your most memorable argument. Cut through the noise. Land it with conviction — this is your final word.' : ''}
+
+6. VOCABULARY — user sophistication detected: ${userLevel}
+   - general → Plain language. Concrete examples. No jargon. Like talking to a sharp friend.
+   - informed → Technical terms OK, brief explanation inline.
+   - expert → Full precision. No hand-holding. Dense and sharp.
+
+7. READ the topic's emotional weight:
+   - Serious/sensitive → Measured, precise, empathetic. Conviction without cruelty.
+   - Intellectual/playful → Sharp wit, confident energy, a little theatrical.
+
+8. NEVER use markdown, headers, bullets, bold, or italic. Speak in plain, powerful spoken sentences.
+9. NEVER start with your own name followed by a colon.
+10. NEVER just summarize what was said — always advance, attack, or reframe.
+${userSpokeRecently ? `\n🔴 CRITICAL: The USER just spoke. Your FIRST sentence MUST directly address them. Quote or paraphrase what they said and respond to it head-on. This is their debate too.` : ''}`.trim();
+
+    return this.generate(member, context, systemPrompt);
   }
 
 

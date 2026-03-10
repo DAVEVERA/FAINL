@@ -9,7 +9,6 @@ import {
     Loader2,
     CheckCircle2
 } from 'lucide-react';
-import { ScrambleText } from './ScrambleText';
 import { supabase } from '../services/supabaseClient';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -56,7 +55,7 @@ export const ContactPage: FC = () => {
             <div className="flex flex-col lg:flex-row gap-12 md:gap-24">
                 <div className="lg:w-1/2 space-y-8 md:space-y-12">
                     <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter text-black dark:text-white">
-                        <ScrambleText text={language === 'nl' ? 'Bereik De Kern' : 'Reach The Core'} />
+                        {language === 'nl' ? 'Bereik De Kern' : 'Reach The Core'}
                     </h1>
                     <p className="text-sm md:text-lg font-bold text-black/50 dark:text-white/50 uppercase tracking-[0.2em] leading-relaxed">
                         {language === 'nl'

@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { SessionState, AppConfig } from '../types';
-import { ScrambleText } from './ScrambleText';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface AccountPageProps {
@@ -79,7 +78,7 @@ export const AccountPage: FC<AccountPageProps> = ({
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 mb-16 md:mb-24">
         <div>
           <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4 text-black dark:text-white">
-            <ScrambleText text={language === 'nl' ? 'Commandocentrum' : 'Command Center'} />
+            {language === 'nl' ? 'Commandocentrum' : 'Command Center'}
           </h1>
           <p className="max-w-2xl text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
             {language === 'nl' ? 'High-integrity neuraal statusbeheer en logboeken van missie-orkestratie.' : 'High-integrity neural state management and session orchestration logs.'}
@@ -107,7 +106,7 @@ export const AccountPage: FC<AccountPageProps> = ({
             <div className="space-y-6 text-black dark:text-white">
               <div>
                 <span className="block text-3xl md:text-4xl font-black">{turnsRemaining}</span>
-                <span className="text-[10px] font-black text-black/40 dark:text-white/40 uppercase tracking-widest">{language === 'nl' ? 'Beurten Beschikbaar' : 'Turns Available'}</span>
+                <span className="text-[10px] font-black text-black/40 dark:text-white/40 uppercase tracking-widest">{language === 'nl' ? 'Credits Beschikbaar' : 'Credits Available'}</span>
               </div>
               <div>
                 <span className="block text-3xl md:text-4xl font-black">{config.creditsRemaining}</span>
