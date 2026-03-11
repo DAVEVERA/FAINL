@@ -158,9 +158,8 @@ export const USAGE_LIMITS = {
   CREDITS_PER_TURN: 1
 };
 
-// Google AdSense — vervang met jouw eigen publisher ID en rewarded ad unit slot ID
-// Aanmaken via: https://www.google.com/adsense → Advertenties → Per advertentie-eenheid → Beloonde interstitial
+// Google AdSense — publisher ID voor H5 Ad Placement API (adBreak)
+// Vereist: Auto-advertenties AAN + Interstitial-advertenties ingeschakeld in AdSense
 export const ADSENSE = {
   PUBLISHER_ID: 'ca-pub-7584438343948866',
-  REWARDED_SLOT: 'PLACEHOLDER',
 };
