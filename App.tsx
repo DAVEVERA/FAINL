@@ -44,6 +44,7 @@ const ContactPage = lazy(() => import("./components/ContactPage").then(m => ({ d
 const PrivacyPolicyPage = lazy(() => import("./components/PrivacyPolicyPage").then(m => ({ default: m.PrivacyPolicyPage })));
 const TermsOfServicePage = lazy(() => import("./components/TermsOfServicePage").then(m => ({ default: m.TermsOfServicePage })));
 const DebateRoom = lazy(() => import("./components/DebateRoom").then(m => ({ default: m.DebateRoom })));
+const ComparePage = lazy(() => import("./components/ComparePage").then(m => ({ default: m.ComparePage })));
 import {
   Menu,
   X as CloseIcon,
@@ -948,6 +949,9 @@ const App: FC = () => {
             path="/payment-success"
             element={<PaymentSuccessPage />}
           />
+
+          {/* Vergelijkingspagina's */}
+          <Route path="/vergelijk/chatgpt-vs-gemini-vs-claude" element={<ComparePage />} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
