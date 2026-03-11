@@ -198,15 +198,25 @@ const App: FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
+  // Keys bundled at build time from VITE_ env vars (GitHub Secrets / local .env)
+  const ENV_KEYS = {
+    googleKey:    (import.meta.env.VITE_GEMINI_API_KEY    as string) || '',
+    openaiKey:    (import.meta.env.VITE_OPENAI_API_KEY    as string) || '',
+    anthropicKey: (import.meta.env.VITE_ANTHROPIC_API_KEY as string) || '',
+    groqKey:      (import.meta.env.VITE_GROQ_API_KEY      as string) || '',
+    deepseekKey:  (import.meta.env.VITE_DEEPSEEK_API_KEY  as string) || '',
+    mistralKey:   (import.meta.env.VITE_MISTRAL_API_KEY   as string) || '',
+  };
+
   const defaultConfig = {
-    // Provider keys (kept for backward/forward compatibility in localStorage config)
-    googleKey: '',
+    // Provider keys — env vars used as default; user can override in Dashboard
+    googleKey:    ENV_KEYS.googleKey,
     openRouterKey: '',
-    openaiKey: '',
-    anthropicKey: '',
-    deepseekKey: '',
-    groqKey: '',
-    mistralKey: '',
+    openaiKey:    ENV_KEYS.openaiKey,
+    anthropicKey: ENV_KEYS.anthropicKey,
+    deepseekKey:  ENV_KEYS.deepseekKey,
+    groqKey:      ENV_KEYS.groqKey,
+    mistralKey:   ENV_KEYS.mistralKey,
     customKey: '',
     mimoKey: '',
     devstralKey: '',
@@ -231,6 +241,13 @@ const App: FC = () => {
     const merged = { ...defaultConfig, ...(raw || {}) };
     return {
       ...merged,
+      // If a user's saved config has empty keys, fall back to env vars
+      googleKey:    merged.googleKey    || ENV_KEYS.googleKey,
+      openaiKey:    merged.openaiKey    || ENV_KEYS.openaiKey,
+      anthropicKey: merged.anthropicKey || ENV_KEYS.anthropicKey,
+      groqKey:      merged.groqKey      || ENV_KEYS.groqKey,
+      deepseekKey:  merged.deepseekKey  || ENV_KEYS.deepseekKey,
+      mistralKey:   merged.mistralKey   || ENV_KEYS.mistralKey,
       activeCouncil: Array.isArray(merged.activeCouncil) && merged.activeCouncil.length > 0
         ? merged.activeCouncil
         : DEFAULT_COUNCIL,
