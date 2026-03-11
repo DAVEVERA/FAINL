@@ -1,5 +1,5 @@
 
-import { useState, useRef, useEffect, FC } from 'react';
+import { useState, useRef, useEffect, FC, lazy, Suspense } from 'react';
 import {
   Send,
   Users,
@@ -36,14 +36,14 @@ import {
 import { UnifiedCouncilService } from "./services/councilService";
 import { CouncilCard } from "./components/CouncilCard";
 import { PaywallModal } from "./components/PaywallModal";
-import { PricingPage } from "./components/PricingPage";
-import { AccountPage } from "./components/AccountPage";
-import { CookbookPage } from "./components/CookbookPage";
-import { FAQPage } from "./components/FAQPage";
-import { ContactPage } from "./components/ContactPage";
-import { PrivacyPolicyPage } from "./components/PrivacyPolicyPage";
-import { TermsOfServicePage } from "./components/TermsOfServicePage";
-import { DebateRoom } from "./components/DebateRoom";
+const PricingPage = lazy(() => import("./components/PricingPage").then(m => ({ default: m.PricingPage })));
+const AccountPage = lazy(() => import("./components/AccountPage").then(m => ({ default: m.AccountPage })));
+const CookbookPage = lazy(() => import("./components/CookbookPage").then(m => ({ default: m.CookbookPage })));
+const FAQPage = lazy(() => import("./components/FAQPage").then(m => ({ default: m.FAQPage })));
+const ContactPage = lazy(() => import("./components/ContactPage").then(m => ({ default: m.ContactPage })));
+const PrivacyPolicyPage = lazy(() => import("./components/PrivacyPolicyPage").then(m => ({ default: m.PrivacyPolicyPage })));
+const TermsOfServicePage = lazy(() => import("./components/TermsOfServicePage").then(m => ({ default: m.TermsOfServicePage })));
+const DebateRoom = lazy(() => import("./components/DebateRoom").then(m => ({ default: m.DebateRoom })));
 import {
   Menu,
   X as CloseIcon,
@@ -60,18 +60,17 @@ import {
   useLocation,
   Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
 import { SEO } from "./components/SEO";
-import { LoginPage } from "./components/LoginPage";
-import { QuestionPage } from "./components/QuestionPage";
+const LoginPage = lazy(() => import("./components/LoginPage").then(m => ({ default: m.LoginPage })));
+const QuestionPage = lazy(() => import("./components/QuestionPage").then(m => ({ default: m.QuestionPage })));
 import { Session } from "@supabase/supabase-js";
 import { LogOut } from "lucide-react";
 import { ScrambleText } from "./components/ScrambleText";
 import { CookieConsent } from "./components/CookieConsent";
 import { AdRewardModal } from "./components/AdRewardModal";
-import { LandingPage } from "./components/LandingPage";
+const LandingPage = lazy(() => import("./components/LandingPage").then(m => ({ default: m.LandingPage })));
 import { useLanguage } from "./contexts/LanguageContext";
 
 
@@ -540,7 +539,7 @@ const App: FC = () => {
       <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
-            <button onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-4 group">
+            <button type="button" onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-4 group">
               <img
                 src="/fainl-logo.png"
                 alt="FAINL logo"
@@ -553,6 +552,7 @@ const App: FC = () => {
             <nav className="hidden lg:flex items-center gap-1">
               {NavLinks.map(link => (
                 <button
+                  type="button"
                   key={link.id}
                   onClick={() => navigate(link.id)}
                   className={`px-4 py-2.5 font-black text-sm uppercase tracking-widest transition-all rounded-lg ${location.pathname === link.id ? 'bg-black text-white' : 'text-black/60 hover:text-black hover:bg-black/5'}`}
@@ -565,6 +565,7 @@ const App: FC = () => {
 
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg active:scale-95 transition-all"
             >
@@ -573,6 +574,7 @@ const App: FC = () => {
 
             {authSession && (
               <button
+                type="button"
                 onClick={handleLogout}
                 className="hidden sm:flex items-center gap-2 p-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200"
                 title="Sign Out"
@@ -587,6 +589,7 @@ const App: FC = () => {
           <div className="lg:hidden absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border-b-4 border-black dark:border-zinc-700 p-4 space-y-2 shadow-2xl animate-in slide-in-from-top-4 duration-300">
             {NavLinks.map(link => (
               <button
+                type="button"
                 key={link.id}
                 onClick={() => { navigate(link.id); setIsMenuOpen(false); }}
                 className={`w-full flex items-center gap-4 p-4 font-black text-sm md:text-base uppercase tracking-[0.15em] rounded-xl transition-all ${location.pathname === link.id ? 'bg-black text-white' : 'bg-zinc-50 text-black/60'}`}
@@ -597,6 +600,7 @@ const App: FC = () => {
             ))}
             {authSession && (
               <button
+                type="button"
                 onClick={() => { handleLogout(); setIsMenuOpen(false); }}
                 className="w-full flex items-center gap-4 p-4 font-black text-sm uppercase tracking-[0.15em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
               >
@@ -634,6 +638,7 @@ const App: FC = () => {
       )}
 
       <main className="flex-1 w-full mx-auto">
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[40vh]"><div className="w-6 h-6 border-2 border-black/20 border-t-black dark:border-white/20 dark:border-t-white rounded-full animate-spin" /></div>}>
         <Routes>
           {/* Home / Landing Page */}
           <Route path="/" element={<LandingPage />} />
@@ -712,6 +717,7 @@ const App: FC = () => {
                           </span>
                         </div>
                         <button
+                          type="button"
                           onClick={handleStart}
                           disabled={!input.trim()}
                           title="Send mission"
@@ -919,6 +925,7 @@ const App: FC = () => {
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </main>
 
       <footer className="border-t border-black/5 py-8 md:py-12 text-center">
