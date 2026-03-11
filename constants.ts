@@ -161,6 +161,6 @@ export const USAGE_LIMITS = {
 // Google AdSense — vervang met jouw eigen publisher ID en rewarded ad unit slot ID
 // Aanmaken via: https://www.google.com/adsense → Advertenties → Per advertentie-eenheid → Beloonde interstitial
 export const ADSENSE = {
-  PUBLISHER_ID: 'ca-pub-PLACEHOLDER',
+  PUBLISHER_ID: 'ca-pub-7584438343948866',
   REWARDED_SLOT: 'PLACEHOLDER',
 };
