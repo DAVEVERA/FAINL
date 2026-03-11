@@ -246,9 +246,12 @@ const App: FC = () => {
     const merged = { ...defaultConfig, ...(raw || {}) };
     return {
       ...merged,
-      activeCouncil: Array.isArray(merged.activeCouncil) && merged.activeCouncil.length > 0
-        ? merged.activeCouncil
-        : DEFAULT_COUNCIL,
+      activeCouncil: (() => {
+        if (!Array.isArray(merged.activeCouncil) || merged.activeCouncil.length === 0) return DEFAULT_COUNCIL;
+        // Migrate: update modelId for any member whose ID matches a DEFAULT_COUNCIL member
+        const defaultById = Object.fromEntries(DEFAULT_COUNCIL.map(m => [m.id, m]));
+        return merged.activeCouncil.map((m: any) => defaultById[m.id] ? { ...m, modelId: defaultById[m.id].modelId, provider: defaultById[m.id].provider } : m);
+      })(),
       customNodes: Array.isArray(merged.customNodes) ? merged.customNodes : [],
       modelCount: merged.modelCount === 5 ? 5 : 3,
       turnsUsed: Number.isFinite(merged.turnsUsed) ? merged.turnsUsed : 0,
