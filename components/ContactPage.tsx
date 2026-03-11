@@ -66,11 +66,11 @@ export const ContactPage: FC = () => {
                     <div className="p-8 bg-black/5 dark:bg-white/5 border-4 border-black/10 dark:border-white/5 rounded-[2rem] space-y-6">
                         <div className="flex items-center gap-4 text-black dark:text-white opacity-40">
                             <MessageSquare className="w-5 h-5" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">{language === 'nl' ? 'Neurale Reactietijd: < 12U' : 'Neural Response Time: < 12H'}</span>
+                            <span className="text-sm font-black uppercase tracking-[0.2em]">{language === 'nl' ? 'Neurale Reactietijd: < 12U' : 'Neural Response Time: < 12H'}</span>
                         </div>
                         <div className="flex items-center gap-4 text-black dark:text-white opacity-40">
                             <Globe className="w-5 h-5" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em]">{language === 'nl' ? 'Globale Node Uptime: 99.9%' : 'Global Node Uptime: 99.9%'}</span>
+                            <span className="text-sm font-black uppercase tracking-[0.2em]">{language === 'nl' ? 'Globale Node Uptime: 99.9%' : 'Global Node Uptime: 99.9%'}</span>
                         </div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@ export const ContactPage: FC = () => {
 
                         <form className="space-y-6 md:space-y-8" onSubmit={handleSubmit}>
                             <div className="space-y-3">
-                                <label className="block text-[10px] font-black text-black/40 dark:text-white/40 uppercase tracking-[0.3em]">{language === 'nl' ? 'Bron Identiteit' : 'Source Identity'}</label>
+                                <label className="block text-sm font-black text-black/50 dark:text-white/40 uppercase tracking-[0.2em]">{language === 'nl' ? 'Bron Identiteit' : 'Source Identity'}</label>
                                 <input
                                     type="text"
                                     required
@@ -92,11 +92,11 @@ export const ContactPage: FC = () => {
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder={language === 'nl' ? 'NODE_NAAM' : 'NODE_NAME'}
                                     disabled={status !== 'idle'}
-                                    className="w-full bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[10px] focus:bg-white dark:focus:bg-zinc-700 transition-all outline-none text-black dark:text-white placeholder:text-black/20 dark:placeholder:text-white/20 disabled:opacity-50"
+                                    className="w-full bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-xl md:rounded-2xl font-bold text-sm focus:bg-white dark:focus:bg-zinc-700 transition-all outline-none text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/20 disabled:opacity-50"
                                 />
                             </div>
                             <div className="space-y-3">
-                                <label className="block text-[10px] font-black text-black/40 dark:text-white/40 uppercase tracking-[0.3em]">{language === 'nl' ? 'Communicatie Payload' : 'Communication Payload'}</label>
+                                <label className="block text-sm font-black text-black/50 dark:text-white/40 uppercase tracking-[0.2em]">{language === 'nl' ? 'Communicatie Payload' : 'Communication Payload'}</label>
                                 <textarea
                                     required
                                     value={payload}
@@ -104,13 +104,13 @@ export const ContactPage: FC = () => {
                                     placeholder={language === 'nl' ? 'VOER MISSIE IN...' : 'ENTER DIRECTIVE...'}
                                     disabled={status !== 'idle'}
                                     rows={5}
-                                    className="w-full bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-xl md:rounded-2xl font-bold uppercase tracking-widest text-[10px] focus:bg-white dark:focus:bg-zinc-700 transition-all outline-none resize-none text-black dark:text-white placeholder:text-black/20 dark:placeholder:text-white/20 disabled:opacity-50"
+                                    className="w-full bg-zinc-50 dark:bg-zinc-800 border-4 border-black dark:border-white/10 p-5 md:p-6 rounded-xl md:rounded-2xl font-medium text-sm focus:bg-white dark:focus:bg-zinc-700 transition-all outline-none resize-none text-black dark:text-white placeholder:text-black/30 dark:placeholder:text-white/20 disabled:opacity-50"
                                 />
                             </div>
                             <button
                                 type="submit"
                                 disabled={status !== 'idle' || !name || !payload}
-                                className={`w-full py-6 md:py-8 rounded-xl md:rounded-2xl font-black uppercase tracking-[0.4em] text-[10px] transition-all shadow-xl flex items-center justify-center gap-4 ${status === 'success'
+                                className={`w-full py-6 md:py-8 rounded-xl md:rounded-2xl font-black uppercase tracking-[0.3em] text-sm transition-all shadow-xl flex items-center justify-center gap-4 ${status === 'success'
                                         ? 'bg-green-500 text-white'
                                         : 'bg-black dark:bg-white text-white dark:text-black hover:scale-[1.02] active:scale-[0.98]'
                                     } disabled:opacity-50 disabled:cursor-not-allowed`}

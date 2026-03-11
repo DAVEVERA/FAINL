@@ -187,7 +187,7 @@ export const AccountPage: FC<AccountPageProps> = ({
           <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-3 text-black">
             Commandocentrum
           </h1>
-          <p className="text-black font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
+          <p className="text-black/70 font-bold text-base md:text-lg leading-relaxed">
             Beheer je credits, nodes, datakluis en missiegeschiedenis.
           </p>
         </div>
@@ -205,22 +205,22 @@ export const AccountPage: FC<AccountPageProps> = ({
         <div className="p-5 bg-black text-white border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,0.3)] flex flex-col gap-1">
           <Zap className="w-5 h-5 mb-1 text-[#FDC700]" />
           <div className="text-3xl font-black">{creditsRemaining}</div>
-          <div className="text-[9px] font-black uppercase tracking-widest opacity-60">Credits Resterend</div>
+          <div className="text-xs font-black uppercase tracking-widest opacity-60">Credits Resterend</div>
         </div>
         <div className="p-5 bg-white border-4 border-black shadow-[4px_4px_0_0_black] flex flex-col gap-1">
           <MessageSquare className="w-5 h-5 mb-1 text-black/40" />
           <div className="text-3xl font-black text-black">{freeSessiesResterend}</div>
-          <div className="text-[9px] font-black uppercase tracking-widest text-black/50">Gratis Sessies</div>
+          <div className="text-xs font-black uppercase tracking-widest text-black/50">Gratis Sessies</div>
         </div>
         <div className="p-5 bg-white border-4 border-black shadow-[4px_4px_0_0_black] flex flex-col gap-1">
           <History className="w-5 h-5 mb-1 text-black/40" />
           <div className="text-3xl font-black text-black">{totalSessies}</div>
-          <div className="text-[9px] font-black uppercase tracking-widest text-black/50">Sessies Totaal</div>
+          <div className="text-xs font-black uppercase tracking-widest text-black/50">Sessies Totaal</div>
         </div>
         <div className="p-5 bg-white border-4 border-black shadow-[4px_4px_0_0_black] flex flex-col gap-1">
           <Users className="w-5 h-5 mb-1 text-black/40" />
           <div className="text-3xl font-black text-black">{config.activeCouncil.length}</div>
-          <div className="text-[9px] font-black uppercase tracking-widest text-black/50">Actieve Nodes</div>
+          <div className="text-xs font-black uppercase tracking-widest text-black/50">Actieve Nodes</div>
         </div>
       </div>
 
@@ -240,7 +240,7 @@ export const AccountPage: FC<AccountPageProps> = ({
                 {config.activeCouncil.length !== DEFAULT_COUNCIL.length && (
                   <button
                     onClick={handleResetCouncil}
-                    className="px-3 py-1.5 bg-zinc-100 text-black font-black text-[9px] uppercase tracking-widest border-2 border-black hover:bg-zinc-200 transition-all"
+                    className="px-3 py-1.5 bg-zinc-100 text-black font-black text-xs uppercase tracking-widest border-2 border-black hover:bg-zinc-200 transition-all"
                   >
                     Reset
                   </button>
@@ -256,17 +256,17 @@ export const AccountPage: FC<AccountPageProps> = ({
 
             {/* Default Council Members (always visible) */}
             <div className="space-y-2">
-              <p className="text-[9px] font-black uppercase tracking-widest text-black/30">Standaard Raad</p>
+              <p className="text-xs font-black uppercase tracking-widest text-black/30">Standaard Raad</p>
               {DEFAULT_COUNCIL.map(node => (
                 <div key={node.id} className="p-3 bg-zinc-50 border-2 border-black/10 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-[#FDC700] rounded-full" />
                     <div>
                       <h4 className="font-black uppercase text-xs text-black">{node.name}</h4>
-                      <p className="text-[9px] font-bold text-black/40">{node.modelId}</p>
+                      <p className="text-xs font-bold text-black/40">{node.modelId}</p>
                     </div>
                   </div>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-black/30">Altijd Actief</span>
+                  <span className="text-xs font-black uppercase tracking-widest text-black/30">Altijd Actief</span>
                 </div>
               ))}
             </div>
@@ -274,7 +274,7 @@ export const AccountPage: FC<AccountPageProps> = ({
             {/* Add Node Form */}
             {isAddingNode && (
               <div className="p-6 bg-zinc-50 border-4 border-black space-y-4 animate-in slide-in-from-top-2 duration-300">
-                <p className="text-[9px] font-black uppercase tracking-widest text-black/40">Nieuwe Node op Gemini (2.0 Flash)</p>
+                <p className="text-xs font-black uppercase tracking-widest text-black/40">Nieuwe Node op Gemini (2.0 Flash)</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
@@ -310,7 +310,7 @@ export const AccountPage: FC<AccountPageProps> = ({
             {/* Custom Nodes List */}
             {config.customNodes?.length > 0 && (
               <div className="space-y-2">
-                <p className="text-[9px] font-black uppercase tracking-widest text-black/30">Jouw Nodes</p>
+                <p className="text-xs font-black uppercase tracking-widest text-black/30">Jouw Nodes</p>
                 {config.customNodes.map(node => {
                   const isActive = isNodeActiveInCouncil(node.id);
                   return (
@@ -319,14 +319,14 @@ export const AccountPage: FC<AccountPageProps> = ({
                         <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-[#FDC700]' : 'bg-black/20'}`} />
                         <div>
                           <h4 className="font-black uppercase text-xs text-black">{node.name}</h4>
-                          <p className="text-[9px] font-bold text-black/40">{node.role}</p>
+                          <p className="text-xs font-bold text-black/40">{node.role}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleToggleNodeInCouncil(node)}
                           title={isActive ? 'Deactiveer in raad' : 'Activeer in raad'}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 font-black text-[9px] uppercase tracking-widest border transition-all ${isActive ? 'bg-[#FDC700] border-black text-black' : 'bg-zinc-100 border-black/20 text-black/50 hover:border-black hover:text-black'}`}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 font-black text-xs uppercase tracking-widest border transition-all ${isActive ? 'bg-[#FDC700] border-black text-black' : 'bg-zinc-100 border-black/20 text-black/50 hover:border-black hover:text-black'}`}
                         >
                           {isActive ? <ToggleRight className="w-3.5 h-3.5" /> : <ToggleLeft className="w-3.5 h-3.5" />}
                           {isActive ? 'Actief' : 'Inactief'}
@@ -367,14 +367,14 @@ export const AccountPage: FC<AccountPageProps> = ({
                 <Download className="w-5 h-5 group-hover:animate-bounce" />
                 <div className="text-left">
                   <span className="block font-black uppercase text-xs">Export Backup</span>
-                  <span className="text-[9px] font-bold opacity-50">Download je data als JSON</span>
+                  <span className="text-xs font-bold opacity-50">Download je data als JSON</span>
                 </div>
               </button>
               <label className="flex items-center justify-center gap-3 p-6 bg-zinc-50 border-2 border-black hover:bg-black hover:text-white transition-all cursor-pointer group">
                 <Upload className="w-5 h-5 group-hover:animate-pulse" />
                 <div className="text-left">
                   <span className="block font-black uppercase text-xs">Import Backup</span>
-                  <span className="text-[9px] font-bold opacity-50">Herstel vanuit JSON bestand</span>
+                  <span className="text-xs font-bold opacity-50">Herstel vanuit JSON bestand</span>
                 </div>
                 <input type="file" accept=".json" onChange={handleImportData} className="hidden" />
               </label>
@@ -486,7 +486,7 @@ export const AccountPage: FC<AccountPageProps> = ({
                         <h4 className="text-xs font-black uppercase tracking-tight truncate max-w-[160px] sm:max-w-xs text-black">
                           "{session.query}"
                         </h4>
-                        <span className="text-[9px] font-bold text-black/40 uppercase tracking-widest">
+                        <span className="text-xs font-bold text-black/40 uppercase tracking-widest">
                           {formatDate(session.timestamp)}
                         </span>
                       </div>

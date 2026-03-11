@@ -39,7 +39,7 @@ export const PricingPage: FC<PricingPageProps> = ({
         <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-3 text-black dark:text-white">
           {language === 'nl' ? 'Credits & Toegang' : 'Credits & Access'}
         </h1>
-        <p className="max-w-xl mx-auto text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.2em] text-[10px]">
+        <p className="max-w-xl mx-auto text-black/60 dark:text-white/60 font-bold text-base md:text-lg leading-relaxed">
           {language === 'nl'
             ? 'Betaal per credit of kies een maandelijks abonnement.'
             : 'Pay per credit or choose a monthly subscription.'}
@@ -56,7 +56,7 @@ export const PricingPage: FC<PricingPageProps> = ({
             <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-black dark:text-white">
               {language === 'nl' ? 'Credits Kopen' : 'Buy Credits'}
             </h2>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
+            <p className="text-sm font-black uppercase tracking-[0.15em] text-black/50 dark:text-white/40">
               {language === 'nl' ? 'Eenmalige credits, verlopen nooit.' : 'One-time credits, never expire.'}
             </p>
           </div>
@@ -84,12 +84,13 @@ export const PricingPage: FC<PricingPageProps> = ({
           ))}
         </div>
 
-        <p className="mt-6 text-center text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">
+        <p className="mt-6 text-center text-sm font-black uppercase tracking-widest text-black/40 dark:text-white/30">
           {language === 'nl'
             ? 'Alle pakketten worden direct verwerkt via Stripe.'
             : 'All packages processed instantly via Stripe.'}
         </p>
       </div>
+
 
       {/* Subscriptions */}
       <div>
@@ -101,7 +102,7 @@ export const PricingPage: FC<PricingPageProps> = ({
             <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter text-black dark:text-white">
               {language === 'nl' ? 'Maandelijks Abonnement' : 'Monthly Subscription'}
             </h2>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-black/40 dark:text-white/40">
+            <p className="text-sm font-black uppercase tracking-[0.15em] text-black/50 dark:text-white/40">
               {language === 'nl' ? 'Automatisch hernieuwd elke maand.' : 'Automatically renewed each month.'}
             </p>
           </div>
@@ -130,7 +131,7 @@ export const PricingPage: FC<PricingPageProps> = ({
         </div>
       </div>
 
-      <p className="mt-16 text-center text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/30">
+      <p className="mt-16 text-center text-sm font-black uppercase tracking-widest text-black/40 dark:text-white/30">
         {language === 'nl'
           ? 'Binnenkort meer niveaus · Veilig afrekenen via Stripe'
           : 'More tiers coming soon · Secure checkout via Stripe'}
