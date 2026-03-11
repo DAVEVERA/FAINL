@@ -13,23 +13,23 @@ const AD_DURATION = 15;
 export const AdRewardModal: FC<AdRewardModalProps> = ({ isOpen, onRewardEarned, onDismiss }) => {
   const [countdown, setCountdown] = useState(AD_DURATION);
   const [canProceed, setCanProceed] = useState(false);
-  const adPushed = useRef(false);
+  const insRef = useRef<HTMLModElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
       setCountdown(AD_DURATION);
       setCanProceed(false);
-      adPushed.current = false;
       return;
     }
 
-    // Push AdSense display ad
-    if (!adPushed.current) {
-      adPushed.current = true;
-      try {
+    // Push AdSense display ad — only if not already initialized on this element
+    try {
+      const el = insRef.current;
+      if (el && !el.getAttribute('data-adsbygoogle-status')) {
         ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-      } catch (_) {}
-    }
+      }
+    } catch (_) {}
+
 
     // Start countdown
     const interval = setInterval(() => {
@@ -72,6 +72,7 @@ export const AdRewardModal: FC<AdRewardModalProps> = ({ isOpen, onRewardEarned, 
         {/* Ad container */}
         <div className="bg-zinc-50 min-h-[260px] flex items-center justify-center overflow-hidden">
           <ins
+            ref={insRef}
             className="adsbygoogle block w-full min-h-[260px]"
             data-ad-client={ADSENSE.PUBLISHER_ID}
             data-ad-slot={ADSENSE.REWARD_GATE_SLOT}

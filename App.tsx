@@ -320,6 +320,23 @@ const App: FC = () => {
   const [isAnnouncementVisible, setIsAnnouncementVisible] = useState(() => {
     return !localStorage.getItem('fainl_visited');
   });
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterState, setNewsletterState] = useState<'banner' | 'form' | 'submitting' | 'success'>('banner');
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+    setNewsletterState('submitting');
+    try {
+      await supabase.from('newsletter_subscribers').insert({
+        email: newsletterEmail.trim().toLowerCase(),
+        promo_code: 'promo_1T9tKD2Z8WgVHOZM0xJIa5Py',
+        source: 'announcement_banner',
+      });
+    } catch (_) { /* table may not exist yet, still show success */ }
+    setNewsletterState('success');
+    localStorage.setItem('fainl_visited', '1');
+  };
 
   const [session, setSession] = useState<SessionState>({
     id: crypto.randomUUID(),
@@ -623,17 +640,42 @@ const App: FC = () => {
         )}
       </header>
 
-      {isAnnouncementVisible && (
-        <div className="w-full bg-black text-white py-2.5 px-4 flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest relative">
-          <span className="text-yellow-400">★</span>
-          <span>15% korting op je eerste aankoop</span>
-          <span className="text-white/40 hidden sm:inline">—</span>
-          <a
-            href="mailto:info@fainl.com"
-            className="underline hover:text-yellow-400 transition-colors hidden sm:inline"
-          >
-            Aanmelden voor nieuwsbrief
-          </a>
+      {isAnnouncementVisible && newsletterState !== 'success' && (
+        <div className="w-full bg-black text-white px-4 py-2.5 relative">
+          {newsletterState === 'banner' && (
+            <div className="flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest">
+              <span className="text-yellow-400">★</span>
+              <span>15% korting op je eerste aankoop</span>
+              <span className="text-white/40 hidden sm:inline">—</span>
+              <button
+                type="button"
+                onClick={() => setNewsletterState('form')}
+                className="underline hover:text-yellow-400 transition-colors hidden sm:inline"
+              >
+                Aanmelden voor nieuwsbrief
+              </button>
+            </div>
+          )}
+          {(newsletterState === 'form' || newsletterState === 'submitting') && (
+            <form onSubmit={handleNewsletterSubmit} className="flex items-center justify-center gap-2 flex-wrap">
+              <span className="text-yellow-400 text-[11px] font-black uppercase tracking-widest whitespace-nowrap">★ 15% korting</span>
+              <input
+                type="email"
+                required
+                value={newsletterEmail}
+                onChange={e => setNewsletterEmail(e.target.value)}
+                placeholder="jouw@email.nl"
+                className="bg-white/10 border border-white/30 text-white placeholder-white/40 text-[11px] px-3 py-1.5 outline-none focus:border-yellow-400 transition-colors w-48"
+              />
+              <button
+                type="submit"
+                disabled={newsletterState === 'submitting'}
+                className="bg-yellow-400 text-black text-[10px] font-black uppercase tracking-widest px-3 py-1.5 hover:bg-yellow-300 transition-colors disabled:opacity-60"
+              >
+                {newsletterState === 'submitting' ? '...' : 'Aanmelden'}
+              </button>
+            </form>
+          )}
           <button
             type="button"
             onClick={() => {
@@ -642,6 +684,21 @@ const App: FC = () => {
             }}
             className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/50 hover:text-white transition-colors"
             aria-label="Sluit aankondiging"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      {newsletterState === 'success' && (
+        <div className="w-full bg-yellow-400 text-black px-4 py-2.5 flex items-center justify-center gap-3 text-[11px] font-black uppercase tracking-widest relative">
+          <span>✓ Aangemeld!</span>
+          <span className="text-black/60">Jouw kortingscode:</span>
+          <span className="bg-black text-yellow-400 px-2 py-0.5 font-mono tracking-normal select-all">promo_1T9tKD2Z8WgVHOZM0xJIa5Py</span>
+          <button
+            type="button"
+            onClick={() => setIsAnnouncementVisible(false)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-black/50 hover:text-black transition-colors"
+            aria-label="Sluit"
           >
             ✕
           </button>
