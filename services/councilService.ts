@@ -3,7 +3,9 @@ import { SYSTEM_PROMPTS } from "../constants";
 
 // Supabase project URL — safe to expose (anon key is public)
 const SUPABASE_URL = (import.meta.env.VITE_SUPABASE_URL as string) || 'https://bbsqosivxfcpkgehfwmm.supabase.co';
-const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || '';
+// Anon key is public by design (Supabase safe-to-expose pattern)
+const SUPABASE_ANON_KEY = (import.meta.env.VITE_SUPABASE_ANON_KEY as string)
+  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJic3Fvc2l2eGZjcGtnZWhmd21tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE4NTY1MTEsImV4cCI6MjA4NzQzMjUxMX0.AFlNomsT7PVtX_1HTenhmqgoH1ghp6t7kMrYZdV4Cbw';
 const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy`;
 
 // Providers handled server-side via the Edge Function — no API keys needed in the browser
