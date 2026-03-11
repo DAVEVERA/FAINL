@@ -17,8 +17,14 @@
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="color-scheme" content="only light" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://bbsqosivxfcpkgehfwmm.supabase.co" />
 
     <!-- Base SEO (per pagina overschreven via react-helmet-async) -->
     <title>FAINL — AI Consensus Engine | Meerdere AI's. Één Antwoord.</title>
@@ -42,15 +48,18 @@
     <meta property="og:url" content="https://fainl.com/" />
     <meta property="og:title" content="FAINL — AI Consensus Engine | Meerdere AI's. Één Antwoord." />
     <meta property="og:description" content="Laat Gemini, GPT-4, Claude en Llama tegelijk jouw vraag beantwoorden, elkaars redenering bekritiseren en live debatteren. FAINL geeft het scherpste AI-oordeel." />
+    <meta property="og:image" content="https://fainl.com/fainl-logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="nl_NL" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="FAINL — AI Consensus Engine | Meerdere AI's. Één Antwoord." />
     <meta name="twitter:description" content="Laat meerdere AI-modellen tegelijk debatteren over jouw vraag. 2 sessies gratis, geen account nodig." />
+    <meta name="twitter:image" content="https://fainl.com/fainl-logo.png" />
 
-    <!-- Google AdSense — vervang ca-pub-7584438343948866 met jouw publisher ID -->
-    <!-- Aanmaken via: https://www.google.com/adsense → Advertenties → Per advertentie-eenheid → Beloonde interstitial -->
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7584438343948866" crossorigin="anonymous"></script>
     <script>
       (window.adsbygoogle = window.adsbygoogle || []).push({

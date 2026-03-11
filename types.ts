@@ -95,4 +95,22 @@ export interface AppConfig {
   isLifetime: boolean;
   totalTurnsAllowed: number;
   hasWatchedAd?: boolean;
+  // Local/custom provider keys (proxied providers use server-side secrets)
+  customKey?: string;
+  customBaseUrl?: string;
+  // Legacy key fields kept for backwards-compat with saved localStorage configs
+  googleKey?: string;
+  openaiKey?: string;
+  anthropicKey?: string;
+  groqKey?: string;
+  deepseekKey?: string;
+  mistralKey?: string;
+  openRouterKey?: string;
+  nemotronKey?: string;
+  glmKey?: string;
+  mimoKey?: string;
+  devstralKey?: string;
+  katKey?: string;
+  olmoKey?: string;
+  gemmaKey?: string;
 }

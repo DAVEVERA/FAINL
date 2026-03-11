@@ -84,7 +84,7 @@ export const AccountPage: FC<AccountPageProps> = ({
       name: newNode.name,
       role: newNode.role,
       provider: ModelProvider.GOOGLE,
-      modelId: 'gemini-2.0-flash',
+      modelId: 'gemini-2.5-flash',
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(newNode.name)}`,
       color: 'bg-zinc-800',
       description: newNode.role || 'Custom AI Node',
