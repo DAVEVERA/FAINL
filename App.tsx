@@ -125,6 +125,40 @@ const AnimatedSendIcon: FC = () => {
   );
 };
 
+const LogoSwitch: FC = () => {
+  const [showText, setShowText] = useState(false);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    const initial = setTimeout(() => {
+      setShowText(true);
+      interval = setInterval(() => setShowText(p => !p), 4200);
+    }, 3000);
+    return () => { clearTimeout(initial); clearInterval(interval); };
+  }, []);
+
+  return (
+    <div className="relative grid items-center h-12 md:h-16 min-w-12 overflow-hidden">
+      {/* Visual logo */}
+      <img
+        src="/fainl-logo.png"
+        alt="FAINL"
+        className={`[grid-area:1/1] h-full w-auto object-contain transition-all duration-500 ease-in-out ${
+          showText ? 'opacity-0 -translate-y-3 pointer-events-none' : 'opacity-100 translate-y-0'
+        }`}
+      />
+      {/* Text logo */}
+      <span
+        className={`[grid-area:1/1] text-[1.35rem] md:text-2xl font-black tracking-tighter text-black dark:text-white whitespace-nowrap transition-all duration-500 ease-in-out ${
+          showText ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3 pointer-events-none'
+        }`}
+      >
+        <ScrambleText text="FAINL" />
+      </span>
+    </div>
+  );
+};
+
 const CyberLogo: FC<{ isAnimated?: boolean }> = ({ isAnimated = true }) => {
   return (
     <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center group overflow-visible">
@@ -539,15 +573,8 @@ const App: FC = () => {
       <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
           <div className="flex items-center gap-4 md:gap-8">
-            <button type="button" onClick={() => navigate("/")} className="flex items-center gap-3 md:gap-4 group">
-              <img
-                src="/fainl-logo.png"
-                alt="FAINL logo"
-                className="h-12 md:h-16 w-auto object-contain"
-              />
-              <span className="text-2xl font-black tracking-tighter hidden sm:block text-black">
-                <ScrambleText text="FAINL" />
-              </span>
+            <button type="button" onClick={() => navigate("/")} aria-label="FAINL — naar startpagina" className="flex items-center group">
+              <LogoSwitch />
             </button>
             <nav className="hidden lg:flex items-center gap-1">
               {NavLinks.map(link => (

@@ -59,7 +59,7 @@ const JSON_LD = {
         "Live AI debatroom",
         "Spraakherkenning",
         "Chairman's Verdict synthese",
-        "Privacy-first lokale opslag",
+        "Lokale sessie-opslag",
         "Geen account vereist",
       ],
       offers: {
@@ -157,10 +157,12 @@ export const LandingPage: FC = () => {
           <span className="text-[#d1b411]">AI-model.</span>
         </h1>
 
-        <p className="max-w-lg sm:max-w-xl mx-auto text-xl sm:text-2xl md:text-2xl font-semibold text-black dark:text-white/80 leading-relaxed mb-8 sm:mb-10 md:mb-14">
-          Eén model geeft een antwoord. Meerdere modellen doorgronden de kern.
-          Met FAINL krijg je het best haalbare antwoord — aangedreven door AI-modellen
-          die concurreren, toetsen en samensmelten tot één superieur eindresultaat.
+        <p className="max-w-xl mx-auto text-lg sm:text-xl md:text-2xl font-semibold text-black dark:text-white/80 leading-snug mb-8 sm:mb-10 md:mb-14">
+          Eén model geeft <em>een</em> antwoord.{" "}
+          <span className="text-black dark:text-white font-black">FAINL geeft het <em>beste</em>.</span>
+          <span className="block mt-3 text-base sm:text-lg font-medium text-black/60 dark:text-white/50 leading-relaxed">
+            Meerdere AI-modellen analyseren parallel, bevragen elkaars redenering en smelten samen tot één gewogen eindoordeel.
+          </span>
         </p>
 
         <div className="flex flex-col xs:flex-row items-center justify-center gap-3 sm:gap-4 mb-8">
@@ -314,7 +316,7 @@ export const LandingPage: FC = () => {
               {
                 icon: Lock,
                 title: "Privacy-first",
-                desc: "Alles blijft in jouw browser. Geen server-opslag, geen datamining, geen profiling. Jouw gedachten zijn van jou.",
+                desc: "Je instellingen en sessiegeschiedenis blijven lokaal in jouw browser. Je vragen worden anoniem via onze proxy naar de AI-providers gestuurd — geen account koppeling, geen profiling.",
               },
               {
                 icon: BarChart3,
