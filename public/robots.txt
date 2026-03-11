@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /login
+Disallow: /payment-success
 
 Sitemap: https://fainl.com/sitemap.xml
