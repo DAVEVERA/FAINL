@@ -91,7 +91,7 @@ export const CookbookPage: FC<CookbookPageProps> = ({ onSelectMission }) => {
                 <h1 className="text-2xl md:text-4xl font-black uppercase tracking-tighter mb-4 text-black dark:text-white">
                     Kookboek
                 </h1>
-                <p className="max-w-2xl mx-auto text-black/50 dark:text-white/50 font-bold uppercase tracking-[0.3em] text-[10px] md:text-xs">
+                <p className="max-w-2xl mx-auto text-black/60 dark:text-white/60 font-bold text-base md:text-lg leading-relaxed">
                     {language === 'nl'
                         ? 'Een high-integrity database met neurale missies, geoptimaliseerd voor autonome multi-agent orkestratie en strategische vervulling.'
                         : 'A high-integrity database of neural directives optimized for autonomous multi-agent orchestration and strategic logic fulfillment.'}
