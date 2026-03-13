@@ -565,107 +565,114 @@ const App: FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-black dark:text-white flex flex-col font-sans selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-x-hidden transition-colors duration-300">
-      <header className="border-b border-black/10 dark:border-white/10 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 grid grid-cols-3 items-center">
-          {/* Left: logo */}
-          <div className="flex items-center">
-            <button type="button" onClick={() => navigate("/")} aria-label="FAINL — naar startpagina" className="flex items-center group">
-              <LogoSwitch />
-            </button>
-          </div>
+      <header className="border-b border-black/10 dark:border-white/10 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+          {/* Logo */}
+          <button type="button" onClick={() => navigate("/")} aria-label="FAINL — naar startpagina" className="flex items-center group">
+            <LogoSwitch />
+          </button>
 
-          {/* Center: nav links */}
-          <nav className="hidden lg:flex items-center justify-center gap-1">
-            {NavLinks.map(link => (
+          {/* Hamburger — always visible */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Menu openen"
+            className="p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:scale-105 active:scale-95 transition-all"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
+      </header>
+
+      {/* ── Sidebar overlay ── */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Drawer */}
+          <div className="relative w-72 sm:w-80 h-full bg-white dark:bg-zinc-950 border-l-2 border-black/10 dark:border-white/10 flex flex-col shadow-2xl animate-in slide-in-from-right duration-300">
+            {/* Drawer header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-black/10 dark:border-white/10">
+              <button type="button" onClick={() => { navigate('/'); setIsMenuOpen(false); }} className="flex items-center group">
+                <LogoSwitch />
+              </button>
               <button
                 type="button"
-                key={link.id}
-                onClick={() => navigate(link.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 font-black text-sm uppercase tracking-widest transition-all rounded-lg ${location.pathname === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'}`}
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Menu sluiten"
+                className="p-2 rounded-lg text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all"
               >
-                <img
-                  src={link.img}
-                  alt=""
-                  aria-hidden="true"
-                  className={`w-4 h-4 object-contain ${location.pathname === link.id ? 'invert dark:invert-0' : 'dark:invert'}`}
-                />
-                {link.label}
+                <CloseIcon className="w-5 h-5" />
               </button>
-            ))}
-          </nav>
-          {/* placeholder for centering on mobile */}
-          <div className="lg:hidden" />
-
-          {/* Right: actions */}
-          <div className="flex items-center justify-end gap-3">
-            {/* Social icons — desktop only */}
-            <div className="hidden lg:flex items-center gap-2 mr-1">
-              {[
-                { src: '/social-icons/instagram-icon.png', label: 'Instagram' },
-                { src: '/social-icons/facebook-icon.png',  label: 'Facebook' },
-                { src: '/social-icons/linkedin-icon.png',  label: 'LinkedIn' },
-                { src: '/social-icons/whatsapp-icon.png',  label: 'WhatsApp' },
-                { src: '/social-icons/email-icon.png',     label: 'E-mail' },
-              ].map(({ src, label }) => (
-                <a key={label} href="#" aria-label={label}
-                  className="w-7 h-7 flex items-center justify-center opacity-30 hover:opacity-80 transition-opacity">
-                  <img src={src} alt={label} className="w-5 h-5 object-contain dark:invert" />
-                </a>
-              ))}
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2.5 bg-black dark:bg-white text-white dark:text-black rounded-lg active:scale-95 transition-all"
-            >
-              {isMenuOpen ? <CloseIcon /> : <Menu />}
-            </button>
+            {/* Nav links */}
+            <nav className="flex-1 overflow-y-auto px-4 py-5 space-y-1">
+              {NavLinks.map(link => {
+                const isActive = location.pathname === link.id;
+                return (
+                  <button
+                    type="button"
+                    key={link.id}
+                    onClick={() => { navigate(link.id); setIsMenuOpen(false); }}
+                    className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl font-black text-sm uppercase tracking-widest transition-all ${
+                      isActive
+                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]'
+                        : 'text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white'
+                    }`}
+                  >
+                    <span className={`w-8 h-8 flex items-center justify-center rounded-lg shrink-0 ${isActive ? 'bg-white/20' : 'bg-black/5 dark:bg-white/5'}`}>
+                      <img
+                        src={link.img}
+                        alt=""
+                        aria-hidden="true"
+                        className={`w-4 h-4 object-contain ${isActive ? 'invert dark:invert-0' : 'dark:invert'}`}
+                      />
+                    </span>
+                    {link.label}
+                    {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#d1b411]" />}
+                  </button>
+                );
+              })}
+            </nav>
 
-            {authSession && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="hidden sm:flex items-center gap-2 p-2.5 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all border border-red-200"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-            )}
+            {/* Drawer footer */}
+            <div className="px-4 py-5 border-t border-black/10 dark:border-white/10 space-y-4">
+              {/* Social icons */}
+              <div className="flex items-center justify-center gap-3">
+                {[
+                  { src: '/social-icons/instagram-icon.png', label: 'Instagram' },
+                  { src: '/social-icons/facebook-icon.png',  label: 'Facebook' },
+                  { src: '/social-icons/linkedin-icon.png',  label: 'LinkedIn' },
+                  { src: '/social-icons/whatsapp-icon.png',  label: 'WhatsApp' },
+                  { src: '/social-icons/email-icon.png',     label: 'E-mail' },
+                ].map(({ src, label }) => (
+                  <a key={label} href="#" aria-label={label}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all">
+                    <img src={src} alt={label} className="w-4 h-4 object-contain dark:invert" />
+                  </a>
+                ))}
+              </div>
+
+              {authSession && (
+                <button
+                  type="button"
+                  onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 font-black text-xs uppercase tracking-widest hover:bg-red-100 dark:hover:bg-red-950/50 transition-all"
+                >
+                  <LogOut className="w-4 h-4" />
+                  {t.nav.signOut}
+                </button>
+              )}
+            </div>
           </div>
         </div>
+      )}
 
-        {isMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full bg-white dark:bg-zinc-900 border-b-4 border-black dark:border-zinc-700 p-4 space-y-2 shadow-2xl animate-in slide-in-from-top-4 duration-300">
-            {NavLinks.map(link => (
-              <button
-                type="button"
-                key={link.id}
-                onClick={() => { navigate(link.id); setIsMenuOpen(false); }}
-                className={`w-full flex items-center gap-4 p-4 font-black text-sm md:text-base uppercase tracking-[0.15em] rounded-xl transition-all ${location.pathname === link.id ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-zinc-50 dark:bg-zinc-800 text-black/60 dark:text-white/60'}`}
-              >
-                <img
-                  src={link.img}
-                  alt=""
-                  aria-hidden="true"
-                  className={`w-5 h-5 object-contain ${location.pathname === link.id ? 'invert dark:invert-0' : 'dark:invert'}`}
-                />
-                {link.label}
-              </button>
-            ))}
-            {authSession && (
-              <button
-                type="button"
-                onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                className="w-full flex items-center gap-4 p-4 font-black text-sm uppercase tracking-[0.15em] rounded-xl transition-all bg-red-50 text-red-600 border border-red-200 mt-4"
-              >
-                <LogOut className="w-5 h-5" />
-                {t.nav.signOut}
-              </button>
-            )}
-          </div>
-        )}
-      </header>
 
       {isAnnouncementVisible && newsletterState !== 'success' && (
         <div className="w-full bg-black text-white px-4 py-2.5 relative">
