@@ -398,6 +398,26 @@ ${userSpokeRecently ? `\nKRITIEK: De GEBRUIKER heeft net gesproken. Jouw EERSTE 
     return this.generateStream(member, context, systemPrompt, onChunk);
   }
 
+  // ── Google Chirp 3 HD TTS ────────────────────────────────────────────────────
+  async synthesizeSpeech(text: string, voiceName: string, speakingRate: number): Promise<string | null> {
+    try {
+      const res = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ provider: 'tts', modelId: voiceName, prompt: text, temperature: speakingRate }),
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.audioContent || null;
+    } catch {
+      return null;
+    }
+  }
+
   async synthesize(
     query: string,
     responses: CouncilResponse[],

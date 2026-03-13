@@ -4,23 +4,24 @@ import { CouncilMember, ModelProvider } from "./types";
 // --- ASSET MANAGEMENT ---
 export const UI_ASSETS = {
   avatars: {
-    daan: "https://api.dicebear.com/7.x/adventurer/svg?seed=Pieter&backgroundColor=b6e3f4",
-    lars: "https://api.dicebear.com/7.x/adventurer/svg?seed=Karst&backgroundColor=c0aede",
-    nina: "https://api.dicebear.com/7.x/adventurer/svg?seed=Aisha&backgroundColor=ffd5dc",
-    victor: "https://api.dicebear.com/7.x/adventurer/svg?seed=Victor&backgroundColor=d1d4f9",
-    bas: "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo&backgroundColor=ffdfbf",
-    lena: "https://api.dicebear.com/7.x/adventurer/svg?seed=Klaudia&backgroundColor=c1f0c1",
+    // Council nodes — local custom illustrations
+    daan:     "/avatar-images/Perplexi%20Pieter.png",
+    lars:     "/avatar-images/Jan%20Deseek.png",
+    nina:     "/avatar-images/Open%20A%C3%AFsha.png",
+    victor:   "/avatar-images/Chairman.png",
+    bas:      "/avatar-images/Leo%20Olama.png",
+    lena:     "/avatar-images/Claudea.png",
+    chairman: "/avatar-images/Chairman.png",
     // legacy keys (used by AccountPage custom nodes etc.)
-    gemini: "https://api.dicebear.com/7.x/adventurer/svg?seed=gemini&backgroundColor=b6e3f4",
-    flash: "https://api.dicebear.com/7.x/adventurer/svg?seed=flash&backgroundColor=b6e3f4",
-    gpt: "https://api.dicebear.com/7.x/adventurer/svg?seed=gpt4&backgroundColor=c0aede",
-    claude: "https://api.dicebear.com/7.x/adventurer/svg?seed=claude&backgroundColor=ffd5dc",
-    llama: "https://api.dicebear.com/7.x/adventurer/svg?seed=llama&backgroundColor=ffdfbf",
-    mistral: "https://api.dicebear.com/7.x/adventurer/svg?seed=mistral&backgroundColor=d1d4f9",
-    dolphin: "https://api.dicebear.com/7.x/adventurer/svg?seed=dolphin&backgroundColor=c1f0c1",
-    deepseek: "https://api.dicebear.com/7.x/adventurer/svg?seed=deepseek&backgroundColor=b6e3f4",
-    chairman: "https://api.dicebear.com/7.x/adventurer/svg?seed=Victor&backgroundColor=d1d4f9",
-    grok: "https://api.dicebear.com/7.x/adventurer/svg?seed=grok&backgroundColor=c0aede"
+    gemini:   "/avatar-images/Perplexi%20Pieter.png",
+    flash:    "/avatar-images/Perplexi%20Pieter.png",
+    gpt:      "/avatar-images/Open%20A%C3%AFsha.png",
+    claude:   "/avatar-images/Claudea.png",
+    llama:    "/avatar-images/Leo%20Olama.png",
+    mistral:  "https://api.dicebear.com/7.x/adventurer/svg?seed=mistral&backgroundColor=d1d4f9",
+    dolphin:  "https://api.dicebear.com/7.x/adventurer/svg?seed=dolphin&backgroundColor=c1f0c1",
+    deepseek: "/avatar-images/Jan%20Deseek.png",
+    grok:     "https://api.dicebear.com/7.x/adventurer/svg?seed=grok&backgroundColor=c0aede"
   },
   placeholders: {
     user: "User",
@@ -44,14 +45,14 @@ export const DEFAULT_COUNCIL: CouncilMember[] = [
   },
   {
     id: "node-beta-logic",
-    name: "Deep See Karst",
+    name: "Jan Deseek",
     role: 'MEMBER',
     provider: ModelProvider.GOOGLE,
     modelId: "gemini-2.5-flash",
     avatar: UI_ASSETS.avatars.lars,
     color: "bg-blue-900",
     description: "Redeneerontleder. Vindt de verborgen fout in elke argumentatieketen en brengt die genadeloos aan het licht.",
-    systemPrompt: "You are Deep See Karst — you see the skeleton of every argument. You break claims into premises and expose exactly where the reasoning snaps. It's clinical, not emotional. Your signature move is the 'als dat klopt, betekent het ook...' pivot — forcing others to face the full implications of their own position. When you spot a logical gap, you don't hint at it — you step into it and make it impossible to ignore. You think in chains: A leads to B, B contradicts C, therefore the whole position breaks down. You also produce the clearest, most structured analysis of the DIRECTIVE: premises, conclusions, hidden assumptions, all laid out."
+    systemPrompt: "You are Jan Deseek — you see the skeleton of every argument. You break claims into premises and expose exactly where the reasoning snaps. It's clinical, not emotional. Your signature move is the 'als dat klopt, betekent het ook...' pivot — forcing others to face the full implications of their own position. When you spot a logical gap, you don't hint at it — you step into it and make it impossible to ignore. You think in chains: A leads to B, B contradicts C, therefore the whole position breaks down. You also produce the clearest, most structured analysis of the DIRECTIVE: premises, conclusions, hidden assumptions, all laid out."
   },
   {
     id: "node-gamma-vision",
@@ -88,7 +89,7 @@ VERPLICHTE STRUCTUUR — gebruik exact deze secties met markdown:
 [De punten van consensus — dit zijn de meest betrouwbare bevindingen. Benoem bij name welke raadsleden overeenkwamen.]
 
 ### ⚔️ De Echte Spanningen
-[De inhoudelijke conflictpunten. Waarom verschilden Perplexi Pieter, Deep See Karst en Open Aïsha? Wat is het belang van die kloof?]
+[De inhoudelijke conflictpunten. Waarom verschilden Perplexi Pieter, Jan Deseek en Open Aïsha? Wat is het belang van die kloof?]
 
 ### 💡 De Beslissende Doorslag
 [Het argument dat alle andere overtreft. Jouw interpretatie als Voorzitter — niet neutraal, maar gezaghebbend.]
@@ -160,12 +161,12 @@ export const PRESETS = [
     members: [
       ...DEFAULT_COUNCIL,
       {
-        id: 'ext_1', name: 'Lama Leo', role: 'MEMBER', provider: ModelProvider.GROQ,
+        id: 'ext_1', name: 'Leo Olama', role: 'MEMBER', provider: ModelProvider.GROQ,
         modelId: 'llama3-70b-8192', avatar: UI_ASSETS.avatars.bas, color: 'bg-orange-600',
         description: 'Harde kritische reviewnode — geen blad voor de mond.', systemPrompt: 'Be extremely critical.'
       },
       {
-        id: 'ext_2', name: 'Klaudia', role: 'MEMBER', provider: ModelProvider.ANTHROPIC,
+        id: 'ext_2', name: 'Claudea', role: 'MEMBER', provider: ModelProvider.ANTHROPIC,
         modelId: 'claude-3-5-sonnet-20241022', avatar: UI_ASSETS.avatars.lena, color: 'bg-amber-700',
         description: 'Genuanceerde semantische analyse — taal als instrument.', systemPrompt: 'Focus on semantic nuance.'
       }

@@ -17,17 +17,27 @@ interface DebateRoomProps {
   onAddDebateMessage: (msg: DebateMessage) => void;
 }
 
-// Natural-sounding profiles: pitch near 1.0, rate 1.05–1.2 (faster = less robotic)
+// Google Chirp 3 HD voices — one per node for distinct characters
+// Voice names: https://cloud.google.com/text-to-speech/docs/chirp3-hd
+const CHIRP_VOICES = [
+  { name: 'nl-NL-Chirp3-HD-Charon', rate: 1.05 },  // Perplexi Pieter — kalm, helder
+  { name: 'nl-NL-Chirp3-HD-Fenrir', rate: 1.08 },  // Jan Deseek — analytisch, zeker
+  { name: 'nl-NL-Chirp3-HD-Aoede',  rate: 1.12 },  // Open Aïsha — expressief, vlot
+  { name: 'nl-NL-Chirp3-HD-Orus',   rate: 1.05 },
+  { name: 'nl-NL-Chirp3-HD-Puck',   rate: 1.1  },
+  { name: 'nl-NL-Chirp3-HD-Kore',   rate: 1.08 },
+];
+
+// Browser TTS fallback profiles (used when Chirp API is unavailable)
 const VOICE_PROFILES = [
-  { pitch: 1.0,  rate: 1.12 },  // Perplexi Pieter — kalm, helder, direct
-  { pitch: 0.92, rate: 1.08 },  // Deep See Karst — lager, analytisch, zeker
-  { pitch: 1.1,  rate: 1.18 },  // Open Aïsha — energiek, vlot, expressief
+  { pitch: 1.0,  rate: 1.12 },
+  { pitch: 0.92, rate: 1.08 },
+  { pitch: 1.1,  rate: 1.18 },
   { pitch: 0.96, rate: 1.1  },
   { pitch: 1.05, rate: 1.15 },
   { pitch: 1.0,  rate: 1.1  },
 ];
 
-// Prefer high-quality Dutch voices by name
 const PREFERRED_NL_VOICE_NAMES = [
   'Microsoft Lotte', 'Microsoft Femke', 'Microsoft Frank',
   'Google Nederlands', 'nl-NL-Standard',
@@ -50,47 +60,71 @@ function getVoices(): Promise<SpeechSynthesisVoice[]> {
   });
 }
 
-// Speak the first 1-2 sentences of text in Dutch — keeps TTS short and snappy
-function speakNL(
-  text: string,
+// Extract first 1-2 sentences for TTS (short = fast, snappy debate pace)
+function extractTTSText(text: string): string {
+  const stripped = text.replace(/[#*`_>~\[\]]/g, '').replace(/\s+/g, ' ').trim();
+  return stripped.split(/(?<=[.!?])\s+/).slice(0, 2).join(' ').substring(0, 180);
+}
+
+// Play base64 MP3 audio — returns Promise that resolves when playback ends
+function playBase64Audio(base64: string): Promise<void> {
+  return new Promise(resolve => {
+    const audio = new Audio(`data:audio/mp3;base64,${base64}`);
+    audio.onended = () => resolve();
+    audio.onerror = () => resolve();
+    audio.play().catch(() => resolve());
+  });
+}
+
+// Browser TTS fallback
+function speakBrowser(
+  ttsText: string,
   nodeIdx: number,
   voices: SpeechSynthesisVoice[],
   profile: { pitch: number; rate: number }
 ): Promise<void> {
   return new Promise(resolve => {
-    if (!window.speechSynthesis) { resolve(); return; }
+    if (!window.speechSynthesis || !ttsText) { resolve(); return; }
     window.speechSynthesis.cancel();
-
-    // Strip markdown and extract first 2 sentences (max ~180 chars for fast TTS)
-    const stripped = text
-      .replace(/[#*`_>~\[\]]/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    const sentences = stripped.split(/(?<=[.!?])\s+/);
-    const ttsText = sentences.slice(0, 2).join(' ').substring(0, 180);
-
-    if (!ttsText) { resolve(); return; }
-
     const utter = new SpeechSynthesisUtterance(ttsText);
     utter.lang = 'nl-NL';
-
     const nlVoices = voices.filter(v => v.lang.startsWith('nl'));
     const pool = nlVoices.length > 0 ? nlVoices : voices;
-
-    // Prefer named high-quality voices, assign different voice per node
     const preferred = pool.filter(v => PREFERRED_NL_VOICE_NAMES.some(n => v.name.includes(n)));
     const voicePool = preferred.length >= 2 ? preferred : pool;
     if (voicePool.length > 0) utter.voice = voicePool[nodeIdx % voicePool.length];
-
-    // Slight random jitter on rate makes speech sound more natural
     utter.pitch  = profile.pitch;
     utter.rate   = profile.rate + (Math.random() - 0.5) * 0.08;
     utter.volume = 1;
     utter.onend  = () => resolve();
     utter.onerror = () => resolve();
-
     window.speechSynthesis.speak(utter);
   });
+}
+
+// Main speak function: tries Google Chirp 3 HD first, falls back to browser TTS
+async function speakNL(
+  text: string,
+  nodeIdx: number,
+  voices: SpeechSynthesisVoice[],
+  _profile: { pitch: number; rate: number },
+  councilSvc: import('../services/councilService').UnifiedCouncilService
+): Promise<void> {
+  const ttsText = extractTTSText(text);
+  if (!ttsText) return;
+
+  const chirp = CHIRP_VOICES[nodeIdx % CHIRP_VOICES.length];
+  try {
+    const audioContent = await councilSvc.synthesizeSpeech(ttsText, chirp.name, chirp.rate);
+    if (audioContent) {
+      await playBase64Audio(audioContent);
+      return;
+    }
+  } catch { /* fall through to browser TTS */ }
+
+  // Fallback: browser Web Speech API
+  const fallbackProfile = VOICE_PROFILES[nodeIdx % VOICE_PROFILES.length];
+  await speakBrowser(ttsText, nodeIdx, voices, fallbackProfile);
 }
 
 export const DebateRoom: FC<DebateRoomProps> = ({
@@ -241,7 +275,7 @@ export const DebateRoom: FC<DebateRoomProps> = ({
       // ── TTS ───────────────────────────────────────────────────────────────
       if (voiceEnabledRef.current) {
         const profile = VOICE_PROFILES[currentIdx % VOICE_PROFILES.length];
-        await speakNL(response, currentIdx, cachedVoices, profile);
+        await speakNL(response, currentIdx, cachedVoices, profile, councilService);
       }
 
     } catch (err) {

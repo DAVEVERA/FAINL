@@ -4,6 +4,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 // @ts-ignore: Deno-specific global
 const SECRETS: Record<string, string | undefined> = {
   google:     Deno.env.get('GEMINI_API_KEY'),
+  tts:        Deno.env.get('GOOGLE_TTS_KEY') || Deno.env.get('GEMINI_API_KEY'), // GCP key with TTS API enabled
   anthropic:  Deno.env.get('ANTHROPIC_API_KEY'),
   openai:     Deno.env.get('OPENAI_API_KEY'),
   groq:       Deno.env.get('GROQ_API_KEY'),
@@ -39,6 +40,7 @@ interface ProxyRequest {
   baseUrl?: string
   temperature?: number
   maxTokens?: number
+  // TTS-specific (provider='tts'): modelId=voiceName, prompt=text, temperature=speakingRate
 }
 
 serve(async (req: Request) => {
@@ -59,9 +61,16 @@ serve(async (req: Request) => {
       maxTokens = 2048,
     } = body
 
-    if (!provider || !modelId || !prompt) {
-      return errRes('Missing required fields: provider, modelId, prompt', 400)
+    if (!provider || !prompt) {
+      return errRes('Missing required fields: provider, prompt', 400)
     }
+
+    // ── Google Chirp 3 HD Text-to-Speech ───────────────────────────────────
+    if (provider === 'tts') {
+      return googleChirpTTS(prompt, modelId || 'nl-NL-Chirp3-HD-Charon', temperature ?? 1.1)
+    }
+
+    if (!modelId) return errRes('Missing required field: modelId', 400)
 
     if (provider === 'google') {
       return stream
@@ -304,6 +313,33 @@ function sseTransform(
       'Connection': 'keep-alive',
     },
   })
+}
+
+// ─── Google Chirp 3 HD Text-to-Speech ────────────────────────────────────────
+
+async function googleChirpTTS(
+  text: string,
+  voiceName: string,
+  speakingRate: number
+): Promise<Response> {
+  const apiKey = SECRETS.tts
+  if (!apiKey) return errRes('Google TTS API key not configured (set GOOGLE_TTS_KEY in Supabase secrets)', 503)
+
+  const res = await fetch(
+    `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: { text },
+        voice: { languageCode: 'nl-NL', name: voiceName },
+        audioConfig: { audioEncoding: 'MP3', speakingRate },
+      }),
+    }
+  )
+  if (!res.ok) return errRes(`Google TTS ${res.status}: ${await res.text()}`, res.status)
+  const data = await res.json()
+  return okRes({ audioContent: data.audioContent ?? '' })
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
