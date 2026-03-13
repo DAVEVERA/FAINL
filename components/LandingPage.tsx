@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight,
   CheckCircle2, Eye, Swords, Brain,
-  Lock, Star, ChevronDown, Mic, BarChart3,
+  Lock, ChevronDown, Mic, BarChart3,
   BookOpen,
 } from "lucide-react";
 import { SEO } from "./SEO";
@@ -503,15 +503,6 @@ export const LandingPage: FC = () => {
         aria-label="Aan de slag met FAINL"
         className="w-full max-w-3xl mx-auto px-4 md:px-6 py-20 md:py-32 text-center"
       >
-        <div className="inline-flex items-center gap-1.5 mb-6">
-          {[...Array(5)].map((_, i) => (
-            <Star key={i} className="w-5 h-5 fill-[#d1b411] text-[#d1b411]" />
-          ))}
-          <span className="ml-2 text-sm md:text-base font-black text-black dark:text-white uppercase tracking-widest">
-            4.8 / 5 — 247 gebruikers
-          </span>
-        </div>
-
         <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-black dark:text-white leading-[0.95] mb-6">
           Klaar voor het scherpste AI-oordeel?
         </h2>
@@ -529,9 +520,6 @@ export const LandingPage: FC = () => {
           <ArrowRight className="w-6 h-6" />
         </button>
 
-        <p className="mt-6 text-sm md:text-base font-black uppercase tracking-[0.2em] text-black/50 dark:text-white/30">
-          Geen creditcard nodig — twee volledige sessies direct gratis.
-        </p>
       </section>
     </>
   );
