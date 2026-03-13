@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { SessionState, CouncilMember, DebateMessage, AppConfig } from '../types';
 import { UnifiedCouncilService } from '../services/councilService';
+import { NodeLoader, loaderShapeForIndex } from './NodeLoader';
 
 interface DebateRoomProps {
   isOpen: boolean;
@@ -547,10 +548,12 @@ export const DebateRoom: FC<DebateRoomProps> = ({
                       {streamingText ? (
                         <span>{streamingText}<span className="inline-block w-0.5 h-4 bg-zinc-400 animate-pulse ml-0.5 align-middle" /></span>
                       ) : (
-                        <div className="flex gap-1 items-center h-5">
-                          <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:0ms]" />
-                          <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:150ms]" />
-                          <span className="w-1.5 h-1.5 bg-zinc-400 rounded-full animate-bounce [animation-delay:300ms]" />
+                        <div className="flex items-center h-12 px-1">
+                          <NodeLoader shape={loaderShapeForIndex(
+                            generatingSpeaker
+                              ? readyMembers.findIndex(m => m.id === generatingSpeaker.id)
+                              : 0
+                          )} />
                         </div>
                       )}
                     </div>
