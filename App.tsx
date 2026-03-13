@@ -52,6 +52,8 @@ const UseCaseLegalPage = lazy(() => import("./components/UseCaseLegalPage").then
 const UseCaseMarketingPage = lazy(() => import("./components/UseCaseMarketingPage").then(m => ({ default: m.UseCaseMarketingPage })));
 const UseCaseHRPage = lazy(() => import("./components/UseCaseHRPage").then(m => ({ default: m.UseCaseHRPage })));
 const UseCaseFinancePage = lazy(() => import("./components/UseCaseFinancePage").then(m => ({ default: m.UseCaseFinancePage })));
+const CompareVsChatGPTPage = lazy(() => import("./components/CompareVsChatGPTPage").then(m => ({ default: m.CompareVsChatGPTPage })));
+const CompareMultiModelPage = lazy(() => import("./components/CompareMultiModelPage").then(m => ({ default: m.CompareMultiModelPage })));
 import {
   Menu,
   X as CloseIcon,
@@ -1072,6 +1074,8 @@ const App: FC = () => {
           <Route path="/gebruik/marketing-strategie-ai" element={<UseCaseMarketingPage />} />
           <Route path="/gebruik/hr-recruitment-ai" element={<UseCaseHRPage />} />
           <Route path="/gebruik/financiele-analyse-ai" element={<UseCaseFinancePage />} />
+          <Route path="/vergelijken/fainl-vs-chatgpt" element={<CompareVsChatGPTPage />} />
+          <Route path="/vergelijken/ai-modellen-vergelijken" element={<CompareMultiModelPage />} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -1094,8 +1098,8 @@ const App: FC = () => {
             <div>
               <p className="text-xs font-black uppercase tracking-[0.25em] text-black/30 dark:text-white/30 mb-4">Vergelijken</p>
               <ul className="space-y-2.5">
-                <li><Link to="/vergelijk/chatgpt-vs-gemini-vs-claude" className="text-sm font-bold text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors">ChatGPT vs Gemini vs Claude</Link></li>
-                <li><Link to="/vergelijk/beste-ai-tool-nederland" className="text-sm font-bold text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors">Beste AI tool Nederland</Link></li>
+                <li><Link to="/vergelijken/fainl-vs-chatgpt" className="text-sm font-bold text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors">FAINL vs ChatGPT</Link></li>
+                <li><Link to="/vergelijken/ai-modellen-vergelijken" className="text-sm font-bold text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white transition-colors">AI modellen vergelijken</Link></li>
               </ul>
             </div>
             <div>
