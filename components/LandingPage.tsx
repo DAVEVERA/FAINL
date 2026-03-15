@@ -283,16 +283,6 @@ const HeroComparisonBanner: FC = () => {
 // ── Main Component ───────────────────────────────────────────────────────────
 export const LandingPage: FC = () => {
   const navigate = useNavigate();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if ('touches' in e) {
-      const touch = e.touches[0];
-      setMousePos({ x: touch.clientX, y: touch.clientY });
-    } else {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    }
-  };
 
   return (
     <>
@@ -309,19 +299,10 @@ export const LandingPage: FC = () => {
       {/* ══ HERO ══ */}
       <section
         aria-label="Introductie"
-        onMouseMove={handleMouseMove}
-        onTouchMove={handleMouseMove}
         className="relative w-full overflow-hidden bg-white text-[#0d1322] pt-16 sm:pt-24 md:pt-32 pb-16 md:pb-24 flex flex-col items-center group/hero"
       >
         <HeroAura />
-        
-        {/* Interactive Interactive Glow Layer */}
-        <div 
-          className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-1000 opacity-0 group-hover/hero:opacity-100"
-          style={{
-            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(209, 180, 17, 0.12), transparent 80%)`
-          }}
-        />
+
         <h1 className="relative z-10 text-[32px] sm:text-[50px] md:text-[68px] font-black uppercase tracking-tighter leading-[1.02] text-center max-w-4xl mx-auto mb-10 md:mb-12">
           Jouw vraag<br />
           verdient meer dan<br />
