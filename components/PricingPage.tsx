@@ -118,7 +118,7 @@ export const PricingPage: FC<PricingPageProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center sm:justify-start">
           {PRICING.SUBSCRIPTIONS.map((pkg, idx) => (
-            <div key={idx} className="card-fainl !border-[#d4af37] hover:!shadow-[12px_12px_0_0_#d4af37]">
+            <div key={idx} className="card-fainl">
               <div className="card__badge !bg-[#d4af37] !text-black">{pkg.label}</div>
               <span className="card__title">€{pkg.price}<span className="text-sm lowercase ml-1">{pkg.period}</span></span>
               <p className="card__subtitle">{language === 'nl' ? 'Onbeperkt archief.' : 'Unlimited archive.'}</p>
