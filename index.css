@@ -3,10 +3,16 @@
 
 :root {
   color-scheme: only light;
-  --color-gold-primary: #d4af37;
-  --color-gold-light: #f9d976;
-  --color-gold-dark: #b8860b;
-  --color-gold-gradient: linear-gradient(135deg, #d4af37 0%, #f9d976 50%, #d4af37 100%);
+  --color-lemon-primary: #fdee00;
+  --color-lemon-light: #ffff4d;
+  --color-lemon-dark: #ccbe00;
+  --color-lemon-gradient: linear-gradient(135deg, #fdee00 0%, #ffff4d 50%, #fdee00 100%);
+  
+  /* Legacy gold vars mapped to lemon to avoid breakage during transition */
+  --color-gold-primary: var(--color-lemon-primary);
+  --color-gold-light: var(--color-lemon-light);
+  --color-gold-dark: var(--color-lemon-dark);
+  --color-gold-gradient: var(--color-lemon-gradient);
 }
 
 @layer base {
@@ -128,8 +134,8 @@
   margin: 0 auto;
   padding: 16px;
   background: white;
-  border: 4px solid var(--color-gold-primary);
-  box-shadow: 8px 8px 0 0 var(--color-gold-primary);
+  border: 4px solid var(--color-lemon-primary);
+  box-shadow: 8px 8px 0 0 black;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
@@ -140,18 +146,18 @@
 
 .dark .card-fainl {
   background: #18181b;
-  border-color: var(--color-gold-dark);
-  box-shadow: 8px 8px 0 0 rgba(212, 175, 55, 0.2);
+  border-color: var(--color-lemon-dark);
+  box-shadow: 8px 8px 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .card-fainl:hover {
   transform: translate(-4px, -4px);
-  box-shadow: 12px 12px 0 0 var(--color-gold-primary);
-  border-color: var(--color-gold-light);
+  box-shadow: 12px 12px 0 0 var(--color-lemon-primary);
+  border-color: var(--color-lemon-light);
 }
 
 .dark .card-fainl:hover {
-  box-shadow: 12px 12px 0 0 rgba(212, 175, 55, 0.3);
+  box-shadow: 12px 12px 0 0 rgba(253, 238, 0, 0.3);
 }
 
 .card__badge {
@@ -240,15 +246,15 @@
   display: block;
   width: 100%;
   padding: 10px;
-  background: var(--color-gold-primary);
+  background: var(--color-lemon-primary);
   color: black;
   text-align: center;
   text-decoration: none;
   font-weight: 900;
   font-size: 12px;
   text-transform: uppercase;
-  border: 4px solid var(--color-gold-dark);
-  box-shadow: 4px 4px 0 0 var(--color-gold-dark);
+  border: 4px solid black;
+  box-shadow: 4px 4px 0 0 black;
   box-sizing: border-box;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -260,29 +266,32 @@
 }
 
 .card__cta:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0 0 black;
-  background: var(--color-gold-light);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--color-lemon-primary);
+  background: var(--color-lemon-primary);
+  color: black;
 }
 
 /* ── Gold Material Button ────────────────────────────────────────────────── */
 .gold-material-btn {
-  background: var(--color-gold-gradient);
+  background: var(--color-lemon-primary);
   background-size: 200% 100%;
   position: relative;
   overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(0,0,0,0.1);
-  box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.4), 0 8px 10px -6px rgba(212, 175, 55, 0.4);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  border: 2px solid black;
+  box-shadow: 4px 4px 0px 0px black;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: black;
+  font-weight: 900;
 }
 
 .gold-material-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 35px -5px rgba(212, 175, 55, 0.5), 0 10px 10px -5px rgba(212, 175, 55, 0.3);
-  background-position: 100% 0;
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px 0px var(--color-lemon-primary);
+  background: var(--color-lemon-primary);
 }
 
 .gold-material-btn::after {
@@ -360,7 +369,7 @@
 /* ── Node loaders (circle / rect / triangle) ─────────────────────────────── */
 .node-loader {
   --path: #d4d4d8;   /* zinc-300 */
-  --dot:  var(--color-gold-primary);   /* FAINL gold */
+  --dot:  var(--color-lemon-primary);   /* FAINL lemon */
   --duration: 3s;
   width: 44px;
   height: 44px;

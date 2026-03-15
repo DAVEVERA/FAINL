@@ -112,7 +112,7 @@ export const FAQPage: FC = () => {
     },
     {
       q: language === 'nl' ? "Zit er een limiet op de lengte van mijn vraag?" : "Is there a limit on the length of my question?",
-      a: language === 'nl' ? "De zichtbare interface toont \"0 / 4000\". Dat wijst erop dat het invoerveld op de site momenteel een limiet van 4000 tekens hanteert voor een vraag of prompt." : "The visible interface shows \"0 / 4000\". This indicates that the input field currently applies a limit of 4000 characters for a question or prompt.",
+      a: language === 'nl' ? "Nee, er is geen kunstmatige limiet op de lengte van je vraag. Of het nu een korte zin is of een uitgebreid document, FAINL verwerkt het voor een diepgaand antwoord." : "No, there is no artificial limit on the length of your question. Whether it's a short sentence or an extensive document, FAINL processes it for a profound answer.",
       icon: MessageSquare
     },
     {
@@ -176,7 +176,7 @@ export const FAQPage: FC = () => {
         {FAQS.map((faq, idx) => (
           <div
             key={idx}
-            className={`bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl md:rounded-[2rem] overflow-hidden transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)] ${openIndex === idx ? 'ring-2 ring-yellow-400' : ''}`}
+            className={`bg-white dark:bg-zinc-900 border-4 border-black dark:border-white/20 rounded-2xl md:rounded-[2rem] overflow-hidden transition-all shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)] dark:shadow-[8px_8px_0px_1px_rgba(255,255,255,0.05)] ${openIndex === idx ? 'ring-2 ring-[#fdee00]' : ''}`}
           >
             <button
               onClick={() => setOpenIndex(openIndex === idx ? null : idx)}

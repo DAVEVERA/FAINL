@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+  import { FC, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -97,7 +97,7 @@ const FAQItem: FC<{ q: string; a: string }> = ({ q, a }) => {
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between py-5 text-left gap-4 group"
       >
-        <span className="font-black text-base md:text-xl uppercase tracking-tight text-black group-hover:text-[#d1b411] transition-colors">
+        <span className="font-black text-base md:text-xl uppercase tracking-tight text-black group-hover:text-[#fdee00] transition-colors">
           {q}
         </span>
         <ChevronDown
@@ -130,7 +130,7 @@ const AI_MODELS = [
 
 
 // ── Static Comparison Banner ────────────────────────────────────────────────
-const HeroComparisonBanner: FC = () => {
+const HeroComparisonBanner: FC = () => {  
   return (
     <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 mb-12">
       <div className="relative flex flex-col md:flex-row bg-[#e8eef3] rounded-[32px] overflow-hidden shadow-sm border border-black/5">
@@ -169,7 +169,7 @@ const HeroComparisonBanner: FC = () => {
         {/* Right Side: 5 AI Models (FAINL) */}
         <div className="w-full md:w-1/2 bg-[#1e293b] p-8 md:p-10 flex flex-col items-center justify-center text-center relative overflow-hidden group">
           {/* Background flair moved out of text container to not obscure content */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#d4af37]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none transition-transform group-hover:scale-110 duration-700"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#fdee00]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none transition-transform group-hover:scale-110 duration-700"></div>
 
           <div className="flex justify-center items-center mb-5 relative z-10">
             <div className="flex -space-x-3 items-center">
@@ -179,7 +179,7 @@ const HeroComparisonBanner: FC = () => {
                <div className="w-10 h-10 rounded-full bg-[#283548] border-2 border-[#1e293b] flex items-center justify-center z-20 opacity-80">
                  <img src="/ai-logos/claude.svg" alt="Claude" className="w-5 h-5 object-contain brightness-0 invert opacity-60"/>
                </div>
-               <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#d4af37] to-yellow-600 border-2 border-[#1e293b] flex items-center justify-center shadow-md shadow-[#d4af37]/20 z-30 font-black text-white text-[10px] sm:text-xs">
+               <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#fdee00] to-yellow-600 border-2 border-[#1e293b] flex items-center justify-center shadow-md shadow-[#fdee00]/20 z-30 font-black text-white text-[10px] sm:text-xs">
                  FAINL
                </div>
                <div className="w-10 h-10 rounded-full bg-[#283548] border-2 border-[#1e293b] flex items-center justify-center z-20 opacity-80">
@@ -194,19 +194,19 @@ const HeroComparisonBanner: FC = () => {
           <h3 className="text-xl md:text-2xl font-black uppercase tracking-tight text-white mb-1 relative z-10">
             Gegarandeerde Consensus
           </h3>
-          <p className="text-[#d4af37] font-bold text-sm md:text-base uppercase tracking-widest mb-6 relative z-10">
+          <p className="text-[#fdee00] font-bold text-sm md:text-base uppercase tracking-widest mb-6 relative z-10">
             5 AI Modellen = De waarheid
           </p>
           
           <div className="space-y-2 text-left w-full max-w-[200px] mx-auto relative z-10">
             <div className="flex items-start gap-2 text-xs font-bold text-white uppercase tracking-tighter">
-              <span className="text-[#d4af37]">✓</span> Fouten gecorrigeerd
+              <span className="text-[#fdee00]">✓</span> Fouten gecorrigeerd
             </div>
             <div className="flex items-start gap-2 text-xs font-bold text-white uppercase tracking-tighter">
-              <span className="text-[#d4af37]">✓</span> Gewogen oordeel
+              <span className="text-[#fdee00]">✓</span> Gewogen oordeel
             </div>
             <div className="flex items-start gap-2 text-xs font-bold text-white uppercase tracking-tighter">
-              <span className="text-[#d4af37]">✓</span> Consensus protocol
+              <span className="text-[#fdee00]">✓</span> Consensus protocol
             </div>
           </div>
         </div>
@@ -241,7 +241,7 @@ export const LandingPage: FC = () => {
         <h1 className="relative z-10 text-[32px] sm:text-[50px] md:text-[68px] font-black uppercase tracking-tighter leading-[1.02] text-center max-w-4xl mx-auto mb-10 md:mb-12">
           Jouw vraag<br />
           verdient meer dan<br />
-          <span className="text-[#d4af37]">één AI-model.</span>
+          <span className="text-[#fdee00]">één AI-model.</span>
         </h1>
 
         {/* Static Comparison Banner */}
@@ -319,7 +319,7 @@ export const LandingPage: FC = () => {
             {
               img: "/general icons/question-icon.png",
               title: "Stel je vraag",
-              desc: "Elke vraag werkt — zakelijk, filosofisch, juridisch, persoonlijk. FAINL verwerkt alles tot 4.000 tekens.",
+              desc: "Elke vraag werkt — zakelijk, filosofisch, juridisch, persoonlijk. Geen limiet op de lengte van je vraag.",
             },
             {
               img: "/general icons/AI-Analyse-icon.png",
@@ -344,7 +344,7 @@ export const LandingPage: FC = () => {
           ].map(({ img, title, desc }) => (
             <li
               key={title}
-              className="group flex items-start gap-5 p-6 md:p-8 bg-white dark:bg-zinc-900 border-2 border-black/5 dark:border-white/10 rounded-2xl hover:border-[#d4af37] hover:shadow-[6px_6px_0px_0px_#d4af37] transition-all duration-200"
+              className="group flex items-start gap-5 p-6 md:p-8 bg-white dark:bg-zinc-900 border-2 border-black/5 dark:border-white/10 rounded-2xl hover:border-[#fdee00] hover:shadow-[6px_6px_0px_0px_#fdee00] transition-all duration-200"
             >
               <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-black dark:bg-white rounded-xl group-hover:scale-110 transition-transform">
                 <img src={img} alt={title} className="w-6 h-6 md:w-7 md:h-7 object-contain invert dark:invert-0" />
@@ -379,38 +379,38 @@ export const LandingPage: FC = () => {
             {[
               {
                 icon: Brain,
-                title: "Multi-model consensus",
-                desc: "Geen enkele AI heeft het bij het rechte eind. FAINL combineert de sterktes van Gemini, Claude, GPT-4 én Llama in één protocol.",
+                title: "Multimodel-consensus",
+                desc: "Geen enkel AI-model heeft altijd gelijk. FAINL bundelt de kracht van Gemini, Claude, GPT, Llama en andere modellen in één slim protocol dat antwoorden vergelijkt, aanscherpt en samenbrengt tot een sterker eindresultaat.",
               },
               {
                 icon: Swords,
-                title: "Live debatroom",
-                desc: "AI-nodes debatteren live — en jij kunt meeschrijven of -spreken. Real-time adversarial testing van elk argument.",
+                title: "Live debatruimte",
+                desc: "Laat AI-modellen live met elkaar in discussie gaan terwijl jij direct meeleest, meespreekt of bijstuurt. Elk argument wordt in real time getest, bevraagd en aangescherpt.",
               },
               {
                 icon: Mic,
                 title: "Spraakherkenning",
-                desc: "Spreek je argument in — FAINL zet het om naar tekst en gooit het live in het debat. Hands-free reasoning.",
+                desc: "Spreek je input eenvoudig in. FAINL zet je woorden direct om naar tekst en brengt ze meteen in het live debat, voor snelle en moeiteloze interactie.",
               },
               {
                 icon: Eye,
                 title: "Volledige transparantie",
-                desc: "Zie exact wat elk afzonderlijk model denkt, zonder aggregatie of filtering. Jij kiest wat je vertrouwt.",
+                desc: "Zie exact hoe ieder model redeneert, zonder verborgen filters of onzichtbare bewerking. Jij ziet de afzonderlijke output en bepaalt zelf welk inzicht het meeste vertrouwen verdient.",
               },
               {
                 icon: Lock,
                 title: "Privacy-first",
-                desc: "Je instellingen en sessiegeschiedenis blijven lokaal in jouw browser. Je vragen worden anoniem via onze proxy naar de AI-providers gestuurd — geen account koppeling, geen profiling.",
+                desc: "Jouw instellingen en sessiegeschiedenis blijven lokaal in je browser. Vragen worden anoniem via onze proxy verstuurd naar AI-providers, zonder accountkoppeling en zonder profilering.",
               },
               {
                 icon: BarChart3,
                 title: "Gewogen eindoordeel",
-                desc: "De Voorzitter Victor synthetiseert alle bevindingen tot één Chairman's Verdict — gefocust op consensus en actionable insights.",
+                desc: "Voorzitter Victor brengt alle inzichten samen tot één helder en onderbouwd eindoordeel, gericht op consensus, scherpte en direct toepasbare inzichten.",
               },
             ].map(({ icon: Icon, title, desc }) => (
               <article
                 key={title}
-                className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 md:p-8 hover:bg-black/10 dark:hover:bg-white/10 hover:border-[#d4af37] transition-all"
+                className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 md:p-8 hover:bg-black/10 dark:hover:bg-white/10 hover:border-[#fdee00] transition-all"
               >
                 <div className="w-12 h-12 bg-black/10 dark:bg-white/10 rounded-xl flex items-center justify-center mb-4">
                   <Icon className="w-6 h-6 text-black dark:text-white" />
@@ -443,7 +443,7 @@ export const LandingPage: FC = () => {
             <div className="grid grid-cols-[1fr_72px_72px] sm:grid-cols-[1fr_120px_120px] bg-black dark:bg-zinc-800 text-white px-4 sm:px-6 py-4 gap-2">
               <span className="font-black uppercase tracking-widest text-[10px] sm:text-xs text-white/60">Eigenschap</span>
               <span className="font-black uppercase tracking-widest text-[10px] sm:text-xs text-center text-white/60 leading-tight">Gewone<br/>AI</span>
-              <span className="font-black uppercase tracking-widest text-[10px] sm:text-xs text-center text-[#d4af37] leading-tight">FAINL</span>
+              <span className="font-black uppercase tracking-widest text-[10px] sm:text-xs text-center text-[#fdee00] leading-tight">FAINL</span>
             </div>
 
             {/* Rows */}
@@ -511,14 +511,14 @@ export const LandingPage: FC = () => {
             Meer vragen?{" "}
             <Link
               to="/faq"
-              className="underline hover:text-[#d4af37] transition-colors"
+              className="underline hover:text-[#fdee00] transition-colors"
             >
               Bekijk de volledige FAQ
             </Link>{" "}
             of{" "}
             <Link
               to="/contact"
-              className="underline hover:text-[#d4af37] transition-colors"
+              className="underline hover:text-[#fdee00] transition-colors"
             >
               neem contact op
             </Link>
@@ -545,7 +545,7 @@ export const LandingPage: FC = () => {
               key={pkg.count}
               type="button"
               onClick={() => window.open(pkg.stripeUrl, "_blank")}
-              className="flex flex-col items-center justify-center p-5 bg-white dark:bg-zinc-900 border-2 border-black/10 dark:border-white/10 rounded-2xl hover:border-[#d4af37] hover:shadow-[6px_6px_0px_0px_#d4af37] hover:-translate-y-0.5 transition-all text-black dark:text-white"
+              className="flex flex-col items-center justify-center p-5 bg-white dark:bg-zinc-900 border-2 border-black/10 dark:border-white/10 rounded-2xl hover:border-[#fdee00] hover:shadow-[6px_6px_0px_0px_#fdee00] hover:-translate-y-0.5 transition-all text-black dark:text-white"
             >
               <div className="text-3xl font-black mb-0.5">{pkg.count}</div>
               <div className="text-sm font-black uppercase tracking-widest text-black/40 dark:text-white/40 mb-3">
@@ -558,9 +558,9 @@ export const LandingPage: FC = () => {
           <button
             type="button"
             onClick={() => window.open(PRICING.SUBSCRIPTIONS[0].stripeUrl, "_blank")}
-            className="flex flex-col items-center justify-center p-5 bg-white dark:bg-zinc-900 border-2 border-[#d4af37] rounded-2xl hover:shadow-[6px_6px_0px_0px_#d4af37] hover:-translate-y-0.5 transition-all text-black dark:text-white relative"
+            className="flex flex-col items-center justify-center p-5 bg-white dark:bg-zinc-900 border-2 border-[#fdee00] rounded-2xl hover:shadow-[6px_6px_0px_0px_#fdee00] hover:-translate-y-0.5 transition-all text-black dark:text-white relative"
           >
-            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#d4af37] text-black text-sm font-black uppercase tracking-widest rounded-full whitespace-nowrap">
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-[#fdee00] text-black text-sm font-black uppercase tracking-widest rounded-full whitespace-nowrap">
               Abonnement
             </div>
             <div className="text-base font-black uppercase tracking-tight mb-0.5">
@@ -579,7 +579,7 @@ export const LandingPage: FC = () => {
         <p className="text-center text-sm text-black/30 dark:text-white/20 font-bold">
           <Link
             to="/tokens"
-            className="inline-flex items-center gap-1.5 underline hover:text-[#d4af37] transition-colors"
+            className="inline-flex items-center gap-1.5 underline hover:text-[#fdee00] transition-colors"
           >
             Bekijk alle pakketten
             <ArrowRight className="w-3 h-3" />

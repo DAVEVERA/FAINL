@@ -169,7 +169,7 @@ serve(async (req: Request) => {
       stream = false,
       baseUrl,
       temperature = 0.7,
-      maxTokens = 2048,
+      maxTokens = 8192,
     } = body
 
     if (!provider || !prompt) {

@@ -52,11 +52,7 @@ export const CouncilCard: FC<CouncilCardProps> = ({
       </div>
 
       {/* Content */}
-      <div
-        className={`overflow-hidden transition-all duration-300 ${
-          !showFull && response ? 'max-h-[280px]' : ''
-        }`}
-      >
+      <div className="overflow-hidden">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-12 gap-3 text-black/40 dark:text-white/30">
             <NodeLoader shape="circle" />
@@ -79,30 +75,6 @@ export const CouncilCard: FC<CouncilCardProps> = ({
           </div>
         )}
       </div>
-
-      {/* Gradient + expand button when truncated */}
-      {response && !showFull && (
-        <div className="relative">
-          <div className="absolute -top-12 left-0 right-0 h-12 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent pointer-events-none" />
-          <button
-            type="button"
-            onClick={() => { setLocalExpanded(true); onToggle(); }}
-            className="w-full py-2.5 text-xs font-black uppercase tracking-widest text-black/40 dark:text-white/30 hover:text-black dark:hover:text-white border-t border-black/5 dark:border-white/5 transition-colors bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center gap-1"
-          >
-            <ChevronDown className="w-3 h-3" /> Lees het volledige antwoord
-          </button>
-        </div>
-      )}
-
-      {response && showFull && (
-        <button
-          type="button"
-          onClick={() => { setLocalExpanded(false); onToggle(); }}
-          className="w-full py-2.5 text-xs font-black uppercase tracking-widest text-black/30 dark:text-white/20 hover:text-black dark:hover:text-white border-t border-black/5 dark:border-white/5 transition-colors bg-zinc-50 dark:bg-zinc-800/50 flex items-center justify-center gap-1"
-        >
-          <ChevronUp className="w-3 h-3" /> Inklappen
-        </button>
-      )}
     </div>
   );
 };

@@ -320,13 +320,13 @@ export class UnifiedCouncilService {
 
     if (ownStance) {
       context += `=== JOUW STANDPUNT (verdedig en verdiep dit) ===\n`;
-      context += `${ownStance.content.substring(0, 300).replace(/\n/g, ' ')}\n\n`;
+      context += `${ownStance.content.replace(/\n/g, ' ')}\n\n`;
     }
 
     context += `=== STANDPUNTEN ANDEREN ===\n`;
     councilResponses.filter(r => r.memberId !== member.id).forEach(r => {
       const m = members.find(x => x.id === r.memberId);
-      if (m) context += `[${m.name}]: ${r.content.substring(0, 200).replace(/\n/g, ' ')}...\n`;
+      if (m) context += `[${m.name}]: ${r.content.replace(/\n/g, ' ')}\n`;
     });
 
     const recentMessages = debateMessages.slice(-6);
@@ -341,7 +341,7 @@ export class UnifiedCouncilService {
       recentMessages.forEach(m => {
         const isSelf = m.memberId === member.id;
         const authorName = m.memberId === 'user' ? 'GEBRUIKER' : (members.find(x => x.id === m.memberId)?.name ?? 'Onbekend');
-        const snippet = m.content.substring(0, 220).replace(/\n/g, ' ');
+        const snippet = m.content.replace(/\n/g, ' ');
         context += `${isSelf ? '[JIJ]' : `[${authorName}]`}: ${snippet}\n`;
       });
     }
