@@ -132,17 +132,32 @@ const HeroParticles: FC = () => {
 
   useEffect(() => {
     const colors = ['bg-[#0d1322]', 'bg-[#b39b0d]'];
-    const newParticles = Array.from({ length: 60 }).map((_, i) => ({
-      id: i,
-      size: Math.random() * 5 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      tx: (Math.random() - 0.5) * 500,
-      ty: (Math.random() - 0.5) * 500,
-      duration: Math.random() * 15 + 15,
-      delay: Math.random() * -30,
-    }));
+    // Meer partikels voor volume (90 i.p.v. 60)
+    const newParticles = Array.from({ length: 90 }).map((_, i) => {
+      // Willekeurige afmetingen voor minder perfect 'ronde' vormen (pilvormig / ovaal)
+      const w = Math.random() * 8 + 4;
+      const h = Math.random() * 8 + 4;
+      // Willekeurige border radius voor asymmetrische vormen ('kiezels'/'scherven')
+      const br = `${Math.floor(Math.random() * 50 + 20)}% ${Math.floor(Math.random() * 50 + 20)}% ${Math.floor(Math.random() * 50 + 20)}% ${Math.floor(Math.random() * 50 + 20)}%`;
+      return {
+        id: i,
+        width: w,
+        height: h,
+        borderRadius: br,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        // Grotere 'kracht'/afstand per beweging
+        tx: (Math.random() - 0.5) * 800,
+        ty: (Math.random() - 0.5) * 800,
+        // Sneller: kortere duration van 8-15 sec (voorheen 15-30)
+        duration: Math.random() * 7 + 8,
+        delay: Math.random() * -20,
+        // Geef party een willekeurige lichte blur-glow
+        blur: Math.random() > 0.5 ? 'blur-[1px]' : '',
+        opacity: Math.random() * 0.4 + 0.3, // 0.3 - 0.7 opacity
+      };
+    });
     setParticles(newParticles);
   }, []);
 
@@ -150,20 +165,23 @@ const HeroParticles: FC = () => {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       <style>{`
         @keyframes drift-particle {
-          0% { transform: translate(0, 0); }
-          100% { transform: translate(var(--tx), var(--ty)); }
+          0% { transform: translate(0, 0) rotate(0deg) scale(0.9); }
+          50% { transform: translate(calc(var(--tx) / 2), calc(var(--ty) / 2)) rotate(180deg) scale(1.1); }
+          100% { transform: translate(var(--tx), var(--ty)) rotate(360deg) scale(0.9); }
         }
       `}</style>
       {particles.map((p) => (
         <div
           key={p.id}
-          className={"absolute rounded-full opacity-[0.35] " + p.color}
+          className={`absolute ${p.blur} ${p.color}`}
           style={{
             left: p.left + "%",
             top: p.top + "%",
-            width: p.size + "px",
-            height: p.size + "px",
-            animation: "drift-particle " + p.duration + "s ease-in-out infinite alternate",
+            width: p.width + "px",
+            height: p.height + "px",
+            borderRadius: p.borderRadius,
+            opacity: p.opacity,
+            animation: "drift-particle " + p.duration + "s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate",
             animationDelay: p.delay + "s",
             ["--tx" as any]: p.tx + "px",
             ["--ty" as any]: p.ty + "px",
@@ -177,6 +195,14 @@ const HeroParticles: FC = () => {
 // ── Main Component ───────────────────────────────────────────────────────────
 export const LandingPage: FC = () => {
   const navigate = useNavigate();
+  const [isFainl, setIsFainl] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsFainl((prev) => !prev);
+    }, 4500); // 4.5 seconds per slide
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -203,21 +229,25 @@ export const LandingPage: FC = () => {
           <span className="text-[#d1b411]">één AI-model.</span>
         </h1>
 
-        {/* The Card */}
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 mb-12">
-          {/* Outer glow just for the right side */}
-          <div className="absolute top-0 bottom-0 right-4 sm:right-6 w-1/2 rounded-r-3xl bg-[#d1b411]/15 blur-2xl pointer-events-none"></div>
+        {/* The Animated Auto-Sliding Card */}
+        <div 
+          className="relative z-10 w-full max-w-3xl mx-auto px-4 sm:px-6 mb-12 cursor-pointer group"
+          onClick={() => setIsFainl(!isFainl)}
+        >
+          {/* Outer glow just for the FAINL side */}
+          <div className={`absolute top-0 bottom-0 right-4 sm:right-6 w-1/2 rounded-r-3xl bg-[#d1b411]/15 blur-2xl pointer-events-none transition-opacity duration-1000 ${isFainl ? 'opacity-100' : 'opacity-0'}`}></div>
           
-          <div className="relative flex flex-col md:flex-row bg-[#e8eef3] rounded-[24px] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] ring-1 ring-black/5">
-            {/* Left Side (Gewone AI) */}
-            <div className="w-full md:w-[45%] p-6 md:p-8 flex items-center sm:items-start md:items-center gap-5 sm:gap-4 md:gap-5 border-b md:border-b-0 md:border-r border-[#cbd5e1]/50">
+          <div className="relative bg-[#e8eef3] rounded-[24px] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] ring-1 ring-black/5 flex flex-col md:flex-row min-h-[190px] md:min-h-[160px]">
+            
+            {/* Left Side (Gewone AI) - Base Layer */}
+            <div className="w-full flex p-6 md:p-8 items-center sm:items-start md:items-center gap-5 sm:gap-4 md:gap-5">
               <div className="flex-shrink-0 relative w-16 h-16 sm:w-14 sm:h-14 md:w-20 md:h-20 flex items-center justify-center">
-                <div className="absolute inset-0 bg-yellow-400/20 shadow-[0_0_30px_rgba(250,204,21,0.3)] rounded-full"></div>
-                <Lightbulb className="w-10 h-10 sm:w-8 sm:h-8 md:w-12 md:h-12 text-yellow-500 relative z-10" />
-                <div className="absolute bottom-1 w-6 h-1 bg-[#94a3b8] rounded-full z-10"></div>
-                <div className="absolute bottom-0 w-4 h-0.5 bg-[#64748b] rounded-full z-10"></div>
+                <div className={`absolute inset-0 bg-yellow-400/20 shadow-[0_0_30px_rgba(250,204,21,0.3)] rounded-full transition-opacity duration-700 ease-in-out ${!isFainl ? 'opacity-100' : 'opacity-0'}`}></div>
+                <Lightbulb className={`w-10 h-10 sm:w-8 sm:h-8 md:w-12 md:h-12 text-yellow-500 relative z-10 transition-all duration-700 ease-in-out ${!isFainl ? 'scale-100 opacity-100' : 'scale-75 opacity-20'}`} />
+                <div className={`absolute bottom-1 w-6 h-1 bg-[#94a3b8] rounded-full z-10 transition-opacity duration-500 ${!isFainl ? 'opacity-100' : 'opacity-0'}`}></div>
+                <div className={`absolute bottom-0 w-4 h-0.5 bg-[#64748b] rounded-full z-10 transition-opacity duration-500 ${!isFainl ? 'opacity-100' : 'opacity-0'}`}></div>
               </div>
-              <div className="mt-1">
+              <div className={`mt-1 transition-all duration-700 delay-75 ${!isFainl ? 'opacity-100 translate-x-0' : 'opacity-40 -translate-x-2'}`}>
                 <p className="text-[11px] sm:text-[10px] md:text-xs font-black uppercase tracking-[0.15em] text-[#64748b] mb-1 md:mb-1.5">Gewone AI</p>
                 <p className="text-sm sm:text-xs md:text-base font-bold text-[#1e293b] leading-snug">
                   Eén model geeft een antwoord.
@@ -225,41 +255,63 @@ export const LandingPage: FC = () => {
               </div>
             </div>
 
-            {/* Right Side (FAINL) */}
-            <div className="w-full md:w-[55%] bg-[#394656] p-6 md:p-8 flex flex-col-reverse sm:flex-row md:flex-row items-start sm:items-center gap-5 sm:gap-4 md:gap-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-              
-              <div className="flex-1 relative z-10">
-                <p className="text-[11px] sm:text-[10px] md:text-xs font-black uppercase tracking-[0.15em] text-white/50 mb-1 md:mb-2">FAINL</p>
-                <p className="text-sm sm:text-xs md:text-[15px] font-medium text-white/90 leading-relaxed md:leading-relaxed drop-shadow-sm">
-                  Meerdere AI-modellen analyseren parallel, bevragen elkaars redenering en smelten samen tot één gewogen eindoordeel.
-                </p>
-              </div>
+            {/* Right Side (FAINL) - Sliding Overlay Layer */}
+            <div 
+              className="absolute inset-y-0 right-0 bg-[#394656] flex flex-col-reverse sm:flex-row md:flex-row items-center sm:items-center justify-center sm:justify-start gap-5 sm:gap-4 md:gap-6 overflow-hidden transition-all duration-[800ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+              style={{ width: isFainl ? '100%' : '0%' }}
+            >
+              {/* Inner content wrapper with exact dimensions to prevent squishing during slide */}
+              <div className="absolute inset-0 w-full flex flex-col-reverse sm:flex-row md:flex-row items-center sm:items-center justify-center sm:justify-start gap-5 sm:gap-4 md:gap-8 p-6 md:p-8 min-w-[320px] md:min-w-[700px]">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+                
+                {/* Text Content with Lazy Parallax */}
+                <div className={`flex-1 relative z-10 transition-all duration-[900ms] delay-100 ${isFainl ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
+                  <p className="text-[11px] sm:text-[10px] md:text-xs font-black uppercase tracking-[0.15em] text-white/50 mb-1 md:mb-2 text-center sm:text-left">FAINL</p>
+                  <p className="text-sm sm:text-xs md:text-[15px] font-medium text-white/90 leading-relaxed md:leading-relaxed drop-shadow-sm text-center sm:text-left">
+                    Meerdere AI-modellen analyseren parallel, bevragen elkaars redenering en smelten samen tot één gewogen eindoordeel.
+                  </p>
+                </div>
 
-              {/* Multi Node Illustration */}
-              <div className="flex-shrink-0 relative w-24 h-24 sm:w-20 sm:h-20 md:w-28 md:h-28 self-center sm:self-auto flex items-center justify-center z-10">
-                <svg className="absolute inset-0 w-full h-full text-white/10" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M50 75 L30 35 M50 75 L70 35 M30 35 L70 35" strokeDasharray="2 3" />
-                </svg>
-                <div className="absolute top-2 left-1 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center">
-                   <div className="absolute inset-0 bg-blue-300/30 blur-md rounded-full shadow-[0_0_20px_rgba(147,197,253,0.3)]"></div>
-                   <Lightbulb className="w-6 h-6 sm:w-4 sm:h-4 md:w-7 md:h-7 text-blue-200 relative z-10" />
-                </div>
-                <div className="absolute top-2 right-1 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center">
-                   <div className="absolute inset-0 bg-yellow-300/40 blur-md rounded-full shadow-[0_0_20px_rgba(253,224,71,0.4)]"></div>
-                   <Lightbulb className="w-6 h-6 sm:w-4 sm:h-4 md:w-7 md:h-7 text-yellow-300 relative z-10" />
-                </div>
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center scale-90 opacity-80">
-                   <div className="absolute inset-0 bg-emerald-300/30 blur-md rounded-full"></div>
-                   <Lightbulb className="w-5 h-5 sm:w-4 sm:h-4 md:w-6 md:h-6 text-emerald-200 relative z-10" />
-                </div>
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 sm:w-8 md:w-12 h-6 sm:h-5 md:h-[26px] bg-[#1e293b] border border-white/20 rounded-md shadow-lg flex flex-col justify-evenly p-1 sm:p-[3px] md:p-1.5 z-20">
-                   <div className="w-full h-0.5 md:h-[3px] bg-white/40 rounded-sm"></div>
-                   <div className="w-3/4 h-0.5 md:h-[3px] bg-white/20 rounded-sm"></div>
-                   <div className="w-full h-0.5 md:h-[3px] bg-[#d1b411]/60 rounded-sm"></div>
+                {/* Multi Node Illustration with Lazy Parallax */}
+                <div className={`flex-shrink-0 relative w-24 h-24 sm:w-20 sm:h-20 md:w-28 md:h-28 self-center sm:self-auto flex items-center justify-center z-10 transition-all duration-[1000ms] delay-150 ${isFainl ? 'opacity-100 scale-100 translate-x-0' : 'opacity-0 scale-50 translate-x-20'}`}>
+                  <svg className="absolute inset-0 w-full h-full text-white/10" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M50 75 L30 35 M50 75 L70 35 M30 35 L70 35" strokeDasharray="2 3" />
+                  </svg>
+                  <div className={`absolute top-2 left-1 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center transition-transform duration-1000 delay-300 ${isFainl ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
+                     <div className="absolute inset-0 bg-blue-300/30 blur-md rounded-full shadow-[0_0_20px_rgba(147,197,253,0.3)]"></div>
+                     <Lightbulb className="w-6 h-6 sm:w-4 sm:h-4 md:w-7 md:h-7 text-blue-200 relative z-10" />
+                  </div>
+                  <div className={`absolute top-2 right-1 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center transition-transform duration-1000 delay-400 ${isFainl ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
+                     <div className="absolute inset-0 bg-yellow-300/40 blur-md rounded-full shadow-[0_0_20px_rgba(253,224,71,0.4)]"></div>
+                     <Lightbulb className="w-6 h-6 sm:w-4 sm:h-4 md:w-7 md:h-7 text-yellow-300 relative z-10" />
+                  </div>
+                  <div className={`absolute top-4 left-1/2 -translate-x-1/2 w-8 h-8 sm:w-6 sm:h-6 md:w-10 md:h-10 flex items-center justify-center scale-90 opacity-80 transition-transform duration-1000 delay-[450ms] ${isFainl ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
+                     <div className="absolute inset-0 bg-emerald-300/30 blur-md rounded-full"></div>
+                     <Lightbulb className="w-5 h-5 sm:w-4 sm:h-4 md:w-6 md:h-6 text-emerald-200 relative z-10" />
+                  </div>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 sm:w-8 md:w-12 h-6 sm:h-5 md:h-[26px] bg-[#1e293b] border border-white/20 rounded-md shadow-lg flex flex-col justify-evenly p-1 sm:p-[3px] md:p-1.5 z-20">
+                     <div className="w-full h-0.5 md:h-[3px] bg-white/40 rounded-sm"></div>
+                     <div className="w-3/4 h-0.5 md:h-[3px] bg-white/20 rounded-sm"></div>
+                     <div className="w-full h-0.5 md:h-[3px] bg-[#d1b411]/60 rounded-sm"></div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Slider Progress Bar / Hint */}
+            <div className="absolute bottom-0 left-0 h-1 bg-black/5 w-full z-20 overflow-hidden">
+               <div 
+                 className="h-full bg-[#d1b411] transition-all duration-[4500ms] ease-linear" 
+                 style={{ width: isFainl ? '100%' : '0%' }}
+                 key={isFainl ? 'fainl' : 'normal'}
+               ></div>
+            </div>
+            
+          </div>
+          
+          <div className="flex justify-center mt-3 gap-1.5">
+             <div className={`w-2 h-2 rounded-full transition-colors duration-500 ${!isFainl ? 'bg-black/40' : 'bg-black/10'}`}></div>
+             <div className={`w-2 h-2 rounded-full transition-colors duration-500 ${isFainl ? 'bg-[#d1b411]' : 'bg-black/10'}`}></div>
           </div>
         </div>
 
